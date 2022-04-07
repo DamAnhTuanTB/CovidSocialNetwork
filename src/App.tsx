@@ -5,6 +5,7 @@ import { Router } from 'react-router-dom';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import configs from './config';
+import 'antd/dist/antd.min.css';
 
 export const history = createBrowserHistory();
 const queryClient = new QueryClient({

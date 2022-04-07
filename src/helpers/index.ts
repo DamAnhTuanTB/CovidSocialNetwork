@@ -1,1 +1,1 @@
-export const getMessages = () => {};
+export const handleErrorMessage = (error: any) => {};
