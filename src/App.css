@@ -28,6 +28,19 @@
   color: #61dafb;
 }
 
+.root-wrapper {
+  background-color: #F0F2F5;
+}
+
+[type='file'],
+[type='image'] {
+cursor: pointer;
+}
+[type='file']::-webkit-file-upload-button {
+-webkit-appearance: button;
+cursor: pointer;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
