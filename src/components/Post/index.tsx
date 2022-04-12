@@ -13,7 +13,7 @@ const PostComponent = (props: any) => {
   return (
     <div>
       <Route exact path={match?.url} render={() => <ListPost match={match} />} />
-      <Route exact path={`${match?.url}/:id_post`} render={() => <DetailPost {...detailPostProps} />} />
+      <Route exact path={`${match?.url}/:id_post`} render={() => <DetailPost match={match} />} />
     </div>
   );
 };

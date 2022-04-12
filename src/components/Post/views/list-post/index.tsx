@@ -71,7 +71,7 @@ const ListPostComponent = (props: any) => {
           <Filter activeTab={activeTab} handleClickTab={handleClickTab} />
           <div>
             {listPost.map((item) => (
-              <PostItem detailPost={item} handleClickLike={handleClickLike} handleClickSave={handleClickSave} />
+              <PostItem key={item.id} detailPost={item} handleClickLike={handleClickLike} handleClickSave={handleClickSave} />
             ))}
           </div>
           <div className="pagination">

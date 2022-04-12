@@ -9,6 +9,7 @@ const PostItemStyle = styled.div`
         display: flex;
         /* margin-bottom: 15px; */
         padding: 15px;
+        position: relative;
         img {
             width: 50px;
             height: 50px;
@@ -22,6 +23,28 @@ const PostItemStyle = styled.div`
         }
         .create-at {
             font-size: 12px;
+        }
+        .more-option {
+            cursor: pointer;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            transform: rotate(90deg);
+            justify-content: center;
+            align-items: center;
+            span {
+                svg {
+                    height: 20px;
+                    width: auto;
+                }
+            }
+            :hover {
+                background-color: #d0d0d0;
+            }
         }
     }
     .body-post {

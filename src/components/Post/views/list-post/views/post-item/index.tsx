@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 // @ts-nocheck
-import { HeartTwoTone, LikeTwoTone, MessageTwoTone, CameraOutlined, CloseOutlined, DeleteFilled } from '@ant-design/icons';
+import { HeartTwoTone, LikeTwoTone, MessageTwoTone, MoreOutlined, CameraOutlined, CloseOutlined, DeleteFilled } from '@ant-design/icons';
+import { Dropdown, Menu } from 'antd';
 import React, { useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
@@ -11,6 +12,11 @@ import CommentItem from './views/comment-item';
 
 const PostItem = (props: any) => {
   const {
+    isProfile = false,
+    isPostSaved = false,
+    isPostDraft = false,
+    isGuest = false,
+    handleClickMoreOption = () => { },
     detailPost = {},
     setDetailPost = () => { },
     handleClickLike = () => { },
@@ -27,6 +33,21 @@ const PostItem = (props: any) => {
     const fileUrl = URL.createObjectURL(e.target.files[0]);
     setImagePreview(fileUrl);
   }
+
+  const onclickMenu = ({ key }) => {
+    handleClickMoreOption(key, detailPost.id)
+  }
+
+  const menu = (
+    <Menu onClick={onclickMenu}>
+      {
+        !isPostSaved && (
+          <Menu.Item key="edit">Chỉnh sửa bài viết</Menu.Item>
+        )
+      }
+      <Menu.Item key={`${isPostSaved ? "unsave" : "delete"}`}>{isPostSaved ? "Bỏ lưu" : "Xóa bài viết"}</Menu.Item>
+    </Menu>
+  );
 
   const handleClickLikeButton = () => {
     if (isDetail) {
@@ -70,53 +91,73 @@ const PostItem = (props: any) => {
             {detailPost?.createdAt}
           </div>
         </div>
+        {
+          (isProfile && !isGuest) && (
+            <Dropdown overlay={menu} placement="bottomRight">
+              <div className="more-option">
+                <MoreOutlined />
+              </div>
+            </Dropdown>
+          )
+        }
       </div>
       <div className="body-post">
         <div className="detail-post">
           {detailPost?.content}
         </div>
         <div className={`${detailPost?.image?.length < 3 ? "list-image" : "list-image-3"}`}>
-          {detailPost?.image?.map((image: any) => (
-            <BaseImagePreview src={image} alt="" />
-          ))}
-        </div>
-      </div>
-      <div className="footer-post">
-        <div className="detail-interaction">
-          <div className="detail-like">
-            <img src="/post/likeFbIcon.svg" alt="" />
-            {detailPost?.totalLike}
-          </div>
-          <div className="detail-other">
-            <div>{detailPost?.totalComment} bình luận</div>
-            <div>{detailPost?.totalSave} lượt lưu</div>
-          </div>
-        </div>
-        <div className="list-button">
-          <div
-            aria-hidden
-            className="like-button action-button"
-            onClick={handleClickLikeButton}
-          >
-            <LikeTwoTone twoToneColor={detailPost?.isLike ? "#1877F2" : "#a3a3a3"} />
-            <div className={`text ${detailPost?.isLike && "text-like"}`}>Thích</div>
-          </div>
-          <div className="comment-button action-button" onClick={handleClickCommentButton}>
-            <MessageTwoTone twoToneColor="#a3a3a3" />
-            <div className="text">Bình luận</div>
-          </div>
-          <div
-            aria-hidden
-            className="save-button action-button"
-            onClick={handleClickSaveButton}
-          >
-            <HeartTwoTone twoToneColor={detailPost?.isSave ? "#f21831" : "#a3a3a3"} />
-            <div className={`text ${detailPost?.isSave && "text-save"}`}>Lưu</div>
-          </div>
+          {detailPost?.image?.map((image: any, index: any) => {
+            const key = detailPost.id.toString() + index.toString();
+            return (
+              <BaseImagePreview key={key} src={image} alt="" />
+            )
+          })}
         </div>
       </div>
       {
-        isDetail && (
+        !isPostDraft && (
+          <div className="footer-post">
+            <div className="detail-interaction">
+              <div className="detail-like">
+                <img src="/post/likeFbIcon.svg" alt="" />
+                {detailPost?.totalLike}
+              </div>
+              <div className="detail-other">
+                <div>{detailPost?.totalComment} bình luận</div>
+                <div>{detailPost?.totalSave} lượt lưu</div>
+              </div>
+            </div>
+            {
+              !isProfile && (
+                <div className="list-button">
+                  <div
+                    aria-hidden
+                    className="like-button action-button"
+                    onClick={handleClickLikeButton}
+                  >
+                    <LikeTwoTone twoToneColor={detailPost?.isLike ? "#1877F2" : "#a3a3a3"} />
+                    <div className={`text ${detailPost?.isLike && "text-like"}`}>Thích</div>
+                  </div>
+                  <div className="comment-button action-button" onClick={handleClickCommentButton}>
+                    <MessageTwoTone twoToneColor="#a3a3a3" />
+                    <div className="text">Bình luận</div>
+                  </div>
+                  <div
+                    aria-hidden
+                    className="save-button action-button"
+                    onClick={handleClickSaveButton}
+                  >
+                    <HeartTwoTone twoToneColor={detailPost?.isSave ? "#f21831" : "#a3a3a3"} />
+                    <div className={`text ${detailPost?.isSave && "text-save"}`}>Lưu</div>
+                  </div>
+                </div>
+              )
+            }
+          </div>
+        )
+      }
+      {
+        (isDetail && !isProfile && !isPostDraft) && (
           <div className="list-comment">
             <div className="input-comment-container">
               {/* bình luận */}

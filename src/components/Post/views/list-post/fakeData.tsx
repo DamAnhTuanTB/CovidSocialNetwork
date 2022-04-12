@@ -21,7 +21,7 @@ const dataRecord = [
     },
     {
         id: 2,
-        content: "Hãy cùng xem trong trận đấu giữa Team Flash và AS Esports ở ván thi đấu đầu tiên phút 24, Team Flash đã làm gì để hóa giải một pha giao tranh tất tay bên phía của AS Esports nhé.",
+        content: "Tỉ lệ mà Chelsea có thể ngược dòng trên sân nhà của Real Madrid có lẽ chỉ tầm 10%, nhưng đêm nay vẫn cứ phải xem, tinh thần Chelsea bất diệt!",
         createdAt: "2020/03/05-5:00",
         user: {
             id: 1,
@@ -39,7 +39,7 @@ const dataRecord = [
     },
     {
         id: 3,
-        content: "Hãy cùng xem trong trận đấu giữa Team Flash và AS Esports ở ván thi đấu đầu tiên phút 24, Team Flash đã làm gì để hóa giải một pha giao tranh tất tay bên phía của AS Esports nhé.",
+        content: "REDMI NOTE 11 PRO+ 5G - Sạc nhanh 120W Xiaomi HyperCharge",
         createdAt: "2020/03/05-5:00",
         user: {
             id: 1,
@@ -57,7 +57,7 @@ const dataRecord = [
     },
     {
         id: 4,
-        content: "Hãy cùng xem trong trận đấu giữa Team Flash và AS Esports ở ván thi đấu đầu tiên phút 24, Team Flash đã làm gì để hóa giải một pha giao tranh tất tay bên phía của AS Esports nhé.",
+        content: "Thanh niên trốn nhà từ HN đi bụi vào SG và cái kết",
         createdAt: "2020/03/05",
         user: {
             id: 1,
