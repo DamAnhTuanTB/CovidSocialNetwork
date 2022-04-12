@@ -30,8 +30,4 @@ const DetailPost = (props: any) => {
   );
 };
 
-DetailPost.propTypes = {
-
-};
-
 export default DetailPost;

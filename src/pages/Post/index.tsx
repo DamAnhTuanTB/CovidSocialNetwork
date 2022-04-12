@@ -5,7 +5,7 @@ import PostComponent from "../../components/Post";
 const PostsPage = ({ match } : any) => {
   return (
     <>
-      <PostComponent />
+      <PostComponent match={match} />
     </>
   );
 };

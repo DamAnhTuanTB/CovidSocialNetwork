@@ -4,7 +4,8 @@ import PageHeader from '../../components/PageHeader';
 import SideNav from '../../components/SideNav';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { useGetProfile } from '../../hooks/useProfile';
-import PostComponent from '../../components/Post';
+import ProfilePage from '../../pages/Profile';
+import PostsPage from '../../pages/Post';
 
 const Home = lazy(() => import('../../pages/Home'));
 
@@ -23,7 +24,8 @@ export default function PageWrapper() {
           <Suspense fallback={null}>
             <Switch>
               <Route path="/home" component={Home} />
-              <Route path="/post" component={PostComponent} />
+              <Route path="/post" component={PostsPage} />
+              <Route path="/profile" component={ProfilePage} />
             </Switch>
           </Suspense>
         </div>
