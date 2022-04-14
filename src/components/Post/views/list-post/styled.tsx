@@ -4,13 +4,13 @@ const ListPostComponentStyled = styled.div`
     font-family: Montserrat,Raleway,sans-serif ;
     display: flex;
     .list-post-container {
-        /* width: 1000px; */
+        width: 1110px;
         display: flex;
         align-items: flex-start;
+        justify-content: space-between;
         margin: auto;
         .list-post {
             width: 700px;
-            margin-right: 50px;
             .pagination {
                 margin-top: 20px;
                 margin-bottom: 50px;

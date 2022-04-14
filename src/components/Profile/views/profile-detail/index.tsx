@@ -14,17 +14,18 @@ const ProfileDetail = (props: any) => {
   const { isGuest = false } = props;
   const { TabPane } = Tabs;
   const param: { id_user: any } = useParams();
-  const [idModalDelete, setIdModalDelete] = useState(null);
   const [idModalEdit, setIdModalEdit] = useState(null);
+  const [postDelete, setPostDelete] = useState(null);
+  const [postEdit, setPostEdit] = useState(null);
   const [isShowModalEditProfile, setIsShowModalEditProfile] = useState(false);
-  const handleClickMoreOption = (key: any, idPost: any) => {
-    console.log(key, idPost);
+  const handleClickMoreOption = (key: any, post: any) => {
+    console.log(key, post);
 
     if (key === "delete") {
-      setIdModalDelete(idPost);
+      setPostDelete(post);
     }
     if (key === "edit") {
-      setIdModalEdit(idPost)
+      setPostEdit(post)
     }
   }
   const handleConfirmDelete = (idPost: any) => {
@@ -36,6 +37,16 @@ const ProfileDetail = (props: any) => {
 
   return (
     <ProfileDetailStyled>
+      <ModalDeletePost
+        setPostDelete={setPostDelete}
+        itemPost={postDelete}
+        handleConfirmDelete={handleConfirmDelete}
+      />
+      <ModalCreatePost
+        isEdit
+        itemPost={postEdit}
+        setPostEdit={setPostEdit}
+      />
       <div className="detail-user">
         <img src="/post/avatar_my1.jpg" alt="" />
         <div className="name-user">Lê Tuấn</div>
@@ -67,18 +78,6 @@ const ProfileDetail = (props: any) => {
                     isGuest={isGuest}
                     handleClickMoreOption={handleClickMoreOption}
                   />
-                  <ModalDeletePost
-                    idModalDelete={idModalDelete}
-                    setIdModalDelete={setIdModalDelete}
-                    itemPost={item}
-                    handleConfirmDelete={handleConfirmDelete}
-                  />
-                  <ModalCreatePost
-                    isEdit
-                    idModalEdit={idModalEdit}
-                    setIdModalEdit={setIdModalEdit}
-                    itemPost={item}
-                  />
                 </Fragment>
               ))
             }
@@ -109,12 +108,6 @@ const ProfileDetail = (props: any) => {
                           isProfile
                           isPostDraft
                           handleClickMoreOption={handleClickMoreOption}
-                        />
-                        <ModalDeletePost
-                          idModalDelete={idModalDelete}
-                          setIdModalDelete={setIdModalDelete}
-                          itemPost={item}
-                          handleConfirmDelete={handleConfirmDelete}
                         />
                       </Fragment>
                     ))
