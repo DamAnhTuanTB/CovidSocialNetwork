@@ -5,29 +5,28 @@ import { Button, Modal } from 'antd';
 const ModalDeletePost = (props: any) => {
   const {
     title = "",
-    idModalDelete,
-    setIdModalDelete = () => { },
+    setPostDelete = () => { },
     itemPost = {},
     handleConfirmDelete = () => { }
   } = props;
   const [loading, setLoading] = useState(false);
   const onSubmit = () => {
-    handleConfirmDelete(idModalDelete);
+    handleConfirmDelete(itemPost?.id);
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      setIdModalDelete(null);
+      setPostDelete(null);
     }, 2000)
   }
   return (
     <Modal
       title={title}
       centered
-      visible={idModalDelete === itemPost.id}
-      onCancel={() => setIdModalDelete(null)}
+      visible={!!itemPost?.id}
+      onCancel={() => setPostDelete(null)}
       onOk={onSubmit}
       footer={[
-        <Button key="back" onClick={() => setIdModalDelete(null)}>
+        <Button key="back" onClick={() => setPostDelete(null)}>
           Hủy
         </Button>,
         <Button key="submit" type="primary" loading={loading} onClick={onSubmit}>

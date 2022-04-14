@@ -9,26 +9,30 @@ import { ModalCreatePostStyled } from './styled';
 const ModalCreatePost = (props: any) => {
   const {
     isEdit = false,
-    idModalEdit = null,
     itemPost = {},
-    setIdModalEdit = () => { }
+    setPostEdit = () => {},
+    isShowModalCreate = false,
+    setIsShowModalCreate = () => {},
   } = props;
   const refInputFile = useRef(null);
   const [listImage, setListImage] = useState<string[]>([]);
   const [content, setContent] = useState("");
 
   useEffect(() => {
-    if (isEdit && idModalEdit) {
+    if (isEdit && itemPost?.id) {
       setListImage(itemPost?.image);
       setContent(itemPost?.content);
     }
-  }, [idModalEdit])
+  }, [itemPost?.id])
 
   const handleChangeImage = (e: any) => {
+    console.log(12312123123);
+    
     if (e.target.files.length === 0) return;
 
     const fileUrl = URL.createObjectURL(e.target.files[0]);
     setListImage([...listImage, fileUrl]);
+    e.target.value = null;
   }
   const handleDeleteImage = (indexImage: any) => {
     const newListImage = [...listImage];
@@ -36,7 +40,13 @@ const ModalCreatePost = (props: any) => {
   }
 
   const handleCancel = () => {
-    setIdModalEdit(null);
+    if (isEdit) {
+      setPostEdit(null);
+    } else {
+      setIsShowModalCreate(false);
+      // setContent("");
+      // setListImage([]);
+    }
   }
 
   const onSubmit = () => {
@@ -44,9 +54,9 @@ const ModalCreatePost = (props: any) => {
   }
   return (
     <ModalCreatePostStyled
-      title="Chỉnh sửa bài viết"
+      title={isEdit ? "Chỉnh sửa bài viết" : "Tạo bài viết"}
       className="modal-create-post"
-      visible={idModalEdit === itemPost.id}
+      visible={isEdit ? !!itemPost?.id : isShowModalCreate}
       style={{ top: 100 }}
       width={800}
       onCancel={handleCancel}
@@ -80,7 +90,7 @@ const ModalCreatePost = (props: any) => {
         <div className="list-preview-image">
           {
             listImage.length > 0 && listImage.map((imageSrc, index) => (
-              <div className="preview-image">
+              <div key={imageSrc + index} className="preview-image">
                 <img src={imageSrc} alt="" />
                 <div className="reset-button" onClick={() => handleDeleteImage(index)}>
                   <CloseOutlined className="reset-icon" />

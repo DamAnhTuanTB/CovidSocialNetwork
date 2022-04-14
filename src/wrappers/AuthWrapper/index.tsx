@@ -6,6 +6,7 @@ import { Redirect, Route, Switch } from 'react-router-dom';
 import { useGetProfile } from '../../hooks/useProfile';
 import ProfilePage from '../../pages/Profile';
 import PostsPage from '../../pages/Post';
+import ChatPage from '../../pages/Chat';
 
 const Home = lazy(() => import('../../pages/Home'));
 
@@ -17,15 +18,16 @@ export default function PageWrapper() {
   // if (!profile) return null;
   return (
     <div>
-      <SideNav />
+      {/* <SideNav /> */}
       <div>
         <PageHeader />
-        <div>
+        <div className="covid-container">
           <Suspense fallback={null}>
             <Switch>
               <Route path="/home" component={Home} />
               <Route path="/post" component={PostsPage} />
               <Route path="/profile" component={ProfilePage} />
+              <Route path="/chat/:id_chat" component={ChatPage} />
             </Switch>
           </Suspense>
         </div>

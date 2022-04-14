@@ -35,7 +35,7 @@ const PostItem = (props: any) => {
   }
 
   const onclickMenu = ({ key }) => {
-    handleClickMoreOption(key, detailPost.id)
+    handleClickMoreOption(key, detailPost);
   }
 
   const menu = (
