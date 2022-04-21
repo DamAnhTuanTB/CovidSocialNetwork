@@ -233,10 +233,10 @@ const PostItemStyle = styled.div`
                 .reset-button {
                     cursor: pointer;
                     position: absolute;
-                    top: 0;
-                    right: 0;
-                    width: 40px;
-                    height: 40px;
+                    top: 10px;
+                    right: 10px;
+                    width: 30px;
+                    height: 30px;
                     display: flex;
                     border-radius: 20px;
                     background-color: rgba(255, 255, 255, 0.7);
@@ -246,6 +246,28 @@ const PostItemStyle = styled.div`
                             width: 20px;
                             height: 20px;
                         }
+                    }
+                }
+                .loading-view {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    background-color: rgba(255, 255, 255, 0.5);
+                    .loading {
+                        margin: auto;
+                        width: 50%;
+                        height: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        /* .ant-progress-inner {
+                            width: 100% !important;
+                            height: 100% !important;
+                            svg
+                        } */
                     }
                 }
             }

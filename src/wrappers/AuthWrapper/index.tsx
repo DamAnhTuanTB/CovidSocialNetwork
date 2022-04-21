@@ -27,7 +27,7 @@ export default function PageWrapper() {
               <Route path="/home" component={Home} />
               <Route path="/post" component={PostsPage} />
               <Route path="/profile" component={ProfilePage} />
-              <Route path="/chat/:id_chat" component={ChatPage} />
+              <Route path="/chat" component={ChatPage} />
             </Switch>
           </Suspense>
         </div>

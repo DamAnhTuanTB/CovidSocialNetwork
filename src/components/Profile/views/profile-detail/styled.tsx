@@ -53,6 +53,9 @@ const ProfileDetailStyled = styled.div`
             margin: 0;
             margin-right: 10px;
         }
+        .ant-tabs-ink-bar-animated {
+            transition: unset !important;
+        }
     }
 `;
 
