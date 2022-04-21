@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { Button, Modal } from 'antd';
 
 const ModalDeletePost = (props: any) => {

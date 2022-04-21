@@ -1,14 +1,14 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 import { CameraOutlined, CloseOutlined } from '@ant-design/icons';
-import { Button, Input, Modal, Progress } from 'antd';
+import { Button, Progress } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
 import TextareaAutosize from 'react-textarea-autosize';
-import { ModalCreatePostStyled } from './styled';
 import { getUrlImage } from '../../../../api/uploadimage';
+import { ModalCreatePostStyled } from './styled';
 
 const ModalCreatePost = (props: any) => {
   const {
+    isAdmin = false,
     isEdit = false,
     itemPost = {},
     setPostEdit = () => { },
@@ -24,6 +24,7 @@ const ModalCreatePost = (props: any) => {
   useEffect(() => {
     if (isEdit && itemPost?.id) {
       setListImage(itemPost?.image);
+      setListImageUrl(itemPost?.image);
       setContent(itemPost?.content);
     }
   }, [itemPost?.id])

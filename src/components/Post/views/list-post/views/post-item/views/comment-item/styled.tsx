@@ -1,6 +1,11 @@
 import styled from "styled-components";
 
 const CommentItemStyled = styled.div`
+    &:hover {
+        .delete-icon {
+            opacity: 1 !important;
+        }
+    }
     .item-comment {
         display: flex;
         /* padding: 20px; */
@@ -21,6 +26,7 @@ const CommentItemStyled = styled.div`
             border-radius: 20px;
             padding: 5px 10px;
             flex: unset;
+            max-width: 85%;
             .name-user {
                 font-weight: bold;
                 span {
@@ -33,6 +39,22 @@ const CommentItemStyled = styled.div`
             }
             .text {
                 word-break: break-all;
+            }
+        }
+        .delete-icon {
+            cursor: pointer;
+            border-radius: 50%;
+            opacity: 0;
+            margin-top: 10px;
+            margin-left: 5px;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #F0F2F5;
+            :hover {
+                background-color: #e5e5e5;
             }
         }
     }

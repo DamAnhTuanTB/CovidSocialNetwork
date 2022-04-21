@@ -5,6 +5,7 @@ const PostItemStyle = styled.div`
     background-color: white;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     border-radius: 10px;
+    margin-bottom: 50px;
     .header-post {
         display: flex;
         /* margin-bottom: 15px; */
@@ -270,6 +271,19 @@ const PostItemStyle = styled.div`
                         } */
                     }
                 }
+            }
+        }
+    }
+    .list-approve-button-admin {
+        display: flex;
+        padding: 5px 10px 5px;
+        button {
+            height: 40px;
+            flex: 1;
+            margin: 0 5px;
+            border-radius: 5px;
+            :nth-child(2) {
+                background-color: #e4e4e4;
             }
         }
     }

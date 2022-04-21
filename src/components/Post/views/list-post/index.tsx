@@ -1,7 +1,5 @@
 /* eslint-disable react/prop-types */
-import { FireTwoTone, FlagTwoTone, StarTwoTone } from "@ant-design/icons";
 import { Pagination } from 'antd';
-import { cloneDeep } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
 import LIST_POST_CONSTANTS from './constant';
@@ -40,30 +38,6 @@ const ListPostComponent = (props: any) => {
     setCurrentPage(+page);
   }, [params.href]);
 
-  const handleClickLike = (post: any) => {
-    if (!post) return;
-    let currentLike = true;
-    if (post.isLike) {
-      currentLike = false;
-    }
-    const listPostClone = cloneDeep(listPost);
-    const indexItemPostInteract = listPost.findIndex((item) => item.id === post.id);
-    listPostClone[indexItemPostInteract].isLike = currentLike;
-    setListPost(listPostClone);
-  };
-
-  const handleClickSave = (post: any) => {
-    if (!post) return;
-    let currentSave = true;
-    if (post.isSave) {
-      currentSave = false;
-    }
-    const listPostClone = cloneDeep(listPost);
-    const indexItemPostInteract = listPost.findIndex((item) => item.id === post.id);
-    listPostClone[indexItemPostInteract].isSave = currentSave;
-    setListPost(listPostClone);
-  };
-
   return (
     <ListPostComponentStyled>
       <div className="list-post-container">
@@ -71,7 +45,12 @@ const ListPostComponent = (props: any) => {
           <Filter activeTab={activeTab} handleClickTab={handleClickTab} />
           <div>
             {listPost.map((item) => (
-              <PostItem key={item.id} detailPost={item} handleClickLike={handleClickLike} handleClickSave={handleClickSave} />
+              <PostItem
+                key={item.id}
+                detailPost={item}
+                listPost={listPost}
+                setListPost={setListPost}
+              />
             ))}
           </div>
           <div className="pagination">

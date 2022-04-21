@@ -1,6 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { CommentItemStyled } from './styled';
+import { DeleteOutlined } from '@ant-design/icons';
 import { cloneDeep } from 'lodash';
 import BaseImagePreview from '../../../../../../../Base/BaseImagePreview';
 
@@ -8,7 +8,8 @@ const CommentItem = (props: any) => {
   const {
     detailComment = {},
     listComment = [],
-    setListComment = () => { }
+    setListComment = () => { },
+    isAdmin = false,
   } = props;
 
   const handleClickLike = () => {
@@ -21,11 +22,17 @@ const CommentItem = (props: any) => {
     }
     const newListComment = cloneDeep(listComment);
     const commentIndex = newListComment.findIndex((item: any) => item.id === detailComment.id);
-    
+
     newListComment[commentIndex].isLike = currentLike;
     newListComment[commentIndex].totalLike = newListComment[commentIndex].totalLike + changeLike;
-    
+
     setListComment(newListComment);
+  }
+
+  const handleDeleteComment = () => {
+    // console.log(111111, detailComment);
+    const newListComment = cloneDeep(listComment);
+    setListComment(newListComment.filter((item: any) => item.id !== detailComment.id));
   }
 
   return (
@@ -43,6 +50,13 @@ const CommentItem = (props: any) => {
             {detailComment.content}
           </div>
         </div>
+        {
+          isAdmin && (
+            <div className="delete-icon" onClick={handleDeleteComment}>
+              <DeleteOutlined />
+            </div>
+          )
+        }
       </div>
       {
         detailComment.image && (

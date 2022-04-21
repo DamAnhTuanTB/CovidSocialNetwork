@@ -57,6 +57,15 @@ const ProfileDetailStyled = styled.div`
             transition: unset !important;
         }
     }
+    .pagination {
+        margin-top: 20px;
+        margin-bottom: 50px;
+        .ant-pagination-item-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
 `;
 
 export { ProfileDetailStyled };
