@@ -7,9 +7,6 @@ import DetailPost from './views/detail-post';
 
 const PostComponent = (props: any) => {
   const { match } = props;
-  const detailPostProps = { // make sure all required component's inputs/Props keys&types match
-    match,
-  }
   return (
     <div>
       <Route exact path={match?.url} render={() => <ListPost match={match} />} />

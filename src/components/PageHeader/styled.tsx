@@ -68,6 +68,7 @@ const PageHeaderStyled = styled.div`
                     top: 55px;
                     left: -180px;
                     max-height: 500px;
+                    padding: 10px;
                     ::after {
                         content: "";
                         position: absolute;
@@ -91,6 +92,40 @@ const PageHeaderStyled = styled.div`
                         border-left: 10px solid transparent;
                         border-right: 10px solid transparent;
                         border-bottom: 11px solid #d0d0d0;
+                    }
+                    .title-notification {
+                        font-size: 20px;
+                        font-weight: 500;
+                        margin-bottom: 15px;
+                    }
+                    .item-notification {
+                        padding: 10px;
+                        background-color: #EDF2F7;
+                        display: flex;
+                        align-items: flex-start;
+                        img {
+                            width: 40px;
+                            height: 40px;
+                            object-fit: cover;
+                            object-position: center;
+                            margin-right: 10px;
+                            border-radius: 50%;
+                        }
+                        .detail {
+                            .content {
+                                font-size: 16px;
+                                span {
+                                    margin-right: 5px;
+                                    color: rgba(74,85,104,1);
+                                    font-weight: 700;
+                                }
+                            }
+                            .created-at {
+                                font-size: 12px;
+                                font-weight: 500;
+                                color: #A0AEC0;
+                            }
+                        }
                     }
                 }
             }

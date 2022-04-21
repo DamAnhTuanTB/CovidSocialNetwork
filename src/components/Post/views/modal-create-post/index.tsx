@@ -2,20 +2,23 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { CameraOutlined, CloseOutlined } from '@ant-design/icons';
-import { Button, Input, Modal } from 'antd';
+import { Button, Input, Modal, Progress } from 'antd';
 import TextareaAutosize from 'react-textarea-autosize';
 import { ModalCreatePostStyled } from './styled';
+import { getUrlImage } from '../../../../api/uploadimage';
 
 const ModalCreatePost = (props: any) => {
   const {
     isEdit = false,
     itemPost = {},
-    setPostEdit = () => {},
+    setPostEdit = () => { },
     isShowModalCreate = false,
-    setIsShowModalCreate = () => {},
+    setIsShowModalCreate = () => { },
   } = props;
   const refInputFile = useRef(null);
   const [listImage, setListImage] = useState<string[]>([]);
+  const [listImageUrl, setListImageUrl] = useState<string[]>([]);
+  const [progressUpload, setProgressUpload] = useState(1);
   const [content, setContent] = useState("");
 
   useEffect(() => {
@@ -32,11 +35,22 @@ const ModalCreatePost = (props: any) => {
 
     const fileUrl = URL.createObjectURL(e.target.files[0]);
     setListImage([...listImage, fileUrl]);
-    e.target.value = null;
+    getUrlImage(
+      e.target.files[0],
+      setProgressUpload,
+      (url) => {
+        setListImageUrl([...listImageUrl, url]);
+        setProgressUpload(1);
+        e.target.value = null;
+      }
+    )
   }
   const handleDeleteImage = (indexImage: any) => {
+    if (progressUpload !== 1) return;
     const newListImage = [...listImage];
-    setListImage(newListImage.filter((item, index) => index !== indexImage))
+    const newListImageUrl = [...listImageUrl];
+    setListImage(newListImage.filter((item, index) => index !== indexImage));
+    setListImageUrl(newListImageUrl.filter((item, index) => index !== indexImage));
   }
 
   const handleCancel = () => {
@@ -83,7 +97,7 @@ const ModalCreatePost = (props: any) => {
         <div className="add-image">
           <div>Thêm ảnh vào bài viết</div>
           <div className="file-input">
-            <input ref={refInputFile} disabled={listImage.length >= 3} onChange={handleChangeImage} type="file" />
+            <input ref={refInputFile} disabled={listImage.length >= 3 || progressUpload !== 1} onChange={handleChangeImage} type="file" />
             <CameraOutlined className="camera-icon" />
           </div>
         </div>
@@ -95,6 +109,13 @@ const ModalCreatePost = (props: any) => {
                 <div className="reset-button" onClick={() => handleDeleteImage(index)}>
                   <CloseOutlined className="reset-icon" />
                 </div>
+                {
+                  (index > listImageUrl.length - 1 && progressUpload > 0) && (
+                    <div className="loading-view">
+                      <Progress className="loading" type='circle' width={50} percent={progressUpload} />
+                    </div>
+                  )
+                }
               </div>
             ))
           }

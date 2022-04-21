@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-const ChatComponentStyled = styled.div`
+const DetailChatComponentStyled = styled.div`
     display: flex;
     .chat-container {
         width: 1110px;
@@ -151,4 +151,4 @@ const ChatComponentStyled = styled.div`
     }
 `;
 
-export { ChatComponentStyled };
+export { DetailChatComponentStyled };

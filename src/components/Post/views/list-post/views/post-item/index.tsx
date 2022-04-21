@@ -1,10 +1,11 @@
 /* eslint-disable react/prop-types */
 // @ts-nocheck
 import { HeartTwoTone, LikeTwoTone, MessageTwoTone, MoreOutlined, CameraOutlined, CloseOutlined, DeleteFilled } from '@ant-design/icons';
-import { Dropdown, Menu } from 'antd';
+import { Dropdown, Menu, Progress } from 'antd';
 import React, { useRef, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
+import { getUrlImage } from '../../../../../../api/uploadimage';
 import BaseImagePreview from '../../../../../Base/BaseImagePreview';
 import dataCommentRecord from './fakeDataComment';
 import { PostItemStyle } from './styled';
@@ -27,11 +28,23 @@ const PostItem = (props: any) => {
   } = props;
   const history = useHistory();
   const [imagePreview, setImagePreview] = useState();
+  const [imageUrlComment, setImageUrlComment] = useState();
+  const [prog, setProg] = useState(1);
   const refInputFile = useRef(null);
   const refTextArea = useRef(null);
   const handleChangeImage = (e: any) => {
     const fileUrl = URL.createObjectURL(e.target.files[0]);
     setImagePreview(fileUrl);
+    // console.log(e.target.files[0].name);
+
+    getUrlImage(
+      e.target.files[0],
+      setProg,
+      (url) => {
+        setImageUrlComment(url);
+        setProg(0);
+      }
+    )
   }
 
   const onclickMenu = ({ key }) => {
@@ -180,12 +193,25 @@ const PostItem = (props: any) => {
               </div>
               {
                 imagePreview && (
-                  <div className="preview-image">
-                    <img src={imagePreview} alt="" />
-                    <div className="reset-button" onClick={() => { refInputFile.current.value = null; setImagePreview(""); }}>
-                      <CloseOutlined className="reset-icon" />
+                  <>
+                    <div className="preview-image">
+                      <img src={imagePreview} alt="" />
+                      {
+                        prog === 0 && (
+                          <div className="reset-button" onClick={() => { refInputFile.current.value = null; setImagePreview(""); }}>
+                            <CloseOutlined className="reset-icon" />
+                          </div>
+                        )
+                      }
+                      {
+                        prog > 0 && (
+                          <div className="loading-view">
+                            <Progress className="loading" type='circle' width={50} percent={prog} />
+                          </div>
+                        )
+                      }
                     </div>
-                  </div>
+                  </>
                 )
               }
             </div>

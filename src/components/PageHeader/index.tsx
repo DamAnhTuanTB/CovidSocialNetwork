@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { MailOutlined, BellOutlined } from '@ant-design/icons';
 import { PageHeaderStyled } from './styled';
 import { Button } from 'antd';
@@ -6,9 +6,18 @@ import ModalCreatePost from '../Post/views/modal-create-post';
 export default function PageHeader() {
   const [isShowNotification, setIsShowNotification] = useState(false);
   const [isShowModal, setIsShowModal] = useState(false);
-  let scrollbarWidth = (window.innerWidth - document.body.clientWidth) + 'px';
-  console.log(123123, scrollbarWidth);
-  
+
+  const showNotify = (data: any) => {
+    console.log("pageheader", data);
+  }
+
+  useEffect(() => {
+    // socket?.on('notify', showNotify);
+    // return () => {
+    //   socket.off('notify', showNotify);
+    // };
+  }, [])
+
   return (
     <PageHeaderStyled>
       <ModalCreatePost
@@ -26,7 +35,21 @@ export default function PageHeader() {
             {
               isShowNotification && (
                 <div className="dropdown">
-                  112312312312
+                  <div className="title-notification">
+                    Thông báo
+                  </div>
+                  <div className="item-notification">
+                    <img src="/post/avatar_my1.jpg" alt="" />
+                    <div className="detail">
+                      <div className="content">
+                        <span>Admin</span>
+                        vừa phê duyệt yêu cầu của bạn
+                      </div>
+                      <div className="created-at">
+                        20 tháng 4
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )
             }
