@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import PropTypes from 'prop-types';
 import { FireTwoTone, FlagTwoTone, StarTwoTone } from '@ant-design/icons';
 import { FilterStyle } from './styled';
 

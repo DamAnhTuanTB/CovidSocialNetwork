@@ -1,18 +1,19 @@
 /* eslint-disable react/prop-types */
 // @ts-nocheck
-import { HeartTwoTone, LikeTwoTone, MessageTwoTone, MoreOutlined, CameraOutlined, CloseOutlined, DeleteFilled } from '@ant-design/icons';
-import { Dropdown, Menu, Progress } from 'antd';
-import React, { useRef, useState } from 'react';
+import { HeartTwoTone, LikeTwoTone, MessageTwoTone, MoreOutlined } from '@ant-design/icons';
+import { Button, Dropdown, Menu } from 'antd';
+import { cloneDeep } from 'lodash';
+import React, { useRef } from 'react';
 import { useHistory } from 'react-router-dom';
-import TextareaAutosize from 'react-textarea-autosize';
-import { getUrlImage } from '../../../../../../api/uploadimage';
 import BaseImagePreview from '../../../../../Base/BaseImagePreview';
-import dataCommentRecord from './fakeDataComment';
 import { PostItemStyle } from './styled';
 import CommentItem from './views/comment-item';
+import InputComment from './views/input-comment';
 
 const PostItem = (props: any) => {
   const {
+    isAdmin = false,
+    isAdminOwner = false,
     isProfile = false,
     isPostSaved = false,
     isPostDraft = false,
@@ -20,34 +21,16 @@ const PostItem = (props: any) => {
     handleClickMoreOption = () => { },
     detailPost = {},
     setDetailPost = () => { },
-    handleClickLike = () => { },
-    handleClickSave = () => { },
+    listPost = {},
+    setListPost = () => { },
     isDetail = false,
     listComment = [],
     setListComment = () => { },
   } = props;
   const history = useHistory();
-  const [imagePreview, setImagePreview] = useState();
-  const [imageUrlComment, setImageUrlComment] = useState();
-  const [prog, setProg] = useState(1);
-  const refInputFile = useRef(null);
   const refTextArea = useRef(null);
-  const handleChangeImage = (e: any) => {
-    const fileUrl = URL.createObjectURL(e.target.files[0]);
-    setImagePreview(fileUrl);
-    // console.log(e.target.files[0].name);
 
-    getUrlImage(
-      e.target.files[0],
-      setProg,
-      (url) => {
-        setImageUrlComment(url);
-        setProg(0);
-      }
-    )
-  }
-
-  const onclickMenu = ({ key }) => {
+  const onclickMenu = ({ key } : any) => {
     handleClickMoreOption(key, detailPost);
   }
 
@@ -62,6 +45,17 @@ const PostItem = (props: any) => {
     </Menu>
   );
 
+  const menuAdmin = (
+    <Menu onClick={onclickMenu}>
+      {
+        isAdminOwner && (
+          <Menu.Item key="edit-admin">Chỉnh sửa bài viết</Menu.Item>
+        )
+      }
+      <Menu.Item key="delete-admin">Xóa bài viết</Menu.Item>
+    </Menu>
+  );
+
   const handleClickLikeButton = () => {
     if (isDetail) {
       setDetailPost({
@@ -69,7 +63,16 @@ const PostItem = (props: any) => {
         isLike: !detailPost.isLike,
       });
     } else {
-      handleClickLike(detailPost);
+      // handleClickLike(detailPost);
+      if (!detailPost) return;
+      let currentLike = true;
+      if (detailPost.isLike) {
+        currentLike = false;
+      }
+      const listPostClone = cloneDeep(listPost);
+      const indexItemPostInteract = listPost.findIndex((item: any) => item.id === detailPost.id);
+      listPostClone[indexItemPostInteract].isLike = currentLike;
+      setListPost(listPostClone);
     }
   }
 
@@ -80,7 +83,15 @@ const PostItem = (props: any) => {
         isSave: !detailPost.isSave,
       });
     } else {
-      handleClickSave(detailPost);
+      if (!detailPost) return;
+      let currentSave = true;
+      if (detailPost.isSave) {
+        currentSave = false;
+      }
+      const listPostClone = cloneDeep(listPost);
+      const indexItemPostInteract = listPost.findIndex((item: any) => item.id === detailPost.id);
+      listPostClone[indexItemPostInteract].isSave = currentSave;
+      setListPost(listPostClone);
     }
   }
 
@@ -88,7 +99,7 @@ const PostItem = (props: any) => {
     if (isDetail) {
       refTextArea.current && refTextArea.current.focus();
     } else {
-      history.push(`/post/${detailPost.id}`);
+      history.push(`${isAdmin ? "/admin/post-management" : "/post"}/${detailPost.id}`);
     }
   }
 
@@ -105,8 +116,9 @@ const PostItem = (props: any) => {
           </div>
         </div>
         {
-          (isProfile && !isGuest) && (
-            <Dropdown overlay={menu} placement="bottomRight">
+          // nếu là profile của bản thân hoặc nếu là admin và không phải bài đang đợi duyệt
+          ((isProfile && !isGuest) || (isAdmin && !isPostDraft)) && (
+            <Dropdown overlay={!isAdmin ? menu : menuAdmin} placement="bottomRight">
               <div className="more-option">
                 <MoreOutlined />
               </div>
@@ -140,81 +152,35 @@ const PostItem = (props: any) => {
                 <div>{detailPost?.totalSave} lượt lưu</div>
               </div>
             </div>
-            {
-              !isProfile && (
-                <div className="list-button">
-                  <div
-                    aria-hidden
-                    className="like-button action-button"
-                    onClick={handleClickLikeButton}
-                  >
-                    <LikeTwoTone twoToneColor={detailPost?.isLike ? "#1877F2" : "#a3a3a3"} />
-                    <div className={`text ${detailPost?.isLike && "text-like"}`}>Thích</div>
-                  </div>
-                  <div className="comment-button action-button" onClick={handleClickCommentButton}>
-                    <MessageTwoTone twoToneColor="#a3a3a3" />
-                    <div className="text">Bình luận</div>
-                  </div>
-                  <div
-                    aria-hidden
-                    className="save-button action-button"
-                    onClick={handleClickSaveButton}
-                  >
-                    <HeartTwoTone twoToneColor={detailPost?.isSave ? "#f21831" : "#a3a3a3"} />
-                    <div className={`text ${detailPost?.isSave && "text-save"}`}>Lưu</div>
-                  </div>
-                </div>
-              )
-            }
+            <div className="list-button">
+              <div
+                aria-hidden
+                className="like-button action-button"
+                onClick={handleClickLikeButton}
+              >
+                <LikeTwoTone twoToneColor={detailPost?.isLike ? "#1877F2" : "#a3a3a3"} />
+                <div className={`text ${detailPost?.isLike && "text-like"}`}>Thích</div>
+              </div>
+              <div className="comment-button action-button" onClick={handleClickCommentButton}>
+                <MessageTwoTone twoToneColor="#a3a3a3" />
+                <div className="text">Bình luận</div>
+              </div>
+              <div
+                aria-hidden
+                className="save-button action-button"
+                onClick={handleClickSaveButton}
+              >
+                <HeartTwoTone twoToneColor={detailPost?.isSave ? "#f21831" : "#a3a3a3"} />
+                <div className={`text ${detailPost?.isSave && "text-save"}`}>Lưu</div>
+              </div>
+            </div>
           </div>
         )
       }
       {
         (isDetail && !isProfile && !isPostDraft) && (
           <div className="list-comment">
-            <div className="input-comment-container">
-              {/* bình luận */}
-              <div className="input-comment">
-                <img className="avatar-user" src="/post/avatar_my1.jpg" alt="" />
-                <div className="inputs">
-                  <TextareaAutosize
-                    placeholder="Nhập bình luận"
-                    onChange={(e) => console.log(e.target.value)}
-                    className="text-input"
-                    ref={refTextArea}
-                  />
-                  <div className="file-input-container">
-                    <div className="file-input">
-                      <input ref={refInputFile} disabled={!!imagePreview} onChange={handleChangeImage} type="file" />
-                      <CameraOutlined className="camera-icon" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {
-                imagePreview && (
-                  <>
-                    <div className="preview-image">
-                      <img src={imagePreview} alt="" />
-                      {
-                        prog === 0 && (
-                          <div className="reset-button" onClick={() => { refInputFile.current.value = null; setImagePreview(""); }}>
-                            <CloseOutlined className="reset-icon" />
-                          </div>
-                        )
-                      }
-                      {
-                        prog > 0 && (
-                          <div className="loading-view">
-                            <Progress className="loading" type='circle' width={50} percent={prog} />
-                          </div>
-                        )
-                      }
-                    </div>
-                  </>
-                )
-              }
-            </div>
+            <InputComment idPost={detailPost.id} refTextArea={refTextArea} />
             <div>
               {
                 listComment.map((item) => {
@@ -224,11 +190,20 @@ const PostItem = (props: any) => {
                       detailComment={item}
                       listComment={listComment}
                       setListComment={setListComment}
+                      isAdmin={isAdmin}
                     />
                   )
                 })
               }
             </div>
+          </div>
+        )
+      }
+      {
+        (isAdmin && isPostDraft) && (
+          <div className="list-approve-button-admin">
+            <Button type="primary">Duyệt bài viết</Button>
+            <Button type="text">Xóa bài viết</Button>
           </div>
         )
       }
