@@ -29,13 +29,11 @@
 }
 
 .root-wrapper {
-  overflow-x: hidden;
   background-color: #F0F2F5;
 }
 
 .covid-container {
   padding-top: 80px;
-  width: 100vw;
 }
 
 [type='file'],

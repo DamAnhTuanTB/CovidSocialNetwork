@@ -2,8 +2,8 @@ import styled from "styled-components";
 
 const LoginStyled = styled.div`
   display: flex;
+  height: 100vh;
   .login-container {
-    padding-top: 100px;
     width: 900px;
     margin: auto;
     display: flex;
@@ -57,6 +57,7 @@ const LoginStyled = styled.div`
           font-size: 20px;
           margin-bottom: 15px;
           width: 100%;
+          font-weight: 500;
         }
         .register-button {
           height: 50px;
@@ -66,6 +67,7 @@ const LoginStyled = styled.div`
           background-color: #42b72a;
           color: white;
           margin-left: 10%;
+          font-weight: 500;
         }
     }
   }

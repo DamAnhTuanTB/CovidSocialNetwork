@@ -101,6 +101,25 @@ const ModalCreatePostStyled = styled(Modal)`
         border: none;
         outline: none;
         font-size: 24px;
+        padding: 0;
+        ::placeholder {
+            color: #8f8f8f;
+        }
+    }
+    .title-post {
+        font-size: 20px;
+        font-weight: 500;
+        padding: 0;
+        width: 100%;
+        border: none;
+        box-shadow: none;
+        /* margin-bottom: 10px; */
+        ::placeholder {
+            color: #8f8f8f;
+        }
+    }
+    .ant-divider {
+        margin: 10px 0;
     }
     .add-image {
         display: flex;

@@ -2,19 +2,22 @@
 // @ts-nocheck
 
 import { SendOutlined } from '@ant-design/icons';
+import { Button, Modal } from 'antd';
 import { isEmpty } from 'lodash';
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Prompt, useParams } from "react-router-dom";
 import ReactTextareaAutosize from "react-textarea-autosize";
 import socketio from 'socket.io-client';
 import dataRecordMessages from './fakeDataMessages';
 import { DetailChatComponentStyled } from "./styled";
 import InfoDoctorComponent from "./views/info-doctor";
+import ModalRatting from './views/modal-ratting';
 
 const DetailChatComponent = ({ match }: any) => {
   const param = useParams();
   const [listMessage, setListMessage] = useState(dataRecordMessages);
   const [currentMessage, setCurrentMessage] = useState("");
+  const [isShowModalRate, setIsShowModalRate] = useState(false);
   const bottomChatRef = useRef();
 
   const checkKeyEnter = (e: any) => {
@@ -72,12 +75,15 @@ const DetailChatComponent = ({ match }: any) => {
   return (
     <DetailChatComponentStyled>
       <div className="chat-container">
-        <InfoDoctorComponent />
+        {/* <InfoDoctorComponent /> */}
         <div className="chat-box">
           <div className="header-chat">
             <div className="user-received-detail">
               <img src="/post/avatar_my1.jpg" alt="" />
               <div>Tuan Cules</div>
+            </div>
+            <div className="rate">
+              <Button type="primary" onClick={() => setIsShowModalRate(true)}>Đánh giá</Button>
             </div>
           </div>
           <div className="list-messages">
@@ -119,6 +125,12 @@ const DetailChatComponent = ({ match }: any) => {
           </div>
         </div>
       </div>
+      <Prompt
+        when={true}
+        message=""
+      />
+
+      <ModalRatting isShowModalRate={isShowModalRate} setIsShowModalRate={setIsShowModalRate} />
     </DetailChatComponentStyled>
   );
 };

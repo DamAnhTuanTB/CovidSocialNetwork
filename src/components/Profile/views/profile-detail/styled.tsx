@@ -30,14 +30,21 @@ const ProfileDetailStyled = styled.div`
             color: #C3CCD7;
             font-size: 14px;
         }
-        .button-edit {
+        .button-edit, .button-change-password {
             cursor: pointer;
+            border-radius: 15px;
             font-size: 16px;
             margin-top: 15px;
             background-color: #F0FAFF;
             color: #2FB5FA;
-            padding: 5px;
+            padding: 5px 10px;
             font-weight: 500;
+            :hover {
+                background-color: #e9eef0;
+            }
+        }
+        .button-change-password {
+            margin-top: 10px;
         }
     }
     .list-post {

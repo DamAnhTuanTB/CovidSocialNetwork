@@ -2,8 +2,8 @@ import styled from "styled-components";
 
 const RegisterStyled = styled.div`
   display: flex;
+  height: 100vh;
   .register-container {
-    padding-top: 100px;
     width: 900px;
     margin: auto;
     display: flex;
@@ -57,6 +57,7 @@ const RegisterStyled = styled.div`
           font-size: 20px;
           margin-bottom: 15px;
           width: 100%;
+          font-weight: 500;
         }
         .register-button {
           height: 50px;

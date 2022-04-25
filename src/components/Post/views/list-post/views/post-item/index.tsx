@@ -16,6 +16,7 @@ const PostItem = (props: any) => {
     isAdminOwner = false,
     isProfile = false,
     isPostSaved = false,
+    isPostPending = false,
     isPostDraft = false,
     isGuest = false,
     handleClickMoreOption = () => { },
@@ -37,7 +38,7 @@ const PostItem = (props: any) => {
   const menu = (
     <Menu onClick={onclickMenu}>
       {
-        !isPostSaved && (
+        (!isPostSaved && !isPostPending) && (
           <Menu.Item key="edit">Chỉnh sửa bài viết</Menu.Item>
         )
       }
@@ -117,7 +118,7 @@ const PostItem = (props: any) => {
         </div>
         {
           // nếu là profile của bản thân hoặc nếu là admin và không phải bài đang đợi duyệt
-          ((isProfile && !isGuest) || (isAdmin && !isPostDraft)) && (
+          ((isProfile && !isGuest) || (isAdmin && !isPostPending)) && (
             <Dropdown overlay={!isAdmin ? menu : menuAdmin} placement="bottomRight">
               <div className="more-option">
                 <MoreOutlined />
@@ -127,6 +128,9 @@ const PostItem = (props: any) => {
         }
       </div>
       <div className="body-post">
+        <div className="title-post">
+          {detailPost?.title}
+        </div>
         <div className="detail-post">
           {detailPost?.content}
         </div>
@@ -140,7 +144,7 @@ const PostItem = (props: any) => {
         </div>
       </div>
       {
-        !isPostDraft && (
+        (!isPostDraft && !isPostPending) && (
           <div className="footer-post">
             <div className="detail-interaction">
               <div className="detail-like">
@@ -178,7 +182,7 @@ const PostItem = (props: any) => {
         )
       }
       {
-        (isDetail && !isProfile && !isPostDraft) && (
+        (isDetail && !isProfile && !isPostDraft && !isPostPending) && (
           <div className="list-comment">
             <InputComment idPost={detailPost.id} refTextArea={refTextArea} />
             <div>
@@ -200,7 +204,7 @@ const PostItem = (props: any) => {
         )
       }
       {
-        (isAdmin && isPostDraft) && (
+        (isAdmin && isPostPending) && (
           <div className="list-approve-button-admin">
             <Button type="primary">Duyệt bài viết</Button>
             <Button type="text">Xóa bài viết</Button>
