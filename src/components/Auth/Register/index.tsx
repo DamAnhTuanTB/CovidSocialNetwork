@@ -4,10 +4,9 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { RegisterStyled } from './styled';
 
-const REQUIRED_TEXT = "Please fill in";
+const REQUIRED_TEXT = "Vui lòng điền";
 
 const RegisterComponent = () => {
-  const [isDoctor, setIsDoctor] = useState(false);
   const onFinish = (values: { birthday: { toDate: () => number; }; }) => {
     const oneDay = 1000 * 60 * 60 * 24;
     const diffInTime = values.birthday?.toDate() - new Date().valueOf();
@@ -17,12 +16,6 @@ const RegisterComponent = () => {
     // if (age < 24)
   };
   const onValuesChange = (values: { role: string; }) => {
-    console.log(123123, values);
-    if (values?.role === "1") {
-      setIsDoctor(false);
-    } else if (values?.role === "2") {
-      setIsDoctor(true);
-    }
   };
   return (
     <RegisterStyled>
@@ -32,7 +25,7 @@ const RegisterComponent = () => {
           <div className="logo-description">Facebook helps you connect and share with the people in your life.</div>
         </div>
         <div className="form-register">
-          <div className="title">Sign up</div>
+          <div className="title">Đăng ký</div>
           <Form
             name="normal_register"
             className="register-form"
@@ -40,7 +33,7 @@ const RegisterComponent = () => {
             onFinish={onFinish}
             onValuesChange={onValuesChange}
           >
-            <Space>
+            <Space className="ant-space-align-start">
               <Form.Item
                 name="firstName"
                 className="firstName"
@@ -51,7 +44,7 @@ const RegisterComponent = () => {
                   }
                 ]}
               >
-                <Input placeholder="First Name" />
+                <Input placeholder="Tên" />
               </Form.Item>
               <Form.Item
                 name="lastName"
@@ -64,43 +57,33 @@ const RegisterComponent = () => {
                 ]}
               >
                 <Input
-                  placeholder="Last Name"
+                  placeholder="Họ"
                 />
               </Form.Item>
             </Space>
+            <Form.Item
+              name="nickName"
+              className="nick-name"
+              rules={[
+                {
+                  required: true,
+                  message: REQUIRED_TEXT
+                }
+              ]}
+            >
+              <Input placeholder="Biệt danh" />
+            </Form.Item>
             <Form.Item
               name="birthday"
               rules={[
                 {
                   required: true,
-                  message: 'Please select your date of birth'
+                  message: REQUIRED_TEXT
                 }
               ]}
             >
-              <DatePicker placeholder="Date of birth" format="DD-MM-YYYY" />
+              <DatePicker placeholder="Ngày sinh" format="DD-MM-YYYY" />
             </Form.Item>
-            <Form.Item name="role">
-              <Radio.Group defaultValue="1">
-                <Radio value="1">Guest</Radio>
-                <Radio value="2">Doctor</Radio>
-              </Radio.Group>
-            </Form.Item>
-            {
-              isDoctor && (
-                <Form.Item
-                  name="idDoctor"
-                  className="idDoctor"
-                  rules={[
-                    {
-                      required: isDoctor,
-                      message: REQUIRED_TEXT
-                    }
-                  ]}
-                >
-                  <Input placeholder="Mã bác sĩ" />
-                </Form.Item>
-              )
-            }
             <Form.Item
               name="Email"
               className="Email"
@@ -131,13 +114,39 @@ const RegisterComponent = () => {
                 }
               ]}
             >
-              <Input
-                type="password"
-                placeholder="Password"
+              <Input.Password
+                placeholder="Mật khẩu"
+              />
+            </Form.Item>
+            <Form.Item
+              name="confirmPassword"
+              className="confirm-password"
+              rules={[
+                {
+                  required: true,
+                  message: REQUIRED_TEXT
+                },
+                {
+                  min: 6,
+                  message: 'Mật khẩu tối thiểu 6 kí tự'
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue('password') === value) {
+                      return Promise.resolve();
+                    }
+      
+                    return Promise.reject(new Error('Mật khẩu không giống nhau'));
+                  },
+                }),
+              ]}
+            >
+              <Input.Password
+                placeholder="Xác nhận mật khẩu"
               />
             </Form.Item>
             <Button type="primary" htmlType="submit" className="register-form-button">
-              Đăng kí
+              Đăng ký
             </Button>
             <div>Bạn đã có tài khoản <Link to="/login">Đăng nhập</Link></div>
           </Form>

@@ -50,6 +50,13 @@ const PostItemStyle = styled.div`
     }
     .body-post {
         margin-bottom: 2px ;
+        .title-post {
+            padding: 0 15px;
+            text-align: justify;
+            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: 600;
+        }
         .detail-post {
             padding: 0 15px;
             text-align: justify;

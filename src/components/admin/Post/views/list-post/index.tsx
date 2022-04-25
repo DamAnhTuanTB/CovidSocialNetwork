@@ -109,7 +109,7 @@ const ListPostManagement = (props: any) => {
                 <PostItem
                   detailPost={item}
                   isAdmin
-                  isPostDraft
+                  isPostPending
                   handleClickMoreOption={handleClickMoreOption}
                 />
               </Fragment>

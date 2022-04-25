@@ -1,4 +1,4 @@
-import { Pagination, Tabs } from 'antd';
+import { Pagination, Space, Tabs } from 'antd';
 import PropTypes from 'prop-types';
 import React, { Fragment, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
@@ -6,6 +6,7 @@ import dataRecord from '../../../Post/views/list-post/fakeData';
 import PostItem from '../../../Post/views/list-post/views/post-item';
 import ModalCreatePost from '../../../Post/views/modal-create-post';
 import { ProfileDetailStyled } from './styled';
+import ModalChangePassword from './views/modal-change-password';
 import ModalDeletePost from './views/modal-delete';
 import ModalEditProfile from './views/modal-edit-profile';
 
@@ -19,11 +20,13 @@ const ProfileDetail = (props: any) => {
   const history = useHistory();
 
   const [typePost, setTypePost] = useState(paramsUrlSearch.get("typePost") || "my-post");
+  const [currentPage, setCurrentPage] = useState(paramsUrlSearch.get("page") || "1");
   const [postDelete, setPostDelete] = useState(null);
   const [postEdit, setPostEdit] = useState(null);
-  const [isShowModalEditProfile, setIsShowModalEditProfile] = useState(false);
   const [listPost, setListPost] = useState(dataRecord);
-  const [currentPage, setCurrentPage] = useState(paramsUrlSearch.get("page") || "1");
+
+  const [isShowModalEditProfile, setIsShowModalEditProfile] = useState(false);
+  const [isShowModalChangePassword, setIsShowModalChangePassword] = useState(false);
 
   const handleChangePage = (page: any) => {
     history.push(`profile?typePost=${typePost}&page=${page}`);
@@ -53,7 +56,7 @@ const ProfileDetail = (props: any) => {
   useEffect(() => {
     window.scrollTo(0, 0);
     if (!paramsUrlSearch.get("typePost")) {
-      history.push("?typePost=my-post");
+      history.replace("?typePost=my-post");
       return;
     }
     setCurrentPage(paramsUrlSearch.get("page") || "1");
@@ -79,14 +82,8 @@ const ProfileDetail = (props: any) => {
         {
           !param.id_user && (
             <>
-              <div className="button-edit" onClick={() => setIsShowModalEditProfile(true)}>Chỉnh sửa</div>
-              <ModalEditProfile
-                {...{
-                  isShowModalEditProfile,
-                  setIsShowModalEditProfile,
-                  handleConfirmEditProfile,
-                }}
-              />
+              <div className="button-edit" onClick={() => setIsShowModalEditProfile(true)}>Chỉnh sửa thông tin cá nhân</div>
+              <div className="button-change-password" onClick={() => setIsShowModalChangePassword(true)}>Đổi mật khẩu</div>
             </>
           )
         }
@@ -135,6 +132,20 @@ const ProfileDetail = (props: any) => {
                         <PostItem
                           detailPost={item}
                           isProfile
+                          isPostPending
+                          handleClickMoreOption={handleClickMoreOption}
+                        />
+                      </Fragment>
+                    ))
+                  }
+                </TabPane>
+                <TabPane tab="Bài viết bị hủy" key="canceled">
+                  {
+                    listPost.map((item) => (
+                      <Fragment key={item.id}>
+                        <PostItem
+                          detailPost={item}
+                          isProfile
                           isPostDraft
                           handleClickMoreOption={handleClickMoreOption}
                         />
@@ -154,6 +165,20 @@ const ProfileDetail = (props: any) => {
           />
         </div>
       </div>
+      <ModalEditProfile
+        {...{
+          isShowModalEditProfile,
+          setIsShowModalEditProfile,
+          handleConfirmEditProfile,
+        }}
+      />
+      <ModalChangePassword
+        {...{
+          isShowModalChangePassword,
+          setIsShowModalChangePassword,
+          handleConfirmEditProfile,
+        }}
+      />
     </ProfileDetailStyled>
   );
 };

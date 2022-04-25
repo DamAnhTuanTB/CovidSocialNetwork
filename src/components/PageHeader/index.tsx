@@ -3,9 +3,11 @@ import { MailOutlined, BellOutlined } from '@ant-design/icons';
 import { PageHeaderStyled } from './styled';
 import { Button } from 'antd';
 import ModalCreatePost from '../Post/views/modal-create-post';
+import { useHistory } from 'react-router-dom';
 export default function PageHeader() {
   const [isShowNotification, setIsShowNotification] = useState(false);
   const [isShowModal, setIsShowModal] = useState(false);
+  const history = useHistory();
 
   const showNotify = (data: any) => {
     console.log("pageheader", data);
@@ -29,7 +31,7 @@ export default function PageHeader() {
           <img src="/login/facebookLogo.svg" alt="" />
         </div>
         <div className="list-button">
-          <MailOutlined className="icon-header" />
+          <MailOutlined className="icon-header" onClick={() => history.push("/chat/1")}/>
           <div className="notification">
             <BellOutlined className="icon-header" onClick={() => setIsShowNotification(!isShowNotification)} />
             {
@@ -54,12 +56,12 @@ export default function PageHeader() {
               )
             }
           </div>
-          <div className="user-avatar">
+          <div className="user-avatar"  onClick={() => history.push("/profile")}>
             <img src="/post/avatar_my1.jpg" alt="" />
           </div>
           <Button type="primary" onClick={() => setIsShowModal(true)}>
             Viết bài
-          </Button>,
+          </Button>
         </div>
       </div>
     </PageHeaderStyled>

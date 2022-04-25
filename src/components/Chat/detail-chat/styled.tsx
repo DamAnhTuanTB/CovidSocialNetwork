@@ -11,10 +11,13 @@ const DetailChatComponentStyled = styled.div`
         align-items: flex-start;
         /* padding-bottom: 20px; */
         .chat-box {
+            margin: auto;
+            margin-bottom: 30px;
             border-radius: 5px;
-            width: 700px;
-            height: 600px;
+            max-width: 700px;
             max-height: 600px;
+            width: 100%;
+            height: 100%;
             padding-bottom: 5px;
             background-color: white;
             box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);

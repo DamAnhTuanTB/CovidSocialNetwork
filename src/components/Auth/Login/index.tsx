@@ -55,18 +55,17 @@ const LoginComponent = () => {
                 }
               ]}
             >
-              <Input
+              <Input.Password
                 prefix={<LockOutlined className="site-form-item-icon" />}
-                type="password"
-                placeholder="Password"
+                placeholder="Mật khẩu"
               />
             </Form.Item>
             <Button type="primary" htmlType="submit" className="login-form-button">
-              Log in
+              Đăng nhập
             </Button>
             <Form.Item className="forgot-pass">
               <Link className="login-form-forgot" to="">
-                Forgot password
+                Quên mật khẩu
               </Link>
             </Form.Item>
 
@@ -74,7 +73,7 @@ const LoginComponent = () => {
 
             <Form.Item>
               <Button type="default" className="register-button" onClick={() => history.push('/register')}>
-                Create account
+                Tạo tài khoản
               </Button>
             </Form.Item>
           </Form>

@@ -29,7 +29,7 @@ const ListPostComponent = (props: any) => {
   useEffect(() => {
     window.scrollTo(0, 0);
     if (!paramsUrl.get("sort")) {
-      history.push("/post?sort=new&page=1");
+      history.replace("/post?sort=new&page=1");
       return;
     }
     const sortBy = LIST_POST_CONSTANTS.listTab.find((item) => item.text === paramsUrl.get("sort"))?.id || 1;
@@ -65,6 +65,7 @@ const ListPostComponent = (props: any) => {
           <ListHotPostComponent />
         </div>
       </div>
+      <div className='123132123'>11111111111</div>
     </ListPostComponentStyled>
   );
 };
