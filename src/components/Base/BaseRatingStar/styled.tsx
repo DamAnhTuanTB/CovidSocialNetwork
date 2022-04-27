@@ -17,6 +17,12 @@ const BaseRatingStarStyled = styled.div`
   .off {
     color: #ccc;
   }
+  &.star-disabled-rating {
+    button {
+      font-size: 30px;
+      cursor: default;
+    }
+  }
 `;
 
 export { BaseRatingStarStyled };

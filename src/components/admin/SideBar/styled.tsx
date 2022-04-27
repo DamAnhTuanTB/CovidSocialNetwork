@@ -7,7 +7,8 @@ const SideBarAdminStyled = styled.div`
   left: 0;
   height: calc(100vh - 60px);
   width: 250px;
-  background-color: currentcolor;
+  background-color: #3e3e3e;
+  z-index: 100;
   .ant-menu {
     background-color: transparent;
     font-size: 16px;

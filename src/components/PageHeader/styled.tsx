@@ -26,6 +26,16 @@ const PageHeaderStyled = styled.div`
         .list-button {
             display: flex;
             align-items: center;
+            .input-search {
+                width: 200px;
+                margin-right: 50px;
+                .ant-input, .ant-input-search-button {
+                    height: 30px;
+                    :focus {
+                        box-shadow: none;
+                    }
+                }
+            }
             .icon-header {
                 cursor: pointer;
                 border-radius: 3px;

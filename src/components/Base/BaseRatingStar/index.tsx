@@ -4,12 +4,13 @@ import { BaseRatingStarStyled } from './styled';
 const StarRating = (props: any) => {
   const {
     rating = 0,
-    setRating = () => {},
+    setRating = () => { },
+    isEdit = true,
   } = props;
 
   const [hover, setHover] = useState(0);
   return (
-    <BaseRatingStarStyled className="star-rating">
+    <BaseRatingStarStyled className={isEdit ? "star-rating" : "star-disabled-rating"}>
       {[...Array(5)].map((star, index) => {
         index += 1;
         return (
@@ -17,9 +18,18 @@ const StarRating = (props: any) => {
             type="button"
             key={index}
             className={index <= (hover || rating) ? "on" : "off"}
-            onClick={() => setRating(index)}
-            onMouseEnter={() => setHover(index)}
-            onMouseLeave={() => setHover(rating)}
+            onClick={() => {
+              if (isEdit)
+                setRating(index);
+            }}
+            onMouseEnter={() => {
+              if (isEdit)
+                setHover(index);
+            }}
+            onMouseLeave={() => {
+              if (isEdit)
+                setHover(rating);
+            }}
           >
             <span className="star">&#9733;</span>
           </button>

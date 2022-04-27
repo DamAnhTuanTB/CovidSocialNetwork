@@ -7,6 +7,7 @@ import { useGetProfile } from '../../hooks/useProfile';
 import ProfilePage from '../../pages/Profile';
 import PostsPage from '../../pages/Post';
 import ChatPage from '../../pages/Chat';
+import SearchPage from '../../pages/Search';
 
 const Home = lazy(() => import('../../pages/Home'));
 
@@ -28,6 +29,7 @@ export default function PageWrapper() {
               <Route path="/post" component={PostsPage} />
               <Route path="/profile" component={ProfilePage} />
               <Route path="/chat" component={ChatPage} />
+              <Route path="/search" component={SearchPage} />
             </Switch>
           </Suspense>
         </div>
