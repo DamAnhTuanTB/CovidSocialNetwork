@@ -62,7 +62,8 @@ const ModalEditProfile = (props: any) => {
 
   useEffect(() => {
     setInitialValues({
-      firstName: "tuan"
+      firstName: "tuan",
+      lastName: "le"
     })
   }, [])
 

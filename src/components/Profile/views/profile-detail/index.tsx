@@ -6,6 +6,7 @@ import dataRecord from '../../../Post/views/list-post/fakeData';
 import PostItem from '../../../Post/views/list-post/views/post-item';
 import ModalCreatePost from '../../../Post/views/modal-create-post';
 import { ProfileDetailStyled } from './styled';
+import ListImage from './views/list-image';
 import ModalChangePassword from './views/modal-change-password';
 import ModalDeletePost from './views/modal-delete';
 import ModalEditProfile from './views/modal-edit-profile';
@@ -19,7 +20,7 @@ const ProfileDetail = (props: any) => {
 
   const history = useHistory();
 
-  const [typePost, setTypePost] = useState(paramsUrlSearch.get("typePost") || "my-post");
+  const [type, setType] = useState(paramsUrlSearch.get("type") || "list-image");
   const [currentPage, setCurrentPage] = useState(paramsUrlSearch.get("page") || "1");
   const [postDelete, setPostDelete] = useState(null);
   const [postEdit, setPostEdit] = useState(null);
@@ -29,11 +30,11 @@ const ProfileDetail = (props: any) => {
   const [isShowModalChangePassword, setIsShowModalChangePassword] = useState(false);
 
   const handleChangePage = (page: any) => {
-    history.push(`profile?typePost=${typePost}&page=${page}`);
+    history.push(`?type=${type}&page=${page}`);
   };
 
   const handleChangeKey = (value: any) => {
-    history.push(`/profile?typePost=${value}`);
+    history.push(`?type=${value}`);
   }
   const handleClickMoreOption = (key: any, post: any) => {
     console.log(key, post);
@@ -55,12 +56,12 @@ const ProfileDetail = (props: any) => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (!paramsUrlSearch.get("typePost")) {
-      history.replace("?typePost=my-post");
+    if (!paramsUrlSearch.get("type")) {
+      history.replace("?type=list-image");
       return;
     }
     setCurrentPage(paramsUrlSearch.get("page") || "1");
-    setTypePost(paramsUrlSearch.get("typePost") || "my-post");
+    setType(paramsUrlSearch.get("type") || "list-image");
   }, [paramsSeacrh.href]);
 
   return (
@@ -89,7 +90,10 @@ const ProfileDetail = (props: any) => {
         }
       </div>
       <div className="list-post">
-        <Tabs defaultActiveKey={typePost} key={typePost} onChange={handleChangeKey}>
+        <Tabs defaultActiveKey={type} key={type} onChange={handleChangeKey}>
+          <TabPane tab="Ảnh" key="list-image">
+            <ListImage />
+          </TabPane>
           <TabPane tab="Bài viết" key="my-post">
             {
               listPost.map((item) => (
@@ -109,7 +113,7 @@ const ProfileDetail = (props: any) => {
           {
             !param.id_user && (
               <>
-                <TabPane tab="Bài viết đã lưu" key="saved">
+                <TabPane tab="Bài viết đã lưu" key="saved-post">
                   {
                     listPost.map((item) => (
                       <Fragment key={item.id}>
@@ -125,7 +129,7 @@ const ProfileDetail = (props: any) => {
                     ))
                   }
                 </TabPane>
-                <TabPane tab="Bài viết đang chờ duyệt" key="unapproved">
+                <TabPane tab="Bài viết đang chờ duyệt" key="pending-post">
                   {
                     listPost.map((item) => (
                       <Fragment key={item.id}>
@@ -139,7 +143,7 @@ const ProfileDetail = (props: any) => {
                     ))
                   }
                 </TabPane>
-                <TabPane tab="Bài viết bị hủy" key="canceled">
+                <TabPane tab="Bài viết bị hủy" key="canceled-post">
                   {
                     listPost.map((item) => (
                       <Fragment key={item.id}>
@@ -157,13 +161,17 @@ const ProfileDetail = (props: any) => {
             )
           }
         </Tabs>
-        <div className="pagination">
-          <Pagination
-            current={+currentPage}
-            total={50}
-            onChange={handleChangePage}
-          />
-        </div>
+        {
+          type !== "list-image" && (
+            <div className="pagination">
+              <Pagination
+                current={+currentPage}
+                total={50}
+                onChange={handleChangePage}
+              />
+            </div>
+          )
+        }
       </div>
       <ModalEditProfile
         {...{

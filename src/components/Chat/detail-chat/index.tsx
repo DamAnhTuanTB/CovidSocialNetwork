@@ -8,12 +8,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { Prompt, useParams } from "react-router-dom";
 import ReactTextareaAutosize from "react-textarea-autosize";
 import socketio from 'socket.io-client';
+import StarRating from '../../Base/BaseRatingStar';
 import dataRecordMessages from './fakeDataMessages';
 import { DetailChatComponentStyled } from "./styled";
 import InfoDoctorComponent from "./views/info-doctor";
 import ModalRatting from './views/modal-ratting';
 
-const DetailChatComponent = ({ match }: any) => {
+const DetailChatComponent = ({ isExpert }: any) => {
   const param = useParams();
   const [listMessage, setListMessage] = useState(dataRecordMessages);
   const [currentMessage, setCurrentMessage] = useState("");
@@ -64,6 +65,10 @@ const DetailChatComponent = ({ match }: any) => {
     // return () => {
     //   socket.off('chat-received', addMessage);
     // };
+    if (isExpert) {
+      console.log(111111, param.chat_id);
+      // call api get chat detail
+    }
   }, [])
 
   useEffect(() => {
@@ -83,7 +88,13 @@ const DetailChatComponent = ({ match }: any) => {
               <div>Tuan Cules</div>
             </div>
             <div className="rate">
-              <Button type="primary" onClick={() => setIsShowModalRate(true)}>Đánh giá</Button>
+              {
+                isExpert ? (
+                  <StarRating rating={4} isEdit={false} />
+                ) : (
+                  <Button type="primary" onClick={() => setIsShowModalRate(true)}>Đánh giá</Button>
+                )
+              }
             </div>
           </div>
           <div className="list-messages">
@@ -125,12 +136,16 @@ const DetailChatComponent = ({ match }: any) => {
           </div>
         </div>
       </div>
-      <Prompt
-        when={true}
-        message=""
-      />
-
+      {
+        !isExpert && (
+          <Prompt
+            when={true}
+            message=""
+          />
+        )
+      }
       <ModalRatting isShowModalRate={isShowModalRate} setIsShowModalRate={setIsShowModalRate} />
+
     </DetailChatComponentStyled>
   );
 };

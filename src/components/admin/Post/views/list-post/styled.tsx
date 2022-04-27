@@ -5,8 +5,10 @@ const ListPostManagementStyled = styled.div`
   .ant-tabs-ink-bar-animated {
     transition: unset !important;
   }
-  .ant-tabs-tabpane {
-    width: 700px;
+  .list-post-container {
+    padding-top: 20px;
+    width: 100%;
+    max-width: 700px;
     margin: auto;
   }
   .ant-tabs-tab {

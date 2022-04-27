@@ -1,13 +1,18 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Pagination, Tabs } from 'antd';
+import { Form, Pagination, Tabs } from 'antd';
 import { useHistory } from 'react-router-dom';
 import dataRecord from '../../../../Post/views/list-post/fakeData';
 import PostItem from '../../../../Post/views/list-post/views/post-item';
 import { ListPostManagementStyled } from './styled';
 import ModalDeletePost from '../../../../Profile/views/profile-detail/views/modal-delete';
 import ModalCreatePost from '../../../../Post/views/modal-create-post';
+import ListInputSearch from './list-input-search';
+import moment from 'moment';
+import ConvertObjToParamsURL from '../../../../../helpers/convertObjToUrl';
 
 const { TabPane } = Tabs;
+
+const dateFormat = 'DD-MM-YYYY';
 
 const ListPostManagement = (props: any) => {
 
@@ -15,18 +20,22 @@ const ListPostManagement = (props: any) => {
   const paramsSeacrh = new URL(window.location.href);
   const paramsUrlSearch = paramsSeacrh.searchParams;
 
-  const [typePost, setTypePost] = useState(paramsUrlSearch.get("typePost") || "list-post");
+  const [form] = Form.useForm();
+
   const [postDelete, setPostDelete] = useState(null);
   const [postEdit, setPostEdit] = useState(null);
   const [listPost, setListPost] = useState(dataRecord);
   const [currentPage, setCurrentPage] = useState(paramsUrlSearch.get("page") || "1");
 
-  const handleChangeKey = (value: any) => {
-    history.push(`/admin/post-management?typePost=${value}`);
-  }
+  const [valueSearch, setValueSearch] = useState({
+    date: null,
+    type: "news",
+    freeText: "",
+    author: "",
+  });
 
   const handleChangePage = (page: any) => {
-    history.push(`/admin/post-management?typePost=${typePost}&page=${page}`);
+    history.push(`/admin/post-management${ConvertObjToParamsURL(valueSearch)}&page=${page}`);
   };
 
   const handleConfirmDelete = (idPost: any) => {
@@ -47,12 +56,29 @@ const ListPostManagement = (props: any) => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (!paramsUrlSearch.get("typePost")) {
-      history.push("?typePost=my-post");
-      return;
+    const newValueSearch = {};
+    if (paramsUrlSearch.get("type")) {
+      (newValueSearch as any).type = paramsUrlSearch.get("type");
+    }
+    if (paramsUrlSearch.get("author")) {
+      (newValueSearch as any).author = paramsUrlSearch.get("author");
+    }
+    if (paramsUrlSearch.get("date")) {
+      (newValueSearch as any).date = moment(paramsUrlSearch.get("date"), dateFormat);
+    }
+    if (paramsUrlSearch.get("freeText")) {
+      (newValueSearch as any).freeText = paramsUrlSearch.get("freeText");
     }
     setCurrentPage(paramsUrlSearch.get("page") || "1");
-    setTypePost(paramsUrlSearch.get("typePost") || "my-post");
+
+    setValueSearch({
+      ...valueSearch,
+      ...newValueSearch,
+    })
+    form.setFieldsValue({
+      ...valueSearch,
+      ...newValueSearch,
+    })
   }, [paramsSeacrh.href]);
 
 
@@ -70,7 +96,39 @@ const ListPostManagement = (props: any) => {
         itemPost={postEdit}
         setPostEdit={setPostEdit}
       />
-      <Tabs defaultActiveKey={typePost} key={typePost} onChange={handleChangeKey}>
+      <ListInputSearch valueSearch={valueSearch} dateFormat={dateFormat} form={form} />
+      <div className="list-post-container">
+        {
+          listPost.map((item, index) => {
+            const propsPostItem = {
+              detailPost: item,
+              isAdmin: true,
+              handleClickMoreOption: handleClickMoreOption,
+            }
+            if ((valueSearch as any).type === "pending") {
+              (propsPostItem as any).isPostPending = true;
+            } else {
+              (propsPostItem as any).listPost = listPost;
+              (propsPostItem as any).setListPost = setListPost;
+              if ((valueSearch as any).type === "my-post") {
+                (propsPostItem as any).isAdminOwner = true;
+              }
+            }
+            return (
+              <Fragment key={item.id}>
+                <PostItem
+                  {
+                  ...propsPostItem
+                  }
+                />
+              </Fragment>
+            )
+          }
+          )
+        }
+      </div>
+
+      {/* <Tabs defaultActiveKey={typePost} key={typePost} onChange={handleChangeKey}>
         <TabPane tab="Bảng tin" key="list-post">
           {
             listPost.map((item) => (
@@ -116,7 +174,7 @@ const ListPostManagement = (props: any) => {
             ))
           }
         </TabPane>
-      </Tabs>
+      </Tabs> */}
 
       <div className="pagination">
         <Pagination

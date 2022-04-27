@@ -7,8 +7,8 @@ const ChatComponent = (props: any) => {
     const { match } = props;
     return (
         <div>
-            <Route exact path={match?.url} render={() => <ListChatComponent match={match} />} />
-            <Route exact path={`${match?.url}/:chat`} render={() => <DetailChatComponent />} />
+            {/* <Route exact path={match?.url} render={() => <ListChatComponent match={match} />} /> */}
+            <Route exact path={`${match?.url}`} render={() => <DetailChatComponent />} />
         </div>
     );
 };

@@ -31,9 +31,9 @@ const ListChatComponent = (props: any) => {
 
 	const handleSearch = () => {
 		if (dateSearch) {
-			history.push(`/chat?date=${dateSearch}`);
+			history.push(`/expert/chat?date=${dateSearch}`);
 		} else {
-			history.push('/chat')
+			history.push('/expert/chat')
 		}
 	}
 
@@ -82,7 +82,7 @@ const ListChatComponent = (props: any) => {
 			title: '',
 			key: 'action',
 			render: (data: any) => (
-				<EyeOutlined className="detail-action" onClick={() => history.push(`/chat/${data.key}`)} />
+				<EyeOutlined className="detail-action" onClick={() => history.push(`/expert/chat/${data.key}`)} />
 			),
 		},
 	];

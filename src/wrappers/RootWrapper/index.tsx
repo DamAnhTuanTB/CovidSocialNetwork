@@ -4,6 +4,7 @@ import { Route, Switch, BrowserRouter, useHistory } from 'react-router-dom';
 import Register from '../../pages/Register';
 import AuthWrapper from '../../wrappers/AuthWrapper';
 import AdminPageWrapper from '../AdminWrapper';
+import ExpertPageWrapper from '../ExpertWrapper';
 
 const Login = lazy(() => import('../../pages/Login'));
 
@@ -63,6 +64,7 @@ export default function AppWrapper() {
           <Route path="/login" exact component={Login} />
           <Route path="/register" exact component={Register} />
           <Route path="/admin" component={AdminPageWrapper} />
+          <Route path="/expert" component={ExpertPageWrapper} />
           <Route path="/" component={AuthWrapper} />
         </Switch>
       </div>
