@@ -21,6 +21,15 @@ const ListChatStyled = styled.div`
             cursor: pointer;
         }
     }
+    .list-chat-admin {
+        padding-top: 30px;
+        .title {
+            font-size: 30px;
+        }
+    }
+    .pagination {
+        margin-top: 20px;
+    }
 `;
 
 export { ListChatStyled };

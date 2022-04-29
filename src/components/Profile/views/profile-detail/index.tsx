@@ -1,7 +1,9 @@
 import { Pagination, Space, Tabs } from 'antd';
 import PropTypes from 'prop-types';
 import React, { Fragment, useEffect, useState } from 'react';
+import { useQueryClient } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
+import BaseImagePreview from '../../../Base/BaseImagePreview';
 import dataRecord from '../../../Post/views/list-post/fakeData';
 import PostItem from '../../../Post/views/list-post/views/post-item';
 import ModalCreatePost from '../../../Post/views/modal-create-post';
@@ -17,6 +19,9 @@ const ProfileDetail = (props: any) => {
   const param: { id_user: any } = useParams();
   const paramsSeacrh = new URL(window.location.href);
   const paramsUrlSearch = paramsSeacrh.searchParams;
+
+  const queryClient = useQueryClient();
+  const myProfile : any = queryClient.getQueryData("my-profile");
 
   const history = useHistory();
 
@@ -77,9 +82,9 @@ const ProfileDetail = (props: any) => {
         setPostEdit={setPostEdit}
       />
       <div className="detail-user">
-        <img src="/post/avatar_my1.jpg" alt="" />
-        <div className="name-user">Lê Tuấn</div>
-        <div className="name-tag">@tuancules</div>
+        <BaseImagePreview isLoading className="avatar" src={myProfile?.avatar || "/defaultAvatar.png"} alt="" />
+        <div className="name-user">{`${myProfile?.first_name} ${myProfile?.last_name}`}</div>
+        <div className="name-tag">@{myProfile?.email}</div>
         {
           !param.id_user && (
             <>
@@ -175,6 +180,7 @@ const ProfileDetail = (props: any) => {
       </div>
       <ModalEditProfile
         {...{
+          profile: myProfile,
           isShowModalEditProfile,
           setIsShowModalEditProfile,
           handleConfirmEditProfile,

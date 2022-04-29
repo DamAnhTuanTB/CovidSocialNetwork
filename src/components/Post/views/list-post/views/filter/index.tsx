@@ -14,23 +14,23 @@ const Filter = (props: any) => {
         <div
           aria-hidden
           onClick={(e) => { handleClickTab("new"); }}
-          className={`item-filter ${activeTab === 1 && "active"}`}
+          className={`item-filter ${activeTab === "new" && "active"}`}
         >
-          <StarTwoTone twoToneColor={activeTab !== 1 ? "#a3a3a3" : "#3199d5"} /><span>new</span>
+          <StarTwoTone twoToneColor={activeTab !== "new" ? "#a3a3a3" : "#3199d5"} /><span>new</span>
         </div>
         <div
           aria-hidden
           onClick={(e) => { handleClickTab("hot"); }}
-          className={`item-filter ${activeTab === 2 && "active"}`}
+          className={`item-filter ${activeTab === "hot" && "active"}`}
         >
-          <FireTwoTone twoToneColor={activeTab !== 2 ? "#a3a3a3" : "#3199d5"} /><span>hot</span>
+          <FireTwoTone twoToneColor={activeTab !== "hot" ? "#a3a3a3" : "#3199d5"} /><span>hot</span>
         </div>
         <div
           aria-hidden
           onClick={(e) => { handleClickTab("top"); }}
-          className={`item-filter ${activeTab === 3 && "active"}`}
+          className={`item-filter ${activeTab === "top" && "active"}`}
         >
-          <FlagTwoTone twoToneColor={activeTab !== 3 ? "#a3a3a3" : "#3199d5"} /><span>top</span>
+          <FlagTwoTone twoToneColor={activeTab !== "top" ? "#a3a3a3" : "#3199d5"} /><span>top</span>
         </div>
       </div>
     </FilterStyle>

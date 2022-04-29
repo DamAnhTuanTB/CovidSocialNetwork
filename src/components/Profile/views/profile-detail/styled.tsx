@@ -14,7 +14,7 @@ const ProfileDetailStyled = styled.div`
         flex-direction: column;
         align-items: center;
         background-color: white;
-        img {
+        .avatar {
             width: 150px;
             height: 150px;
             border-radius: 50%;

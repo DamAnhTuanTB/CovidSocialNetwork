@@ -1,5 +1,11 @@
 import { sendPost } from './axios';
 
 // eslint-disable-next-line import/prefer-default-export
-export const login = (payload: any) => sendPost('/v1/app/auth/login', payload);
-export const signUp = (payload: any) => sendPost('/v1/app/auth/signup', payload);
+export const login = async (payload: any) => {
+  const res = await sendPost('http://localhost:8888/covid-network-social/auth/login', payload);
+  return res;
+}
+export const signUp = async (payload: any) => {
+  const res = await sendPost('http://localhost:8888/covid-network-social/auth/create', payload);
+  return res;
+}

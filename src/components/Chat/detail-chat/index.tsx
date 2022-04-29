@@ -14,7 +14,11 @@ import { DetailChatComponentStyled } from "./styled";
 import InfoDoctorComponent from "./views/info-doctor";
 import ModalRatting from './views/modal-ratting';
 
-const DetailChatComponent = ({ isExpert }: any) => {
+const DetailChatComponent = (props: any) => {
+  const {
+    isExpert = false,
+    isAdmin = false,
+  } = props;
   const param = useParams();
   const [listMessage, setListMessage] = useState(dataRecordMessages);
   const [currentMessage, setCurrentMessage] = useState("");
@@ -81,7 +85,7 @@ const DetailChatComponent = ({ isExpert }: any) => {
     <DetailChatComponentStyled>
       <div className="chat-container">
         {/* <InfoDoctorComponent /> */}
-        <div className="chat-box">
+        <div className={`chat-box ${isAdmin && "chat-box-admin"}`}>
           <div className="header-chat">
             <div className="user-received-detail">
               <img src="/post/avatar_my1.jpg" alt="" />
@@ -89,7 +93,7 @@ const DetailChatComponent = ({ isExpert }: any) => {
             </div>
             <div className="rate">
               {
-                isExpert ? (
+                (isExpert || isAdmin) ? (
                   <StarRating rating={4} isEdit={false} />
                 ) : (
                   <Button type="primary" onClick={() => setIsShowModalRate(true)}>Đánh giá</Button>
@@ -100,9 +104,13 @@ const DetailChatComponent = ({ isExpert }: any) => {
           <div className="list-messages">
             {
               listMessage.length > 0 && listMessage.map((itemMessage, index) => {
+
+                // check send hay received
                 const classMessage = itemMessage?.isSend ? "message-sended" : "message-received";
                 let classContent = itemMessage?.isSend ? "sended" : "received";
                 let classImage = "";
+
+                // check cac tin nhan gui hoac nhan lien tiep
                 if (index < listMessage.length && itemMessage?.isSend === listMessage[index + 1]?.isSend) {
                   classContent += " border-radius-bottom";
                   classImage = "hide-avatar"
@@ -120,24 +128,28 @@ const DetailChatComponent = ({ isExpert }: any) => {
             }
             <div ref={bottomChatRef}></div>
           </div>
-          <div className="send-message">
-            <div className="input-container">
-              <ReactTextareaAutosize
-                placeholder="Aa"
-                value={currentMessage}
-                onChange={(e) => setCurrentMessage(e.target.value)}
-                className="input-send"
-                onKeyDown={checkKeyEnter}
-              />
-            </div>
-            <div className="icon-send-upload">
-              <SendOutlined onClick={handleSubmitMessage} />
-            </div>
-          </div>
+          {
+            !isAdmin && (
+              <div className="send-message">
+                <div className="input-container">
+                  <ReactTextareaAutosize
+                    placeholder="Aa"
+                    value={currentMessage}
+                    onChange={(e) => setCurrentMessage(e.target.value)}
+                    className="input-send"
+                    onKeyDown={checkKeyEnter}
+                  />
+                </div>
+                <div className="icon-send-upload">
+                  <SendOutlined onClick={handleSubmitMessage} />
+                </div>
+              </div>
+            )
+          }
         </div>
       </div>
       {
-        !isExpert && (
+        (!isExpert && !isAdmin) && (
           <Prompt
             when={true}
             message=""

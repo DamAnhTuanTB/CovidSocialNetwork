@@ -151,6 +151,10 @@ const DetailChatComponentStyled = styled.div`
                 }
             }
         }
+        .chat-box-admin {
+            margin-top: 30px;
+            margin-bottom: 0;
+        }
     }
 `;
 

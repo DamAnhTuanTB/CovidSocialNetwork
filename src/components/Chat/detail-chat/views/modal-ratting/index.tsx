@@ -16,7 +16,7 @@ const ModalRatting = (props: any) => {
   const [rating, setRating] = useState(5);
 
   const handleSubmitRate = () => {    
-    setIsShowModalRate(false)
+    setIsShowModalRate(false);
   }
   return (
     <ModalRattingStyled
