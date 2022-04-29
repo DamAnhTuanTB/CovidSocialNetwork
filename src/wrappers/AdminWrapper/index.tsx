@@ -2,6 +2,8 @@ import React, { Suspense } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import HeaderAdmin from '../../components/admin/Header';
 import SideBarAdmin from '../../components/admin/SideBar';
+import ExpertManagementPage from '../../pages/admin/Expert';
+import GuestManagementPage from '../../pages/admin/Guest';
 import PostsPageManagement from '../../pages/admin/Post';
 import { AdminStyled } from './styled';
 
@@ -20,6 +22,8 @@ export default function AdminPageWrapper() {
           <Suspense fallback={null}>
             <Switch>
               <Route path="/admin/post-management" component={PostsPageManagement} />
+              <Route path="/admin/guest-management" component={GuestManagementPage} />
+              <Route path="/admin/expert-management" component={ExpertManagementPage} />
             </Switch>
           </Suspense>
         </div>

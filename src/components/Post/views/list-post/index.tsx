@@ -14,7 +14,7 @@ const ListPostComponent = (props: any) => {
   const params = new URL(window.location.href);
   const paramsUrl = params.searchParams;
   const [currentPage, setCurrentPage] = useState(1);
-  const [activeTab, setActiveTab] = useState(LIST_POST_CONSTANTS.listTab.find((item) => item.text === paramsUrl.get("sort"))?.id || 1);
+  const [activeTab, setActiveTab] = useState(paramsUrl.get("sort") || "new");
   const [listPost, setListPost] = useState(dataRecord);
   const history = useHistory();
 
@@ -23,7 +23,7 @@ const ListPostComponent = (props: any) => {
   };
 
   const handleChangePage = (page: any) => {
-    history.push(`/post?sort=new&page=${page}`);
+    history.push(`/post?sort=${activeTab}&page=${page}`);
   };
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const ListPostComponent = (props: any) => {
       history.replace("/post?sort=new&page=1");
       return;
     }
-    const sortBy = LIST_POST_CONSTANTS.listTab.find((item) => item.text === paramsUrl.get("sort"))?.id || 1;
+    const sortBy = paramsUrl.get("sort") || "new";
     const page = paramsUrl.get("page") || 1;
     setActiveTab(sortBy);
     setCurrentPage(+page);
@@ -65,7 +65,6 @@ const ListPostComponent = (props: any) => {
           <ListHotPostComponent />
         </div>
       </div>
-      <div className='123132123'>11111111111</div>
     </ListPostComponentStyled>
   );
 };

@@ -1,21 +1,45 @@
 // import getImagePath from '@helpers/get-image-path';
 import { Button, DatePicker, Form, Input, Radio, Space } from 'antd';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useMutation } from 'react-query';
+import { Link, useHistory } from 'react-router-dom';
+import { signUp } from '../../../api/authentication';
+import toastCustom from '../../../helpers/toastCustom';
 import { RegisterStyled } from './styled';
 
 const REQUIRED_TEXT = "Vui lòng điền";
 
 const RegisterComponent = () => {
-  const onFinish = (values: { birthday: { toDate: () => number; }; }) => {
-    const oneDay = 1000 * 60 * 60 * 24;
-    const diffInTime = values.birthday?.toDate() - new Date().valueOf();
-    const age = Math.round(diffInTime / oneDay);
-    console.log(123123123, age);
-    
-    // if (age < 24)
-  };
-  const onValuesChange = (values: { role: string; }) => {
+  const mutation = useMutation(signUp);
+  const history = useHistory();
+
+  const onFinish = (values: any) => {
+    const bodyRegister = { ...values };
+    delete bodyRegister.confirmPassword;
+    bodyRegister.date_of_birth = bodyRegister.date_of_birth.format("YYYY/MM/DD");
+
+    mutation.mutate(bodyRegister, {
+      onSuccess: (data) => {
+        if (data?.status === 201) {
+          toastCustom({
+            mess: "Đăng kí thành công",
+            type: "success",
+          })
+          setTimeout(() => {
+            history.push("/login");
+          }, 200)
+        }
+      },
+      onError: (err: any) => {
+        const dataErr = err?.response;
+        if (dataErr?.data?.statusCode === 400) {
+          toastCustom({
+            mess: dataErr?.data?.message,
+            type: "error",
+          })
+        }
+      }
+    });
   };
   return (
     <RegisterStyled>
@@ -29,13 +53,12 @@ const RegisterComponent = () => {
           <Form
             name="normal_register"
             className="register-form"
-            initialValues={{ remember: true }}
+            initialValues={{}}
             onFinish={onFinish}
-            onValuesChange={onValuesChange}
           >
             <Space className="ant-space-align-start">
               <Form.Item
-                name="firstName"
+                name="first_name"
                 className="firstName"
                 rules={[
                   {
@@ -47,7 +70,7 @@ const RegisterComponent = () => {
                 <Input placeholder="Tên" />
               </Form.Item>
               <Form.Item
-                name="lastName"
+                name="last_name"
                 className="lastName"
                 rules={[
                   {
@@ -62,7 +85,7 @@ const RegisterComponent = () => {
               </Form.Item>
             </Space>
             <Form.Item
-              name="nickName"
+              name="nick_name"
               className="nick-name"
               rules={[
                 {
@@ -74,7 +97,7 @@ const RegisterComponent = () => {
               <Input placeholder="Biệt danh" />
             </Form.Item>
             <Form.Item
-              name="birthday"
+              name="date_of_birth"
               rules={[
                 {
                   required: true,
@@ -85,7 +108,7 @@ const RegisterComponent = () => {
               <DatePicker placeholder="Ngày sinh" format="DD-MM-YYYY" />
             </Form.Item>
             <Form.Item
-              name="Email"
+              name="email"
               className="Email"
               rules={[
                 {
@@ -130,12 +153,12 @@ const RegisterComponent = () => {
                   min: 6,
                   message: 'Mật khẩu tối thiểu 6 kí tự'
                 },
-                ({ getFieldValue }) => ({
-                  validator(_, value) {
+                ({ getFieldValue }: any) => ({
+                  validator(_: any, value: any) {
                     if (!value || getFieldValue('password') === value) {
                       return Promise.resolve();
                     }
-      
+
                     return Promise.reject(new Error('Mật khẩu không giống nhau'));
                   },
                 }),

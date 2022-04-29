@@ -13,13 +13,13 @@ const LIST_MENU_SIDEBAR = [
     subMenu: [
       {
         label: "Danh sách khách hàng",
-        key: "list-guest",
-        link: "/admin/list-guest",
+        key: "guest-management",
+        link: "/admin/guest-management",
       },
       {
         label: "Danh sách bác sĩ",
-        key: "list-doctor",
-        link: "/admin/list-doctor",
+        key: "expert-management",
+        link: "/admin/expert-management",
       }
     ]
   },

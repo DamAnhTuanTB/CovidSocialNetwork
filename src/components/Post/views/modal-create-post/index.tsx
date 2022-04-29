@@ -14,6 +14,7 @@ const ModalCreatePost = (props: any) => {
     setPostEdit = () => { },
     isShowModalCreate = false,
     setIsShowModalCreate = () => { },
+    profile = {}
   } = props;
   const refInputFile = useRef(null);
   const [listImage, setListImage] = useState<string[]>([]);
@@ -87,8 +88,8 @@ const ModalCreatePost = (props: any) => {
       ]}
     >
       <div className="detail-user">
-        <img src="/post/avatar_my1.jpg" alt="" />
-        <div className="name-user">Tuan cules</div>
+        <img src={profile?.avatar || "/defaultAvatar.png"} alt="" />
+        <div className="name-user">{profile?.nick_name}</div>
       </div>
       <div className="body-modal-create">
         <Input

@@ -5,23 +5,70 @@ import { Button, DatePicker, Form, Input, Modal, Progress, Space } from 'antd';
 import { Link } from 'react-router-dom';
 import { ModalEditProfileStyled } from './styled';
 import { getUrlImage } from '../../../../../../api/uploadimage';
+import moment from 'moment';
+import { useMutation, useQueryClient } from 'react-query';
+import { updateProfile } from '../../../../../../api/profile';
+import toastCustom from '../../../../../../helpers/toastCustom';
+
 const REQUIRED_TEXT = "Vui lòng điền";
 const REGEX_PHONE = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
 
 const ModalEditProfile = (props: any) => {
   const {
+    profile = {},
     isShowModalEditProfile,
     setIsShowModalEditProfile = () => { },
     handleConfirmEditProfile = () => { }
   } = props;
   const [form] = Form.useForm();
+  const queryClient = useQueryClient();
+
   const [loading, setLoading] = useState(false);
   const [initialValues, setInitialValues] = useState({});
   const [prog, setProg] = useState(0);
-  const [avatar, setAvatar] = useState();
-  const [avatarPreview, setAvatarPreview] = useState();
+  const [avatar, setAvatar] = useState(profile?.avatar || null);
+  const [avatarPreview, setAvatarPreview] = useState(profile?.avatar || null);
+
+  const mutation = useMutation(updateProfile);
+
 
   const onFinish = (values: any) => {
+    setLoading(true);
+    const bodyUpdateProfile = { ...values };
+    bodyUpdateProfile.date_of_birth = bodyUpdateProfile.date_of_birth.format("YYYY/MM/DD");
+    bodyUpdateProfile.avatar = avatar;
+
+
+
+    mutation.mutate(bodyUpdateProfile, {
+      onSuccess: (res: any) => {
+        if (res?.data?.statusCode === 200) {
+          setLoading(false);
+          toastCustom({
+            mess: res?.data?.message,
+            type: "success",
+          });
+          queryClient.setQueryData("my-profile", (oldData) => {
+            return {
+              ...oldData,
+              ...bodyUpdateProfile
+            }
+          });
+          queryClient.invalidateQueries('profile');
+          handleCancel();
+        }
+      },
+      onError: (err: any) => {
+        setLoading(false);
+        if (err?.response?.data?.statusCode === 500) {
+          toastCustom({
+            mess: "Lỗi hệ thống",
+            type: "error",
+          });
+        } 
+      }
+    })
+
     // handleConfirmEditProfile(formdata);
     // setLoading(true);
     // setTimeout(() => {
@@ -41,12 +88,13 @@ const ModalEditProfile = (props: any) => {
     <Button key="back" onClick={handleCancel}>
       Hủy
     </Button>,
-    <Button key="submit" type="primary" loading={loading} onClick={form.submit}>
+    <Button disabled={!!prog} key="submit" type="primary" loading={loading} onClick={form.submit}>
       Ok
     </Button>,
   ]
 
   const handleChangeAvatar = (e: any) => {
+    setProg(1);
     const file = e.target.files[0];
     const fileUrl = URL.createObjectURL(e.target.files[0]);
     setAvatarPreview(fileUrl);
@@ -61,11 +109,13 @@ const ModalEditProfile = (props: any) => {
   }
 
   useEffect(() => {
-    setInitialValues({
-      firstName: "tuan",
-      lastName: "le"
-    })
-  }, [])
+    const cloneProfile = { ...profile };
+    cloneProfile.date_of_birth = moment(cloneProfile.date_of_birth, "YYYY/MM/DD");
+
+    setInitialValues(cloneProfile);
+    setAvatar(profile?.avatar);
+    setAvatarPreview(profile?.avatar);
+  }, [isShowModalEditProfile])
 
   return (
     <ModalEditProfileStyled
@@ -100,7 +150,7 @@ const ModalEditProfile = (props: any) => {
       >
         <Space className="ant-space-align-start fullwitdh">
           <Form.Item
-            name="firstName"
+            name="first_name"
             className="firstName"
             label="Tên"
             rules={[
@@ -113,7 +163,7 @@ const ModalEditProfile = (props: any) => {
             <Input placeholder="Tên" />
           </Form.Item>
           <Form.Item
-            name="lastName"
+            name="last_name"
             className="lastName"
             label="Họ"
             rules={[
@@ -130,7 +180,7 @@ const ModalEditProfile = (props: any) => {
         </Space>
         <Space className="ant-space-align-start fullwitdh">
           <Form.Item
-            name="nickName"
+            name="nick_name"
             className="nickname"
             label="Biệt danh"
             rules={[
@@ -145,7 +195,7 @@ const ModalEditProfile = (props: any) => {
             />
           </Form.Item>
           <Form.Item
-            name="birthday"
+            name="date_of_birth"
             label="Ngày sinh"
             rules={[
               {
@@ -159,7 +209,7 @@ const ModalEditProfile = (props: any) => {
 
         </Space>
         <Form.Item
-          name="Email"
+          name="email"
           className="Email"
           label="Email"
           rules={[
@@ -176,19 +226,14 @@ const ModalEditProfile = (props: any) => {
           <Input placeholder="Email" />
         </Form.Item>
         <Form.Item
-          name="phone"
+          name="telephone"
           className="phone"
           label="Số điện thoại"
           rules={[
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || REGEX_PHONE.test(value)) {
-                  return Promise.resolve();
-                }
-
-                return Promise.reject(new Error('Số điện thoại không đúng định dạng'));
-              },
-            }),
+            {
+              pattern: new RegExp(REGEX_PHONE),
+              message: "Số điện thoại không đúng định dạng"
+            }
           ]}
         >
           <Input

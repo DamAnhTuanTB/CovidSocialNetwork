@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { CloseOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import { BaseImagePreviewStyled } from './styled';
+import LoadingImage from '../LoadingImage';
 
 const BaseImagePreview = (props: any) => {
-  const { src, className } = props;
+  const { src, className, isLoading = false } = props;
   const [isPreview, setIsPreview] = useState(false);
   return (
     <BaseImagePreviewStyled className="img-preview">
@@ -18,7 +19,13 @@ const BaseImagePreview = (props: any) => {
           </div>
         )
       }
-      <img className={className} src={src} alt="" onClick={() => setIsPreview(true)} />
+      {
+        isLoading ? (
+          <LoadingImage className={className} src={src} alt="" onClick={() => setIsPreview(true)} />
+        ) : (
+          <img className={className} src={src} alt="" onClick={() => setIsPreview(true)} />
+        )
+      }
     </BaseImagePreviewStyled>
   );
 };

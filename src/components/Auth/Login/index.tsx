@@ -1,15 +1,37 @@
 import { LockOutlined, MailOutlined } from '@ant-design/icons';
 import { Button, Divider, Form, Input } from 'antd';
 import React from 'react';
+import Cookies from 'js-cookie';
+import { useMutation, useQuery } from 'react-query';
 import { Link, useHistory } from 'react-router-dom';
+import { login } from '../../../api/authentication';
+import toastCustom from '../../../helpers/toastCustom';
 import { LoginStyled } from './styled';
 
-const REQUIRED_TEXT = "Please fill in";
+const REQUIRED_TEXT = "Vui lòng điền";
 
 const LoginComponent = () => {
   const history = useHistory();
+  const mutation = useMutation(login);
+
   const onFinish = (values: object) => {
-    console.log('Received values of form: ', values);
+    mutation.mutate(values, {
+      onSuccess: (data) => {
+        if (data?.data?.token) {
+          Cookies.set('token', data?.data?.token);
+          history.push('/post');
+        }
+      },
+      onError: (err: any) => {
+        const dataError = err?.response;
+        if (dataError?.data?.statusCode === 401) {
+          toastCustom({
+            mess: "Email hoặc mật khẩu không đúng",
+            type: "error",
+          })
+        }
+      }
+    });
   };
   return (
     <LoginStyled>
@@ -26,7 +48,7 @@ const LoginComponent = () => {
             onFinish={onFinish}
           >
             <Form.Item
-              name="email"
+              name="username"
               className="email"
               rules={[
                 {

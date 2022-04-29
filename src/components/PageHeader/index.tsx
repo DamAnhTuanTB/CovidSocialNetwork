@@ -4,6 +4,7 @@ import { PageHeaderStyled } from './styled';
 import { Button, Input } from 'antd';
 import ModalCreatePost from '../Post/views/modal-create-post';
 import { useHistory } from 'react-router-dom';
+import { useQueryClient } from 'react-query';
 
 export default function PageHeader(props: any) {
   const {
@@ -13,6 +14,9 @@ export default function PageHeader(props: any) {
   const [isShowModal, setIsShowModal] = useState(false);
   const history = useHistory();
 
+  const queryClient = useQueryClient();
+  const myProfile : any = queryClient.getQueryData("my-profile");
+  
   const showNotify = (data: any) => {
     console.log("pageheader", data);
   }
@@ -31,10 +35,12 @@ export default function PageHeader(props: any) {
   }, [])
 
   return (
+
     <PageHeaderStyled>
       <ModalCreatePost
         isShowModalCreate={isShowModal}
         setIsShowModalCreate={setIsShowModal}
+        profile={myProfile}
       />
       <div className="header-container">
         <div className="logo">
@@ -82,7 +88,7 @@ export default function PageHeader(props: any) {
             )
           }
           <div className="user-avatar" onClick={() => history.push("/profile")}>
-            <img src="/post/avatar_my1.jpg" alt="" />
+            <img src={myProfile?.avatar || "/defaultAvatar.png"} alt="" />
           </div>
           {
             !isExpert && (
