@@ -5,8 +5,15 @@ import { BaseImagePreviewStyled } from './styled';
 import LoadingImage from '../LoadingImage';
 
 const BaseImagePreview = (props: any) => {
-  const { src, className, isLoading = false } = props;
+  const { src, className, isLoading = false, cancelPreview = false } = props;
   const [isPreview, setIsPreview] = useState(false);
+
+  const handleClickPreview = () => {
+    if (cancelPreview) return;
+
+    setIsPreview(!isPreview);
+  }
+
   return (
     <BaseImagePreviewStyled className="img-preview">
       {
@@ -14,16 +21,16 @@ const BaseImagePreview = (props: any) => {
           <div className="preview-image-fixed">
             <img className="image-temp" src={src} alt="" />
             <div className="close-button">
-              <CloseOutlined twoToneColor="#FFFFFF" onClick={() => setIsPreview(false)} />
+              <CloseOutlined twoToneColor="#FFFFFF" onClick={handleClickPreview} />
             </div>
           </div>
         )
       }
       {
         isLoading ? (
-          <LoadingImage className={className} src={src} alt="" onClick={() => setIsPreview(true)} />
+          <LoadingImage className={className} src={src} alt="" onClick={handleClickPreview} />
         ) : (
-          <img className={className} src={src} alt="" onClick={() => setIsPreview(true)} />
+          <img className={className} src={src} alt="" onClick={handleClickPreview} />
         )
       }
     </BaseImagePreviewStyled>

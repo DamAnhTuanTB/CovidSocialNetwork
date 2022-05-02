@@ -5,6 +5,7 @@ import { Button, Input } from 'antd';
 import ModalCreatePost from '../Post/views/modal-create-post';
 import { useHistory } from 'react-router-dom';
 import { useQueryClient } from 'react-query';
+import BaseImagePreview from '../Base/BaseImagePreview';
 
 export default function PageHeader(props: any) {
   const {
@@ -88,7 +89,7 @@ export default function PageHeader(props: any) {
             )
           }
           <div className="user-avatar" onClick={() => history.push("/profile")}>
-            <img src={myProfile?.avatar || "/defaultAvatar.png"} alt="" />
+            <BaseImagePreview isLoading cancelPreview className="avatar" src={myProfile?.avatar || "/defaultAvatar.png"} alt="" />
           </div>
           {
             !isExpert && (

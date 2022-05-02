@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Modal } from 'antd';
+import { useMutation, useQueryClient } from 'react-query';
+import { deletePost } from '../../../../../../api/post';
+import toastCustom from '../../../../../../helpers/toastCustom';
 
 const ModalDeletePost = (props: any) => {
   const {
@@ -8,14 +11,43 @@ const ModalDeletePost = (props: any) => {
     itemPost = {},
     handleConfirmDelete = () => { }
   } = props;
+
+  const mutation = useMutation(deletePost);
+
+  const queryClient = useQueryClient();
+
   const [loading, setLoading] = useState(false);
   const onSubmit = () => {
-    handleConfirmDelete(itemPost?.id);
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setPostDelete(null);
-    }, 2000)
+    mutation.mutate(
+      itemPost?.id,
+      {
+        onSuccess: (data) => {
+          setLoading(false);
+          if (data?.statusCode === 200) {
+            toastCustom({
+              mess: "Xóa bài viết thành công",
+              type: "success"
+            })
+            setPostDelete(null);
+            queryClient.invalidateQueries("my-posts");
+          }
+        },
+        onError: (err) => {
+          console.log(err);
+          toastCustom({
+            mess: "Xóa bài viết không thành công",
+            type: "success"
+          })
+          setPostDelete(null);
+        }
+      }
+    )
+
+    // setTimeout(() => {
+    //   setLoading(false);
+    //   setPostDelete(null);
+    // }, 2000)
   }
   return (
     <Modal

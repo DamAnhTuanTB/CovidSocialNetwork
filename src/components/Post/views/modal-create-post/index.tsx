@@ -2,8 +2,12 @@
 import { CameraOutlined, CloseOutlined } from '@ant-design/icons';
 import { Button, Divider, Input, Progress } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
+import { useHistory } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
+import { createPost, updatePost } from '../../../../api/post';
 import { getUrlImage } from '../../../../api/uploadimage';
+import toastCustom from '../../../../helpers/toastCustom';
 import { ModalCreatePostStyled } from './styled';
 
 const ModalCreatePost = (props: any) => {
@@ -16,41 +20,48 @@ const ModalCreatePost = (props: any) => {
     setIsShowModalCreate = () => { },
     profile = {}
   } = props;
+  const history = useHistory();
+  const queryClient = useQueryClient();
+
   const refInputFile = useRef(null);
   const [listImage, setListImage] = useState<string[]>([]);
   const [listImageUrl, setListImageUrl] = useState<string[]>([]);
-  const [progressUpload, setProgressUpload] = useState(1);
+  const [progressUpload, setProgressUpload] = useState(0);
   const [content, setContent] = useState("");
   const [title, setTitle] = useState("");
 
+  const [loadingSubmit, setLoadingSubmit] = useState(false);
+
+  const mutationCreatePost = useMutation(createPost);
+  const mutationUpdatePost = useMutation(updatePost);
+
   useEffect(() => {
     if (isEdit && itemPost?.id) {
-      setListImage(itemPost?.image);
-      setListImageUrl(itemPost?.image);
-      setContent(itemPost?.content);
-      setTitle(itemPost?.title || "")
+      setListImage(itemPost?.content_images?.split(";"));
+      setListImageUrl(itemPost?.content_images?.split(";"));
+      setContent(itemPost?.content_texts);
+      setTitle(itemPost?.title);
     }
   }, [itemPost?.id])
 
   const handleChangeImage = (e: any) => {
-    console.log(12312123123);
-
     if (e.target.files.length === 0) return;
 
     const fileUrl = URL.createObjectURL(e.target.files[0]);
     setListImage([...listImage, fileUrl]);
+    setProgressUpload(1);
     getUrlImage(
       e.target.files[0],
       setProgressUpload,
       (url) => {
         setListImageUrl([...listImageUrl, url]);
-        setProgressUpload(1);
+        setProgressUpload(0);
         e.target.value = null;
       }
     )
   }
   const handleDeleteImage = (indexImage: any) => {
-    if (progressUpload !== 1) return;
+    if (progressUpload) return;
     const newListImage = [...listImage];
     const newListImageUrl = [...listImageUrl];
     setListImage(newListImage.filter((item, index) => index !== indexImage));
@@ -61,14 +72,73 @@ const ModalCreatePost = (props: any) => {
     if (isEdit) {
       setPostEdit(null);
     } else {
+      setTitle("");
+      setContent("");
+      setListImage([]);
+      setListImageUrl([]);
       setIsShowModalCreate(false);
-      // setContent("");
-      // setListImage([]);
     }
   }
 
   const onSubmit = () => {
-
+    setLoadingSubmit(true);
+    const bodyCreatePost = {
+      content_texts: content,
+      content_images: listImageUrl.join(";"),
+      title: title,
+    }
+    if (isEdit) {
+      mutationUpdatePost.mutate(
+        {
+          idPost: itemPost?.id,
+          ...bodyCreatePost,
+        },
+        {
+          onSuccess: (data) => {
+            setLoadingSubmit(false);
+            if (data?.statusCode === 200) {
+              toastCustom({
+                mess: "Tạo bài viết thành công. Vui lòng chờ admin phê duyệt",
+                type: "success",
+              });
+              queryClient.invalidateQueries('my-posts');
+              history.push(`/profile?type=pending-post`);
+              handleCancel();
+            }
+          },
+          onError: (err) => {
+            setLoadingSubmit(false);
+            console.log(err);
+          }
+        }
+      )
+    } else {
+      mutationCreatePost.mutate(bodyCreatePost, {
+        onSuccess: (data) => {
+          setLoadingSubmit(false);
+          if (data?.statusCode === 201) {
+            toastCustom({
+              mess: "Tạo bài viết thành công. Vui lòng chờ admin phê duyệt",
+              type: "success",
+            })
+          }
+          history.push(`/profile?type=pending-post`);
+          queryClient.invalidateQueries('my-posts');
+          handleCancel();
+        },
+        onError: (err: any) => {
+          setLoadingSubmit(true);
+          console.log(err);
+          // const dataErr = err?.response;
+          // if (dataErr?.data?.statusCode === 400) {
+          //   toastCustom({
+          //     mess: dataErr?.data?.message,
+          //     type: "error",
+          //   })
+          // }
+        }
+      });
+    }
   }
   return (
     <ModalCreatePostStyled
@@ -82,14 +152,14 @@ const ModalCreatePost = (props: any) => {
         <Button key="back" onClick={handleCancel}>
           Hủy
         </Button>,
-        <Button key="submit" type="primary" onClick={onSubmit}>
+        <Button loading={loadingSubmit} key="submit" type="primary" disabled={!title || !content || listImage.length < 1 || !!progressUpload} onClick={onSubmit}>
           Ok
         </Button>,
       ]}
     >
       <div className="detail-user">
-        <img src={profile?.avatar || "/defaultAvatar.png"} alt="" />
-        <div className="name-user">{profile?.nick_name}</div>
+        <img src={(isEdit ? itemPost?.author_avatar : profile?.avatar) || "/defaultAvatar.png"} alt="" />
+        <div className="name-user">{isEdit ? itemPost?.author_nick_name : profile?.nick_name}</div>
       </div>
       <div className="body-modal-create">
         <Input
@@ -109,7 +179,7 @@ const ModalCreatePost = (props: any) => {
         <div className="add-image">
           <div>Thêm ảnh vào bài viết</div>
           <div className="file-input">
-            <input ref={refInputFile} disabled={listImage.length >= 3 || progressUpload !== 1} onChange={handleChangeImage} type="file" />
+            <input ref={refInputFile} disabled={listImage.length >= 3 || !!progressUpload} onChange={handleChangeImage} type="file" />
             <CameraOutlined className="camera-icon" />
           </div>
         </div>

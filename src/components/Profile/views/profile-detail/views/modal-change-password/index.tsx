@@ -3,6 +3,9 @@ import { Button, Form, Input, Modal } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { ModalChangePasswordStyled } from './styled';
+import { useMutation } from 'react-query';
+import toastCustom from '../../../../../../helpers/toastCustom';
+import { updatePassword } from '../../../../../../api/profile';
 
 const ModalChangePassword = (props: any) => {
   const {
@@ -11,14 +14,47 @@ const ModalChangePassword = (props: any) => {
   } = props;
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const mutation = useMutation(updatePassword);
 
   const handleCancel = () => {
     setIsShowModalChangePassword(false)
     form.resetFields();
   }
 
-  const onFinish = (value: any) => {
-    console.log(123123,value);
+  const onFinish = (values: any) => {
+    const bodyUpdatePassword = {...values};
+    delete bodyUpdatePassword.confirm_password;
+    setLoading(true);    
+    mutation.mutate(bodyUpdatePassword, {
+      onSuccess: (res: any) => {
+        if (res?.data?.statusCode === 201) {
+          setLoading(false);
+          toastCustom({
+            mess: "Bạn đã đổi mật khẩu thành công",
+            type: "success",
+          });
+          handleCancel();
+        }
+      },
+      onError: (err: any) => {
+        console.log(err);
+        setLoading(false);
+        if (err?.response?.data?.statusCode === 500) {
+          toastCustom({
+            mess: "Lỗi hệ thống",
+            type: "error",
+          });
+          return;
+        }
+        if (err?.response?.data?.statusCode === 400) {
+          toastCustom({
+            mess: err?.response?.data?.message,
+            type: "error",
+          });
+          return;
+        }
+      }
+    })
     
     // setLoading(true);
     // setTimeout(() => {
@@ -54,7 +90,7 @@ const ModalChangePassword = (props: any) => {
         onFinish={onFinish}
       >
         <Form.Item
-          name="oldpassword"
+          name="old_password"
           className="oldpassword"
           label="Mật khẩu hiện tại"
           rules={[
@@ -73,7 +109,7 @@ const ModalChangePassword = (props: any) => {
           />
         </Form.Item>
         <Form.Item
-          name="newpassword"
+          name="new_password"
           className="newpassword"
           label="Mật khẩu mới"
           rules={[
@@ -87,7 +123,7 @@ const ModalChangePassword = (props: any) => {
             },
             ({ getFieldValue }) => ({
               validator(_, value) {
-                if (!value || getFieldValue('oldpassword') !== value) {
+                if (!value || getFieldValue('old_password') !== value) {
                   return Promise.resolve();
                 }
   
@@ -101,7 +137,7 @@ const ModalChangePassword = (props: any) => {
           />
         </Form.Item>
         <Form.Item
-          name="confirmpassword"
+          name="confirm_password"
           className="confirmpassword"
           label="Nhập lại mật khẩu mới"
           rules={[
@@ -115,7 +151,7 @@ const ModalChangePassword = (props: any) => {
             },
             ({ getFieldValue }) => ({
               validator(_, value) {
-                if (!value || getFieldValue('newpassword') === value) {
+                if (!value || getFieldValue('new_password') === value) {
                   return Promise.resolve();
                 }
   

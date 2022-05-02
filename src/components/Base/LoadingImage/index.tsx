@@ -1,5 +1,6 @@
 import { Skeleton } from 'antd';
 import React, { useEffect, useState } from 'react';
+import { BaseLoadingImageStyled } from './styled';
 
 const LoadingImage = (props: any) => {
   const {
@@ -19,7 +20,7 @@ const LoadingImage = (props: any) => {
   }, [src])
 
   return (
-    <>
+    <BaseLoadingImageStyled>
       <img
         style={{ display: loaded ? 'block' : 'none' }}
         src={src}
@@ -29,7 +30,7 @@ const LoadingImage = (props: any) => {
         {...moreProps}
       />
       {!loaded && <Skeleton.Image className={className} />}
-    </>
+    </BaseLoadingImageStyled>
   );
 };
 
