@@ -5,6 +5,7 @@ import { Button, Dropdown, Menu } from 'antd';
 import { cloneDeep } from 'lodash';
 import React, { useRef } from 'react';
 import { useHistory } from 'react-router-dom';
+import handleConvertDateStringToDateTime from '../../../../../../helpers/convertDateStringToDate';
 import BaseImagePreview from '../../../../../Base/BaseImagePreview';
 import { PostItemStyle } from './styled';
 import CommentItem from './views/comment-item';
@@ -107,13 +108,13 @@ const PostItem = (props: any) => {
   return (
     <PostItemStyle className="post-item">
       <div className="header-post">
-        <img src={detailPost?.user?.avatar} alt="" />
+        <img src={detailPost?.author_avatar} alt="" />
         <div>
           <div className="post-author">
-            {detailPost?.user?.name}
+            {detailPost?.author_nick_name}
           </div>
           <div className="create-at">
-            {detailPost?.createdAt}
+            {handleConvertDateStringToDateTime(detailPost?.create_at)}
           </div>
         </div>
         {
@@ -132,10 +133,10 @@ const PostItem = (props: any) => {
           {detailPost?.title}
         </div>
         <div className="detail-post">
-          {detailPost?.content}
+          {detailPost?.content_texts}
         </div>
         <div className={`${detailPost?.image?.length < 3 ? "list-image" : "list-image-3"}`}>
-          {detailPost?.image?.map((image: any, index: any) => {
+          {detailPost?.content_images?.split(";")?.map((image: any, index: any) => {
             const key = detailPost.id.toString() + index.toString();
             return (
               <BaseImagePreview key={key} src={image} alt="" />

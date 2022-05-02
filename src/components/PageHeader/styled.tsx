@@ -54,7 +54,8 @@ const PageHeaderStyled = styled.div`
             }
             .user-avatar {
                 margin-right: 10px;
-                img {
+                border-radius: 50%;
+                .avatar {
                     cursor: pointer;
                     border-radius: 50%;
                     height: 40px;

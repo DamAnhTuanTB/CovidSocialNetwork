@@ -1,5 +1,22 @@
 const dataRecord = [
     {
+        author_avatar: "https://firebasestorage.googleapis.com/v0/b/fir-upload-image-a79ce.appspot.com/o/file%2Frog.jpg?alt=media&token=89f32fe7-a4d8-408e-9579-2ed004de87f8",
+        author_id: "5",
+        author_nick_name: "tuancules",
+        content_images: "https://firebasestorage.googleapis.com/v0/b/fir-upload-image-a79ce.appspot.com/o/file%2Fblue-dark-light-formation-4k-abstract.jpg?alt=media&token=6528dcc4-c17b-4522-91de-67e1cf537731;https://firebasestorage.googleapis.com/v0/b/fir-upload-image-a79ce.appsp",
+        content_texts: "nội dung nè",
+        create_at: "2022-05-01T07:55:53.000Z",
+        id: "2",
+        isLike: 0,
+        isSave: 0,
+        status: "pending",
+        title: "tiêu đề nè",
+        totalComment: "0",
+        totalLike: "0",
+        totalSave: "0",
+        update_at: "2022-05-01T07:55:53.000Z",
+    },
+    {
         id: 1,
         content: "Hãy cùng xem trong trận đấu giữa Team Flash và AS Esports ở ván thi đấu đầu tiên phút 24, Team Flash đã làm gì để hóa giải một pha giao tranh tất tay bên phía của AS Esports nhé.",
         createdAt: "2020/03/05-5:00",

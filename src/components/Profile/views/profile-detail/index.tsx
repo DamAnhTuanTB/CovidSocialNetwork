@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import React, { Fragment, useEffect, useState } from 'react';
 import { useQueryClient } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
+import { useGetListMyPost } from '../../../../hooks/usePost';
+import { useGetProfileOther } from '../../../../hooks/useProfile';
 import BaseImagePreview from '../../../Base/BaseImagePreview';
 import dataRecord from '../../../Post/views/list-post/fakeData';
 import PostItem from '../../../Post/views/list-post/views/post-item';
@@ -21,7 +23,9 @@ const ProfileDetail = (props: any) => {
   const paramsUrlSearch = paramsSeacrh.searchParams;
 
   const queryClient = useQueryClient();
-  const myProfile : any = queryClient.getQueryData("my-profile");
+  const myProfile: any = queryClient.getQueryData("my-profile");
+
+  const { profileOtherData, isLoadingError } = useGetProfileOther(param.id_user);
 
   const history = useHistory();
 
@@ -29,10 +33,18 @@ const ProfileDetail = (props: any) => {
   const [currentPage, setCurrentPage] = useState(paramsUrlSearch.get("page") || "1");
   const [postDelete, setPostDelete] = useState(null);
   const [postEdit, setPostEdit] = useState(null);
-  const [listPost, setListPost] = useState(dataRecord);
+  const [listPost, setListPost] = useState<any>([]);
 
   const [isShowModalEditProfile, setIsShowModalEditProfile] = useState(false);
   const [isShowModalChangePassword, setIsShowModalChangePassword] = useState(false);
+
+  const [profileOtherUser, setProfileOtherUser] = useState<any>({});
+
+  const { dataPost, refetchPost, isLoadingPost } = useGetListMyPost({
+    type: type,
+    page: currentPage,
+    limit: 10,
+  });
 
   const handleChangePage = (page: any) => {
     history.push(`?type=${type}&page=${page}`);
@@ -58,6 +70,7 @@ const ProfileDetail = (props: any) => {
   const handleConfirmEditProfile = (formdata: any) => {
     console.log(12312312312312, formdata);
   }
+  if (isGuest) { }
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -65,9 +78,27 @@ const ProfileDetail = (props: any) => {
       history.replace("?type=list-image");
       return;
     }
+    if (paramsUrlSearch.get("type") === "list-image") {
+      console.log(123123123);
+    } else {
+      setListPost(dataPost?.data);
+    }
+    // call api theo cách chay ở đây
+
     setCurrentPage(paramsUrlSearch.get("page") || "1");
     setType(paramsUrlSearch.get("type") || "list-image");
-  }, [paramsSeacrh.href]);
+  }, [paramsSeacrh.href, dataPost]);
+
+  useEffect(() => {
+    if (isGuest && isLoadingError) {
+      history.push("/profile");
+      return;
+    }
+
+    if (isGuest && profileOtherData?.status === 200) {
+      setProfileOtherUser(profileOtherData?.data);
+    }
+  }, [profileOtherData, isLoadingError])
 
   return (
     <ProfileDetailStyled>
@@ -82,9 +113,9 @@ const ProfileDetail = (props: any) => {
         setPostEdit={setPostEdit}
       />
       <div className="detail-user">
-        <BaseImagePreview isLoading className="avatar" src={myProfile?.avatar || "/defaultAvatar.png"} alt="" />
-        <div className="name-user">{`${myProfile?.first_name} ${myProfile?.last_name}`}</div>
-        <div className="name-tag">@{myProfile?.email}</div>
+        <BaseImagePreview isLoading className="avatar" src={!isGuest ? myProfile?.avatar || "/defaultAvatar.png" : profileOtherUser?.avatar || "/defaultAvatar.png"} alt="" />
+        <div className="name-user">{!isGuest ? `${myProfile?.first_name} ${myProfile?.last_name}` : `${profileOtherUser?.first_name || ""} ${profileOtherUser?.last_name || ""}`}</div>
+        <div className="name-tag">@{!isGuest ? myProfile?.email : profileOtherUser?.email || ""}</div>
         {
           !param.id_user && (
             <>
@@ -101,7 +132,7 @@ const ProfileDetail = (props: any) => {
           </TabPane>
           <TabPane tab="Bài viết" key="my-post">
             {
-              listPost.map((item) => (
+              listPost?.map((item: any) => (
                 <Fragment key={item.id}>
                   <PostItem
                     detailPost={item}
@@ -120,7 +151,7 @@ const ProfileDetail = (props: any) => {
               <>
                 <TabPane tab="Bài viết đã lưu" key="saved-post">
                   {
-                    listPost.map((item) => (
+                    listPost?.map((item: any) => (
                       <Fragment key={item.id}>
                         <PostItem
                           detailPost={item}
@@ -136,7 +167,7 @@ const ProfileDetail = (props: any) => {
                 </TabPane>
                 <TabPane tab="Bài viết đang chờ duyệt" key="pending-post">
                   {
-                    listPost.map((item) => (
+                    listPost?.map((item: any) => (
                       <Fragment key={item.id}>
                         <PostItem
                           detailPost={item}
@@ -150,7 +181,7 @@ const ProfileDetail = (props: any) => {
                 </TabPane>
                 <TabPane tab="Bài viết bị hủy" key="canceled-post">
                   {
-                    listPost.map((item) => (
+                    listPost?.map((item: any) => (
                       <Fragment key={item.id}>
                         <PostItem
                           detailPost={item}
@@ -169,11 +200,15 @@ const ProfileDetail = (props: any) => {
         {
           type !== "list-image" && (
             <div className="pagination">
-              <Pagination
-                current={+currentPage}
-                total={50}
-                onChange={handleChangePage}
-              />
+              {
+                !isLoadingPost && (
+                  <Pagination
+                    current={+currentPage}
+                    total={50}
+                    onChange={handleChangePage}
+                  />
+                )
+              }
             </div>
           )
         }
