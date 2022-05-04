@@ -8,6 +8,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 import { createPost, updatePost } from '../../../../api/post';
 import { getUrlImage } from '../../../../api/uploadimage';
 import toastCustom from '../../../../helpers/toastCustom';
+import MODAL_CREATE_POST_CONSTANTS from './constants';
 import { ModalCreatePostStyled } from './styled';
 
 const ModalCreatePost = (props: any) => {
@@ -98,7 +99,7 @@ const ModalCreatePost = (props: any) => {
             setLoadingSubmit(false);
             if (data?.statusCode === 200) {
               toastCustom({
-                mess: "Tạo bài viết thành công. Vui lòng chờ admin phê duyệt",
+                mess: MODAL_CREATE_POST_CONSTANTS.successMessage.edit,
                 type: "success",
               });
               queryClient.invalidateQueries('my-posts');
@@ -118,7 +119,7 @@ const ModalCreatePost = (props: any) => {
           setLoadingSubmit(false);
           if (data?.statusCode === 201) {
             toastCustom({
-              mess: "Tạo bài viết thành công. Vui lòng chờ admin phê duyệt",
+              mess: MODAL_CREATE_POST_CONSTANTS.successMessage.create,
               type: "success",
             })
           }
@@ -142,7 +143,7 @@ const ModalCreatePost = (props: any) => {
   }
   return (
     <ModalCreatePostStyled
-      title={isEdit ? "Chỉnh sửa bài viết" : "Tạo bài viết"}
+      title={isEdit ? MODAL_CREATE_POST_CONSTANTS.title.edit : MODAL_CREATE_POST_CONSTANTS.title.create}
       className="modal-create-post"
       visible={isEdit ? !!itemPost?.id : isShowModalCreate}
       style={{ top: 100 }}
@@ -150,10 +151,10 @@ const ModalCreatePost = (props: any) => {
       onCancel={handleCancel}
       footer={[
         <Button key="back" onClick={handleCancel}>
-          Hủy
+          {MODAL_CREATE_POST_CONSTANTS.cancel}
         </Button>,
         <Button loading={loadingSubmit} key="submit" type="primary" disabled={!title || !content || listImage.length < 1 || !!progressUpload} onClick={onSubmit}>
-          Ok
+          {MODAL_CREATE_POST_CONSTANTS.submit}
         </Button>,
       ]}
     >
@@ -166,18 +167,18 @@ const ModalCreatePost = (props: any) => {
           className="title-post"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="Tiêu đề bài viết"
+          placeholder={MODAL_CREATE_POST_CONSTANTS.placeholder.title}
           maxLength={100}
         />
         <Divider />
         <TextareaAutosize
           className="content-post"
-          placeholder="Nội dung bài viết"
+          placeholder={MODAL_CREATE_POST_CONSTANTS.placeholder.content}
           value={content}
           onChange={(e) => setContent(e.target.value)}
         />
         <div className="add-image">
-          <div>Thêm ảnh vào bài viết</div>
+          <div>{MODAL_CREATE_POST_CONSTANTS.placeholder.image}</div>
           <div className="file-input">
             <input ref={refInputFile} disabled={listImage.length >= 3 || !!progressUpload} onChange={handleChangeImage} type="file" />
             <CameraOutlined className="camera-icon" />

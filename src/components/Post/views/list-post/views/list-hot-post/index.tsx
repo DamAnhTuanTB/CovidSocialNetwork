@@ -3,12 +3,14 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ListHotPostStyled } from './styled';
 
+const TITLE = "Có thể bạn quan tâm";
+
 const ListHotPostComponent = (props: any) => {
   const { match } = props;
   return (
     <ListHotPostStyled>
       <div className="title">
-        Có thể bạn quan tâm
+        {TITLE}
       </div>
       <div className="posts">
         <div className="post-item">

@@ -1,17 +1,15 @@
 // @ts-nocheck
-import React, { useEffect, useState } from 'react';
 import { CameraOutlined } from '@ant-design/icons';
-import { Button, DatePicker, Form, Input, Modal, Progress, Space } from 'antd';
-import { Link } from 'react-router-dom';
-import { ModalEditProfileStyled } from './styled';
-import { getUrlImage } from '../../../../../../api/uploadimage';
+import { Button, DatePicker, Form, Input, Progress, Space } from 'antd';
 import moment from 'moment';
+import React, { useEffect, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { updateProfile } from '../../../../../../api/profile';
+import { getUrlImage } from '../../../../../../api/uploadimage';
 import toastCustom from '../../../../../../helpers/toastCustom';
+import MODAL_EDIT_PROFILE_CONSTANTS from './constants';
+import { ModalEditProfileStyled } from './styled';
 
-const REQUIRED_TEXT = "Vui lòng điền";
-const REGEX_PHONE = /(84|0[3|5|7|8|9])+([0-9]{8})\b/g;
 
 const ModalEditProfile = (props: any) => {
   const {
@@ -62,19 +60,12 @@ const ModalEditProfile = (props: any) => {
         setLoading(false);
         if (err?.response?.data?.statusCode === 500) {
           toastCustom({
-            mess: "Lỗi hệ thống",
+            mess: MODAL_EDIT_PROFILE_CONSTANTS.message.error.internalServer,
             type: "error",
           });
         } 
       }
     })
-
-    // handleConfirmEditProfile(formdata);
-    // setLoading(true);
-    // setTimeout(() => {
-    //   setLoading(false);
-    //   setIsShowModalEditProfile(false);
-    // }, 2000)
   }
 
   const handleCancel = () => {
@@ -86,10 +77,10 @@ const ModalEditProfile = (props: any) => {
 
   const footerEdit = [
     <Button key="back" onClick={handleCancel}>
-      Hủy
+      {MODAL_EDIT_PROFILE_CONSTANTS.cancel}
     </Button>,
     <Button disabled={!!prog} key="submit" type="primary" loading={loading} onClick={form.submit}>
-      Ok
+      {MODAL_EDIT_PROFILE_CONSTANTS.submit}
     </Button>,
   ]
 
@@ -119,7 +110,7 @@ const ModalEditProfile = (props: any) => {
 
   return (
     <ModalEditProfileStyled
-      title="Chỉnh sửa thông tin cá nhân"
+      title={MODAL_EDIT_PROFILE_CONSTANTS.title}
       centered
       visible={isShowModalEditProfile}
       onCancel={handleCancel}
@@ -141,7 +132,6 @@ const ModalEditProfile = (props: any) => {
         }
       </div>
       <Form
-        name="normal_register"
         form={form}
         className="update-profile-form"
         initialValues={initialValues}
@@ -152,29 +142,29 @@ const ModalEditProfile = (props: any) => {
           <Form.Item
             name="first_name"
             className="firstName"
-            label="Tên"
+            label={MODAL_EDIT_PROFILE_CONSTANTS.placeholder.firstName}
             rules={[
               {
                 required: true,
-                message: REQUIRED_TEXT
+                message: MODAL_EDIT_PROFILE_CONSTANTS.validate.required
               }
             ]}
           >
-            <Input placeholder="Tên" />
+            <Input placeholder={MODAL_EDIT_PROFILE_CONSTANTS.placeholder.firstName} />
           </Form.Item>
           <Form.Item
             name="last_name"
             className="lastName"
-            label="Họ"
+            label={MODAL_EDIT_PROFILE_CONSTANTS.placeholder.lastName}
             rules={[
               {
                 required: true,
-                message: REQUIRED_TEXT
+                message: MODAL_EDIT_PROFILE_CONSTANTS.validate.required
               }
             ]}
           >
             <Input
-              placeholder="Họ"
+              placeholder={MODAL_EDIT_PROFILE_CONSTANTS.placeholder.lastName}
             />
           </Form.Item>
         </Space>
@@ -182,62 +172,62 @@ const ModalEditProfile = (props: any) => {
           <Form.Item
             name="nick_name"
             className="nickname"
-            label="Biệt danh"
+            label={MODAL_EDIT_PROFILE_CONSTANTS.placeholder.nickName}
             rules={[
               {
                 required: true,
-                message: REQUIRED_TEXT
+                message: MODAL_EDIT_PROFILE_CONSTANTS.validate.required
               },
             ]}
           >
             <Input
-              placeholder="Biệt danh"
+              placeholder={MODAL_EDIT_PROFILE_CONSTANTS.placeholder.nickName}
             />
           </Form.Item>
           <Form.Item
             name="date_of_birth"
-            label="Ngày sinh"
+            label={MODAL_EDIT_PROFILE_CONSTANTS.placeholder.birthday}
             rules={[
               {
                 required: true,
-                message: REQUIRED_TEXT
+                message: MODAL_EDIT_PROFILE_CONSTANTS.validate.required
               }
             ]}
           >
-            <DatePicker placeholder="Ngày sinh" format="DD-MM-YYYY" />
+            <DatePicker placeholder={MODAL_EDIT_PROFILE_CONSTANTS.placeholder.birthday} format="DD-MM-YYYY" />
           </Form.Item>
 
         </Space>
         <Form.Item
           name="email"
           className="Email"
-          label="Email"
+          label={MODAL_EDIT_PROFILE_CONSTANTS.placeholder.email}
           rules={[
             {
               type: 'email',
-              message: 'Email không đúng định dạng'
+              message: MODAL_EDIT_PROFILE_CONSTANTS.validate.email
             },
             {
               required: true,
-              message: REQUIRED_TEXT
+              message: MODAL_EDIT_PROFILE_CONSTANTS.validate.required
             }
           ]}
         >
-          <Input placeholder="Email" />
+          <Input placeholder={MODAL_EDIT_PROFILE_CONSTANTS.placeholder.email} />
         </Form.Item>
         <Form.Item
           name="telephone"
           className="phone"
-          label="Số điện thoại"
+          label={MODAL_EDIT_PROFILE_CONSTANTS.placeholder.phone}
           rules={[
             {
-              pattern: new RegExp(REGEX_PHONE),
-              message: "Số điện thoại không đúng định dạng"
+              pattern: new RegExp(MODAL_EDIT_PROFILE_CONSTANTS.regexPhone),
+              message: MODAL_EDIT_PROFILE_CONSTANTS.validate.phone
             }
           ]}
         >
           <Input
-            placeholder="Số điện thoại"
+            placeholder={MODAL_EDIT_PROFILE_CONSTANTS.placeholder.phone}
           />
         </Form.Item>
       </Form>

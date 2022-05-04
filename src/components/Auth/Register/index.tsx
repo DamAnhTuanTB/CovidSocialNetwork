@@ -1,13 +1,12 @@
 // import getImagePath from '@helpers/get-image-path';
-import { Button, DatePicker, Form, Input, Radio, Space } from 'antd';
-import React, { useState } from 'react';
+import { Button, DatePicker, Form, Input, Space } from 'antd';
+import React from 'react';
 import { useMutation } from 'react-query';
 import { Link, useHistory } from 'react-router-dom';
 import { signUp } from '../../../api/authentication';
 import toastCustom from '../../../helpers/toastCustom';
+import REGISTER_CONSTANTS from './constant';
 import { RegisterStyled } from './styled';
-
-const REQUIRED_TEXT = "Vui lòng điền";
 
 const RegisterComponent = () => {
   const mutation = useMutation(signUp);
@@ -22,7 +21,7 @@ const RegisterComponent = () => {
       onSuccess: (data) => {
         if (data?.status === 201) {
           toastCustom({
-            mess: "Đăng kí thành công",
+            mess: REGISTER_CONSTANTS.successMessage,
             type: "success",
           })
           setTimeout(() => {
@@ -46,10 +45,10 @@ const RegisterComponent = () => {
       <div className="register-container">
         <div className="logo">
           <img src="/login/facebookLogo.svg" className="logo-image" alt="" />
-          <div className="logo-description">Facebook helps you connect and share with the people in your life.</div>
+          <div className="logo-description">{REGISTER_CONSTANTS.slogan}</div>
         </div>
         <div className="form-register">
-          <div className="title">Đăng ký</div>
+          <div className="title">{REGISTER_CONSTANTS.title}</div>
           <Form
             name="normal_register"
             className="register-form"
@@ -63,11 +62,11 @@ const RegisterComponent = () => {
                 rules={[
                   {
                     required: true,
-                    message: REQUIRED_TEXT
+                    message: REGISTER_CONSTANTS.validateMessage.required
                   }
                 ]}
               >
-                <Input placeholder="Tên" />
+                <Input placeholder={REGISTER_CONSTANTS.placeholder.firstName} />
               </Form.Item>
               <Form.Item
                 name="last_name"
@@ -75,12 +74,12 @@ const RegisterComponent = () => {
                 rules={[
                   {
                     required: true,
-                    message: REQUIRED_TEXT
+                    message: REGISTER_CONSTANTS.validateMessage.required
                   }
                 ]}
               >
                 <Input
-                  placeholder="Họ"
+                  placeholder={REGISTER_CONSTANTS.placeholder.lastName}
                 />
               </Form.Item>
             </Space>
@@ -90,22 +89,22 @@ const RegisterComponent = () => {
               rules={[
                 {
                   required: true,
-                  message: REQUIRED_TEXT
+                  message: REGISTER_CONSTANTS.validateMessage.required
                 }
               ]}
             >
-              <Input placeholder="Biệt danh" />
+              <Input placeholder={REGISTER_CONSTANTS.placeholder.nickName} />
             </Form.Item>
             <Form.Item
               name="date_of_birth"
               rules={[
                 {
                   required: true,
-                  message: REQUIRED_TEXT
+                  message: REGISTER_CONSTANTS.validateMessage.required
                 }
               ]}
             >
-              <DatePicker placeholder="Ngày sinh" format="DD-MM-YYYY" />
+              <DatePicker placeholder={REGISTER_CONSTANTS.placeholder.birthday} format="DD-MM-YYYY" />
             </Form.Item>
             <Form.Item
               name="email"
@@ -113,11 +112,11 @@ const RegisterComponent = () => {
               rules={[
                 {
                   type: 'email',
-                  message: 'Email không đúng định dạng'
+                  message: REGISTER_CONSTANTS.validateMessage.email
                 },
                 {
                   required: true,
-                  message: REQUIRED_TEXT
+                  message: REGISTER_CONSTANTS.validateMessage.required
                 }
               ]}
             >
@@ -129,11 +128,11 @@ const RegisterComponent = () => {
               rules={[
                 {
                   required: true,
-                  message: REQUIRED_TEXT
+                  message: REGISTER_CONSTANTS.validateMessage.required
                 },
                 {
                   min: 6,
-                  message: 'Mật khẩu tối thiểu 6 kí tự'
+                  message: REGISTER_CONSTANTS.validateMessage.passwordMinLength
                 }
               ]}
             >
@@ -147,11 +146,11 @@ const RegisterComponent = () => {
               rules={[
                 {
                   required: true,
-                  message: REQUIRED_TEXT
+                  message: REGISTER_CONSTANTS.validateMessage.required
                 },
                 {
                   min: 6,
-                  message: 'Mật khẩu tối thiểu 6 kí tự'
+                  message: REGISTER_CONSTANTS.validateMessage.passwordMinLength
                 },
                 ({ getFieldValue }: any) => ({
                   validator(_: any, value: any) {
@@ -159,19 +158,19 @@ const RegisterComponent = () => {
                       return Promise.resolve();
                     }
 
-                    return Promise.reject(new Error('Mật khẩu không giống nhau'));
+                    return Promise.reject(new Error(REGISTER_CONSTANTS.validateMessage.verifyPass));
                   },
                 }),
               ]}
             >
               <Input.Password
-                placeholder="Xác nhận mật khẩu"
+                placeholder={REGISTER_CONSTANTS.placeholder.confirmPass}
               />
             </Form.Item>
             <Button type="primary" htmlType="submit" className="register-form-button">
-              Đăng ký
+              {REGISTER_CONSTANTS.submit}
             </Button>
-            <div>Bạn đã có tài khoản <Link to="/login">Đăng nhập</Link></div>
+            <div>{REGISTER_CONSTANTS.prefixLogin}<Link to="/login">{REGISTER_CONSTANTS.login}</Link></div>
           </Form>
         </div>
       </div>

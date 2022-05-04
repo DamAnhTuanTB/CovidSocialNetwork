@@ -1,10 +1,10 @@
 // @ts-nocheck
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { ModalRattingStyled } from './styled';
-import { EyeOutlined, MehFilled, FrownFilled, SmileFilled } from '@ant-design/icons';
+import { FrownFilled, MehFilled, SmileFilled } from '@ant-design/icons';
 import { Button } from 'antd';
+import React, { useState } from 'react';
 import StarRating from '../../../../Base/BaseRatingStar';
+import MODAL_RATING_CONSTANTS from './constants';
+import { ModalRattingStyled } from './styled';
 
 const ModalRatting = (props: any) => {
   const {
@@ -21,17 +21,17 @@ const ModalRatting = (props: any) => {
   return (
     <ModalRattingStyled
       rating={rating}
-      title="Đánh giá cuộc trò chuyện"
+      title={MODAL_RATING_CONSTANTS.title}
       centered
       visible={isShowModalRate}
       onOk={handleSubmitRate}
       onCancel={() => setIsShowModalRate(false)}
       footer={[
         <Button key="back" onClick={() => setIsShowModalRate(false)}>
-          Hủy
+          {MODAL_RATING_CONSTANTS.cancel}
         </Button>,
         <Button key="submit" type="primary" loading={loading} onClick={handleSubmitRate}>
-          Đánh giá
+          {MODAL_RATING_CONSTANTS.submit}
         </Button>,
       ]}
     >

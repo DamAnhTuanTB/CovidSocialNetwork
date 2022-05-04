@@ -1,8 +1,9 @@
-import React from 'react';
-import { CommentItemStyled } from './styled';
 import { DeleteOutlined } from '@ant-design/icons';
 import { cloneDeep } from 'lodash';
+import React from 'react';
 import BaseImagePreview from '../../../../../../../Base/BaseImagePreview';
+import POST_ITEM_CONSTANTS from '../../constants';
+import { CommentItemStyled } from './styled';
 
 const CommentItem = (props: any) => {
   const {
@@ -73,7 +74,7 @@ const CommentItem = (props: any) => {
               className={`button-like ${detailComment.isLike && "liked"}`}
               onClick={handleClickLike}
             >
-              Thích
+              {POST_ITEM_CONSTANTS.detailAction.like}
             </div>
             <div className="total-like">
               <img src="/post/likeFbIcon.svg" alt="" />

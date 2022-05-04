@@ -1,9 +1,11 @@
-import { Pagination, Space, Table, Tag } from 'antd';
-import { EyeOutlined, MessageOutlined, DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EyeOutlined, MessageOutlined } from '@ant-design/icons';
+import { Pagination, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import dataRecordExpert from './fakeDataExpert';
 import { ListExpertStyled } from './styled';
+
+const TITLE = "Danh sách chuyên gia";
 
 const ListExpertComponent = (props: any) => {
 
@@ -93,7 +95,7 @@ const ListExpertComponent = (props: any) => {
   return (
     <ListExpertStyled>
       <div className="title">
-        Danh sách chuyên gia
+        {TITLE}
       </div>
       <Table
         columns={columns}
