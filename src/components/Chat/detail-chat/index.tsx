@@ -2,8 +2,7 @@
 // @ts-nocheck
 
 import { SendOutlined } from '@ant-design/icons';
-import { Button, Modal } from 'antd';
-import { isEmpty } from 'lodash';
+import { Button } from 'antd';
 import React, { useEffect, useRef, useState } from "react";
 import { Prompt, useParams } from "react-router-dom";
 import ReactTextareaAutosize from "react-textarea-autosize";
@@ -11,7 +10,6 @@ import socketio from 'socket.io-client';
 import StarRating from '../../Base/BaseRatingStar';
 import dataRecordMessages from './fakeDataMessages';
 import { DetailChatComponentStyled } from "./styled";
-import InfoDoctorComponent from "./views/info-doctor";
 import ModalRatting from './views/modal-ratting';
 
 const DetailChatComponent = (props: any) => {

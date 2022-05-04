@@ -14,7 +14,7 @@ const ListPostComponent = (props: any) => {
   const params = new URL(window.location.href);
   const paramsUrl = params.searchParams;
   const [currentPage, setCurrentPage] = useState(1);
-  const [activeTab, setActiveTab] = useState(paramsUrl.get("sort") || "new");
+  const [activeTab, setActiveTab] = useState(paramsUrl.get("sort") || LIST_POST_CONSTANTS.listTab[0]);
   const [listPost, setListPost] = useState(dataRecord);
   const history = useHistory();
 
@@ -32,7 +32,7 @@ const ListPostComponent = (props: any) => {
       history.replace("/post?sort=new&page=1");
       return;
     }
-    const sortBy = paramsUrl.get("sort") || "new";
+    const sortBy = paramsUrl.get("sort") || LIST_POST_CONSTANTS.listTab[0];
     const page = paramsUrl.get("page") || 1;
     setActiveTab(sortBy);
     setCurrentPage(+page);

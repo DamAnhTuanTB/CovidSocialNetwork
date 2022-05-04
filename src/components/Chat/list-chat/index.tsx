@@ -1,10 +1,11 @@
-import { Button, DatePicker, Input, Pagination, Space, Table, Tag } from 'antd';
 import { EyeOutlined } from '@ant-design/icons';
+import { Button, DatePicker, Pagination, Table, Tag } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { ListChatStyled } from './styled';
-import dataRecordChat from './fakeDataChat';
 import { useHistory } from 'react-router-dom';
+import LIST_CHAT_CONSTANTS from './constants';
+import dataRecordChat from './fakeDataChat';
+import { ListChatStyled } from './styled';
 
 const ListChatComponent = (props: any) => {
 	const {
@@ -109,7 +110,7 @@ const ListChatComponent = (props: any) => {
 		<ListChatStyled>
 			<div className={`list-chat ${isAdmin && "list-chat-admin"}`}>
 				<div className="title">
-					Danh sách tin nhắn
+					{LIST_CHAT_CONSTANTS.title}
 				</div>
 				<div className="search-bar">
 					<DatePicker onChange={handleChangeDate} value={dateSearch ? moment(dateSearch, dateFormat) : undefined} format={dateFormat} />

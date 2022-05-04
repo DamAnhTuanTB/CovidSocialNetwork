@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
 import { Button, Modal } from 'antd';
+import React, { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { deletePost } from '../../../../../../api/post';
 import toastCustom from '../../../../../../helpers/toastCustom';
+import MODAL_DELETE_POST_CONSTANTS from './constants';
 
 const ModalDeletePost = (props: any) => {
   const {
@@ -26,7 +27,7 @@ const ModalDeletePost = (props: any) => {
           setLoading(false);
           if (data?.statusCode === 200) {
             toastCustom({
-              mess: "Xóa bài viết thành công",
+              mess: MODAL_DELETE_POST_CONSTANTS.message.success,
               type: "success"
             })
             setPostDelete(null);
@@ -36,18 +37,13 @@ const ModalDeletePost = (props: any) => {
         onError: (err) => {
           console.log(err);
           toastCustom({
-            mess: "Xóa bài viết không thành công",
+            mess: MODAL_DELETE_POST_CONSTANTS.message.error,
             type: "success"
           })
           setPostDelete(null);
         }
       }
     )
-
-    // setTimeout(() => {
-    //   setLoading(false);
-    //   setPostDelete(null);
-    // }, 2000)
   }
   return (
     <Modal
@@ -58,14 +54,14 @@ const ModalDeletePost = (props: any) => {
       onOk={onSubmit}
       footer={[
         <Button key="back" onClick={() => setPostDelete(null)}>
-          Hủy
+          {MODAL_DELETE_POST_CONSTANTS.cancel}
         </Button>,
         <Button key="submit" type="primary" loading={loading} onClick={onSubmit}>
-          Ok
+          {MODAL_DELETE_POST_CONSTANTS.submit}
         </Button>,
       ]}
     >
-      Bạn có muốn xóa bài viết này không
+      {MODAL_DELETE_POST_CONSTANTS.content}
     </Modal>
   );
 };

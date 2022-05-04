@@ -62,6 +62,7 @@ const PostItemStyle = styled.div`
             text-align: justify;
             margin-bottom: 15px;
             font-size: 14px;
+            white-space: pre-wrap;
         }
         .list-image {
             img {

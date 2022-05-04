@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import BaseImagePreview from '../../../../Base/BaseImagePreview';
 import ReactLoading from "react-loading";
+import BaseImagePreview from '../../../../Base/BaseImagePreview';
 import { ModalListImageStyled } from './styled';
+
+const TITLE_MODAL = "Danh sách ảnh";
 
 const ModalListImage = (props: any) => {
   const {
@@ -29,7 +31,7 @@ const ModalListImage = (props: any) => {
 
   return (
     <ModalListImageStyled
-      title="Danh sách ảnh"
+      title={TITLE_MODAL}
       centered
       visible={!!idGuest}
       onCancel={handleCancel}

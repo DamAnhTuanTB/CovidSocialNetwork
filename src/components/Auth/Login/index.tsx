@@ -1,14 +1,13 @@
 import { LockOutlined, MailOutlined } from '@ant-design/icons';
 import { Button, Divider, Form, Input } from 'antd';
-import React from 'react';
 import Cookies from 'js-cookie';
-import { useMutation, useQuery } from 'react-query';
+import React from 'react';
+import { useMutation } from 'react-query';
 import { Link, useHistory } from 'react-router-dom';
 import { login } from '../../../api/authentication';
 import toastCustom from '../../../helpers/toastCustom';
+import LOGIN_PATIENT_CONSTANTS from './constant';
 import { LoginStyled } from './styled';
-
-const REQUIRED_TEXT = "Vui lòng điền";
 
 const LoginComponent = () => {
   const history = useHistory();
@@ -26,7 +25,7 @@ const LoginComponent = () => {
         const dataError = err?.response;
         if (dataError?.data?.statusCode === 401) {
           toastCustom({
-            mess: "Email hoặc mật khẩu không đúng",
+            mess: LOGIN_PATIENT_CONSTANTS.errorMessage.errAccount,
             type: "error",
           })
         }
@@ -38,7 +37,7 @@ const LoginComponent = () => {
       <div className="login-container">
         <div className="logo">
           <img src="/login/facebookLogo.svg" className="logo-image" alt="" />
-          <div className="logo-description">Facebook helps you connect and share with the people in your life.</div>
+          <div className="logo-description">{LOGIN_PATIENT_CONSTANTS.slogan}</div>
         </div>
         <div className="form-login">
           <Form
@@ -53,15 +52,15 @@ const LoginComponent = () => {
               rules={[
                 {
                   type: 'email',
-                  message: 'Email không đúng định dạng'
+                  message: LOGIN_PATIENT_CONSTANTS.validateMessage.email
                 },
                 {
                   required: true,
-                  message: REQUIRED_TEXT
+                  message: LOGIN_PATIENT_CONSTANTS.validateMessage.required
                 }
               ]}
             >
-              <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Email" />
+              <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder={LOGIN_PATIENT_CONSTANTS.placeholder.email} />
             </Form.Item>
             <Form.Item
               name="password"
@@ -69,25 +68,25 @@ const LoginComponent = () => {
               rules={[
                 {
                   required: true,
-                  message: REQUIRED_TEXT
+                  message: LOGIN_PATIENT_CONSTANTS.validateMessage.required
                 },
                 {
                   min: 6,
-                  message: 'Mật khẩu tối thiểu 6 kí tự'
+                  message: LOGIN_PATIENT_CONSTANTS.validateMessage.passwordMinLength
                 }
               ]}
             >
               <Input.Password
                 prefix={<LockOutlined className="site-form-item-icon" />}
-                placeholder="Mật khẩu"
+                placeholder={LOGIN_PATIENT_CONSTANTS.placeholder.password}
               />
             </Form.Item>
             <Button type="primary" htmlType="submit" className="login-form-button">
-              Đăng nhập
+              {LOGIN_PATIENT_CONSTANTS.submit}
             </Button>
             <Form.Item className="forgot-pass">
               <Link className="login-form-forgot" to="">
-                Quên mật khẩu
+                {LOGIN_PATIENT_CONSTANTS.forgotPass}
               </Link>
             </Form.Item>
 
@@ -95,7 +94,7 @@ const LoginComponent = () => {
 
             <Form.Item>
               <Button type="default" className="register-button" onClick={() => history.push('/register')}>
-                Tạo tài khoản
+                {LOGIN_PATIENT_CONSTANTS.register}
               </Button>
             </Form.Item>
           </Form>

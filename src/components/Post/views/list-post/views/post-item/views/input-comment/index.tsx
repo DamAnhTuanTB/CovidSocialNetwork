@@ -5,6 +5,7 @@ import { Progress } from 'antd';
 import React, { useRef, useState } from 'react';
 import ReactTextareaAutosize from 'react-textarea-autosize';
 import { getUrlImage } from '../../../../../../../../api/uploadimage';
+import POST_ITEM_CONSTANTS from '../../constants';
 
 const InputComment = (props: any) => {
   const { 
@@ -42,7 +43,7 @@ const InputComment = (props: any) => {
         <img className="avatar-user" src="/post/avatar_my1.jpg" alt="" />
         <div className="inputs">
           <ReactTextareaAutosize
-            placeholder="Nhập bình luận"
+            placeholder={POST_ITEM_CONSTANTS.comment.placeholder}
             onChange={handleChangeInput}
             className="text-input"
             ref={refTextArea}

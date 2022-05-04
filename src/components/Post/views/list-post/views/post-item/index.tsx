@@ -7,6 +7,7 @@ import React, { useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import handleConvertDateStringToDateTime from '../../../../../../helpers/convertDateStringToDate';
 import BaseImagePreview from '../../../../../Base/BaseImagePreview';
+import POST_ITEM_CONSTANTS from './constants';
 import { PostItemStyle } from './styled';
 import CommentItem from './views/comment-item';
 import InputComment from './views/input-comment';
@@ -40,10 +41,10 @@ const PostItem = (props: any) => {
     <Menu onClick={onclickMenu}>
       {
         (!isPostSaved && !isPostPending) && (
-          <Menu.Item key="edit">Chỉnh sửa bài viết</Menu.Item>
+          <Menu.Item key="edit">{POST_ITEM_CONSTANTS.dropdown.edit}</Menu.Item>
         )
       }
-      <Menu.Item key={`${isPostSaved ? "unsave" : "delete"}`}>{isPostSaved ? "Bỏ lưu" : "Xóa bài viết"}</Menu.Item>
+      <Menu.Item key={`${isPostSaved ? "unsave" : "delete"}`}>{isPostSaved ? POST_ITEM_CONSTANTS.dropdown.unsave : POST_ITEM_CONSTANTS.dropdown.delete}</Menu.Item>
     </Menu>
   );
 
@@ -51,10 +52,10 @@ const PostItem = (props: any) => {
     <Menu onClick={onclickMenu}>
       {
         isAdminOwner && (
-          <Menu.Item key="edit-admin">Chỉnh sửa bài viết</Menu.Item>
+          <Menu.Item key="edit-admin">{POST_ITEM_CONSTANTS.dropdown.edit}</Menu.Item>
         )
       }
-      <Menu.Item key="delete-admin">Xóa bài viết</Menu.Item>
+      <Menu.Item key="delete-admin">{POST_ITEM_CONSTANTS.dropdown.delete}</Menu.Item>
     </Menu>
   );
 
@@ -135,7 +136,7 @@ const PostItem = (props: any) => {
         <div className="detail-post">
           {detailPost?.content_texts}
         </div>
-        <div className={`${detailPost?.image?.length < 3 ? "list-image" : "list-image-3"}`}>
+        <div className={`${detailPost?.content_images?.split(";")?.length < 3 ? "list-image" : "list-image-3"}`}>
           {detailPost?.content_images?.split(";")?.map((image: any, index: any) => {
             const key = detailPost.id.toString() + index.toString();
             return (
@@ -153,8 +154,8 @@ const PostItem = (props: any) => {
                 {detailPost?.totalLike}
               </div>
               <div className="detail-other">
-                <div>{detailPost?.totalComment} bình luận</div>
-                <div>{detailPost?.totalSave} lượt lưu</div>
+                <div>{detailPost?.totalComment}{POST_ITEM_CONSTANTS.detailAction.suffix.comment}</div>
+                <div>{detailPost?.totalSave}{POST_ITEM_CONSTANTS.detailAction.suffix.save}</div>
               </div>
             </div>
             <div className="list-button">
@@ -164,11 +165,11 @@ const PostItem = (props: any) => {
                 onClick={handleClickLikeButton}
               >
                 <LikeTwoTone twoToneColor={detailPost?.isLike ? "#1877F2" : "#a3a3a3"} />
-                <div className={`text ${detailPost?.isLike && "text-like"}`}>Thích</div>
+                <div className={`text ${detailPost?.isLike && "text-like"}`}>{POST_ITEM_CONSTANTS.detailAction.like}</div>
               </div>
               <div className="comment-button action-button" onClick={handleClickCommentButton}>
                 <MessageTwoTone twoToneColor="#a3a3a3" />
-                <div className="text">Bình luận</div>
+                <div className="text">{POST_ITEM_CONSTANTS.detailAction.comment}</div>
               </div>
               <div
                 aria-hidden
@@ -176,7 +177,7 @@ const PostItem = (props: any) => {
                 onClick={handleClickSaveButton}
               >
                 <HeartTwoTone twoToneColor={detailPost?.isSave ? "#f21831" : "#a3a3a3"} />
-                <div className={`text ${detailPost?.isSave && "text-save"}`}>Lưu</div>
+                <div className={`text ${detailPost?.isSave && "text-save"}`}>{POST_ITEM_CONSTANTS.detailAction.save}</div>
               </div>
             </div>
           </div>
@@ -207,8 +208,8 @@ const PostItem = (props: any) => {
       {
         (isAdmin && isPostPending) && (
           <div className="list-approve-button-admin">
-            <Button type="primary">Duyệt bài viết</Button>
-            <Button type="text">Xóa bài viết</Button>
+            <Button type="primary">{POST_ITEM_CONSTANTS.adminAction.approve}</Button>
+            <Button type="text">{POST_ITEM_CONSTANTS.adminAction.delete}</Button>
           </div>
         )
       }

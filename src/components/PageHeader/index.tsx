@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { MailOutlined, BellOutlined } from '@ant-design/icons';
-import { PageHeaderStyled } from './styled';
+import { BellOutlined, MailOutlined } from '@ant-design/icons';
 import { Button, Input } from 'antd';
-import ModalCreatePost from '../Post/views/modal-create-post';
-import { useHistory } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import { useQueryClient } from 'react-query';
+import { useHistory } from 'react-router-dom';
 import BaseImagePreview from '../Base/BaseImagePreview';
+import ModalCreatePost from '../Post/views/modal-create-post';
+import PAGE_HEADER_CONSTANTS from './constants';
+import { PageHeaderStyled } from './styled';
 
 export default function PageHeader(props: any) {
   const {
@@ -68,7 +69,7 @@ export default function PageHeader(props: any) {
                   isShowNotification && (
                     <div className="dropdown">
                       <div className="title-notification">
-                        Thông báo
+                        {PAGE_HEADER_CONSTANTS.notificationTitle}
                       </div>
                       <div className="item-notification">
                         <img src="/post/avatar_my1.jpg" alt="" />
@@ -94,7 +95,7 @@ export default function PageHeader(props: any) {
           {
             !isExpert && (
               <Button type="primary" onClick={() => setIsShowModal(true)}>
-                Viết bài
+                {PAGE_HEADER_CONSTANTS.createPost}
               </Button>
             )
           }

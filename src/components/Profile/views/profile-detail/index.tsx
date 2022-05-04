@@ -1,4 +1,4 @@
-import { Pagination, Space, Tabs } from 'antd';
+import { Pagination, Tabs } from 'antd';
 import PropTypes from 'prop-types';
 import React, { Fragment, useEffect, useState } from 'react';
 import { useQueryClient } from 'react-query';
@@ -6,9 +6,9 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useGetListMyPost } from '../../../../hooks/usePost';
 import { useGetProfileOther } from '../../../../hooks/useProfile';
 import BaseImagePreview from '../../../Base/BaseImagePreview';
-import dataRecord from '../../../Post/views/list-post/fakeData';
 import PostItem from '../../../Post/views/list-post/views/post-item';
 import ModalCreatePost from '../../../Post/views/modal-create-post';
+import PROFILE_DETAIL_CONSTANTS from './constants';
 import { ProfileDetailStyled } from './styled';
 import ListImage from './views/list-image';
 import ModalChangePassword from './views/modal-change-password';
@@ -34,6 +34,7 @@ const ProfileDetail = (props: any) => {
   const [postDelete, setPostDelete] = useState(null);
   const [postEdit, setPostEdit] = useState(null);
   const [listPost, setListPost] = useState<any>([]);
+  const [totalPost, setTotalPost] = useState<any>();
 
   const [isShowModalEditProfile, setIsShowModalEditProfile] = useState(false);
   const [isShowModalChangePassword, setIsShowModalChangePassword] = useState(false);
@@ -41,7 +42,7 @@ const ProfileDetail = (props: any) => {
   const [profileOtherUser, setProfileOtherUser] = useState<any>({});
 
   const { dataPost, refetchPost, isLoadingPost } = useGetListMyPost({
-    type: type,
+    type: type?.split("-")[0],
     page: currentPage,
     limit: 10,
   });
@@ -82,8 +83,8 @@ const ProfileDetail = (props: any) => {
       console.log(123123123);
     } else {
       setListPost(dataPost?.data);
+      setTotalPost(dataPost?.total)
     }
-    // call api theo cách chay ở đây
 
     setCurrentPage(paramsUrlSearch.get("page") || "1");
     setType(paramsUrlSearch.get("type") || "list-image");
@@ -119,8 +120,8 @@ const ProfileDetail = (props: any) => {
         {
           !param.id_user && (
             <>
-              <div className="button-edit" onClick={() => setIsShowModalEditProfile(true)}>Chỉnh sửa thông tin cá nhân</div>
-              <div className="button-change-password" onClick={() => setIsShowModalChangePassword(true)}>Đổi mật khẩu</div>
+              <div className="button-edit" onClick={() => setIsShowModalEditProfile(true)}>{PROFILE_DETAIL_CONSTANTS.editProfile}</div>
+              <div className="button-change-password" onClick={() => setIsShowModalChangePassword(true)}>{PROFILE_DETAIL_CONSTANTS.changePassword}</div>
             </>
           )
         }
@@ -130,7 +131,7 @@ const ProfileDetail = (props: any) => {
           <TabPane tab="Ảnh" key="list-image">
             <ListImage />
           </TabPane>
-          <TabPane tab="Bài viết" key="my-post">
+          <TabPane tab="Bài viết" key="success-post">
             {
               listPost?.map((item: any) => (
                 <Fragment key={item.id}>
@@ -149,7 +150,7 @@ const ProfileDetail = (props: any) => {
           {
             !param.id_user && (
               <>
-                <TabPane tab="Bài viết đã lưu" key="saved-post">
+                <TabPane tab="Bài viết đã lưu" key="save-post">
                   {
                     listPost?.map((item: any) => (
                       <Fragment key={item.id}>
@@ -179,7 +180,7 @@ const ProfileDetail = (props: any) => {
                     ))
                   }
                 </TabPane>
-                <TabPane tab="Bài viết bị hủy" key="canceled-post">
+                <TabPane tab="Bài viết bị hủy" key="cancel-post">
                   {
                     listPost?.map((item: any) => (
                       <Fragment key={item.id}>
@@ -204,7 +205,7 @@ const ProfileDetail = (props: any) => {
                 !isLoadingPost && (
                   <Pagination
                     current={+currentPage}
-                    total={50}
+                    total={+totalPost}
                     onChange={handleChangePage}
                   />
                 )

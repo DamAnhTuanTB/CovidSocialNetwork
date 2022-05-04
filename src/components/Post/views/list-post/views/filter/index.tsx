@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
 import { FireTwoTone, FlagTwoTone, StarTwoTone } from '@ant-design/icons';
+import React from 'react';
+import FILTER_POST_CONSTANTS from './constants';
 import { FilterStyle } from './styled';
 
 const Filter = (props: any) => {
@@ -8,7 +9,7 @@ const Filter = (props: any) => {
   return (
     <FilterStyle className="filter-sort">
       <div className="title">
-        DÀNH CHO BẠN
+        {FILTER_POST_CONSTANTS.title}
       </div>
       <div className="list-filter">
         <div

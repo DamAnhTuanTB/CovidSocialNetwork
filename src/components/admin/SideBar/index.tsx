@@ -1,20 +1,9 @@
 
+import { Menu } from 'antd';
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { SideBarAdminStyled } from './styled';
-import { Menu, MenuProps } from 'antd';
-import {
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-  BarChartOutlined,
-  CloudOutlined,
-  AppstoreOutlined,
-  TeamOutlined,
-  ShopOutlined,
-} from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import LIST_MENU_SIDEBAR from './constant';
+import { SideBarAdminStyled } from './styled';
 
 const { SubMenu } = Menu;
 

@@ -1,8 +1,10 @@
-import { Form, Input, Skeleton, Space } from 'antd';
-import React, { useState } from 'react';
+import { Form, Space } from 'antd';
+import React from 'react';
 import BaseImagePreview from '../../../../Base/BaseImagePreview';
-import LoadingImage from '../../../../Base/LoadingImage';
+import MODAL_PROFILE_CONSTANTS from './constants';
 import { ModalProfileGuestStyled } from './styled';
+
+const TITLE_MODAL = "Thông tin cá nhân";
 
 const ModalProfileGuest = (props: any) => {
   const {
@@ -16,7 +18,7 @@ const ModalProfileGuest = (props: any) => {
 
   return (
     <ModalProfileGuestStyled
-      title="Thông tin cá nhân"
+      title={TITLE_MODAL}
       centered
       visible={!!previewGuest}
       onCancel={handleCancel}
@@ -39,30 +41,30 @@ const ModalProfileGuest = (props: any) => {
       >
         <Space className="ant-space-align-start fullwitdh">
           <div className="info-item first-name">
-            <div className="label">Tên</div>
+            <div className="label">{MODAL_PROFILE_CONSTANTS.label.firstName}</div>
             <div className="value">{previewGuest?.first_name}</div>
           </div>
           <div className="info-item last-name">
-            <div className="label">Họ</div>
+            <div className="label">{MODAL_PROFILE_CONSTANTS.label.lastName}</div>
             <div className="value">{previewGuest?.last_name}</div>
           </div>
         </Space>
         <Space className="ant-space-align-start fullwitdh">
           <div className="info-item nick-name">
-            <div className="label">Biệt danh</div>
+            <div className="label">{MODAL_PROFILE_CONSTANTS.label.nickName}</div>
             <div className="value">{previewGuest?.nick_name}</div>
           </div>
           <div className="info-item birthday">
-            <div className="label">Ngày sinh</div>
+            <div className="label">{MODAL_PROFILE_CONSTANTS.label.birthday}</div>
             <div className="value">{previewGuest?.birthday}</div>
           </div>
         </Space>
         <div className="info-item email">
-          <div className="label">Email</div>
+          <div className="label">{MODAL_PROFILE_CONSTANTS.label.email}</div>
           <div className="value">{previewGuest?.email}</div>
         </div>
         <div className="info-item phone">
-          <div className="label">Số điện thoại</div>
+          <div className="label">{MODAL_PROFILE_CONSTANTS.label.phone}</div>
           <div className="value">{previewGuest?.phone}</div>
         </div>
       </Form>

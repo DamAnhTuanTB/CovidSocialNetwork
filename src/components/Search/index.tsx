@@ -2,6 +2,7 @@ import { Pagination } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import dataRecord from '../Post/views/list-post/fakeData';
+import SEARCH_CONSTANTS from './constants';
 import { SearchComponentStyled } from './styled';
 
 const SearchComponent = (props: any) => {
@@ -34,7 +35,7 @@ const SearchComponent = (props: any) => {
     <SearchComponentStyled>
       <div className="search-component">
         <div className="title">
-          Kết quả tìm kiếm cho: {searchText}
+          {SEARCH_CONSTANTS.title}{searchText}
         </div>
         {
           listPost.map((item: any) => (

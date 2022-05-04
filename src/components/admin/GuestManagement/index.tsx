@@ -1,11 +1,13 @@
-import { Pagination, Space, Table, Tag } from 'antd';
-import { EyeOutlined, FileImageOutlined, DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EyeOutlined, FileImageOutlined } from '@ant-design/icons';
+import { Pagination, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import dataRecordGuest from './fakeDataGuest';
 import { ListGuestStyled } from './styled';
-import ModalProfileGuest from './views/modalProfileGuest';
 import ModalListImage from './views/modalListImage';
+import ModalProfileGuest from './views/modalProfileGuest';
+
+const TITLE = "Danh sách bệnh nhân";
 
 const ListGuestComponent = (props: any) => {
 
@@ -87,7 +89,7 @@ const ListGuestComponent = (props: any) => {
   return (
     <ListGuestStyled>
       <div className="title">
-        Danh sách bệnh nhân
+        {TITLE}
       </div>
       <Table
         columns={columns}

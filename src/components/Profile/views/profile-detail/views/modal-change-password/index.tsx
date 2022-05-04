@@ -1,11 +1,10 @@
+import { Button, Form, Input } from 'antd';
 import React, { useState } from 'react';
-import { Button, Form, Input, Modal } from 'antd';
-import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
-import { ModalChangePasswordStyled } from './styled';
 import { useMutation } from 'react-query';
-import toastCustom from '../../../../../../helpers/toastCustom';
 import { updatePassword } from '../../../../../../api/profile';
+import toastCustom from '../../../../../../helpers/toastCustom';
+import MODAL_CHANGE_PASSWORD_CONSTANTS from './constants';
+import { ModalChangePasswordStyled } from './styled';
 
 const ModalChangePassword = (props: any) => {
   const {
@@ -30,7 +29,7 @@ const ModalChangePassword = (props: any) => {
         if (res?.data?.statusCode === 201) {
           setLoading(false);
           toastCustom({
-            mess: "Bạn đã đổi mật khẩu thành công",
+            mess: MODAL_CHANGE_PASSWORD_CONSTANTS.message.success,
             type: "success",
           });
           handleCancel();
@@ -41,7 +40,7 @@ const ModalChangePassword = (props: any) => {
         setLoading(false);
         if (err?.response?.data?.statusCode === 500) {
           toastCustom({
-            mess: "Lỗi hệ thống",
+            mess: MODAL_CHANGE_PASSWORD_CONSTANTS.message.error.internalServer,
             type: "error",
           });
           return;
@@ -55,26 +54,20 @@ const ModalChangePassword = (props: any) => {
         }
       }
     })
-    
-    // setLoading(true);
-    // setTimeout(() => {
-    //   setLoading(false);
-    //   setIsShowModalChangePassword(false);
-    // }, 2000)
   }
 
   const footerEdit = [
     <Button key="back" onClick={handleCancel}>
-      Hủy
+      {MODAL_CHANGE_PASSWORD_CONSTANTS.cancel}
     </Button>,
     <Button key="submit"type="primary" loading={loading} onClick={form.submit}>
-      Ok
+      {MODAL_CHANGE_PASSWORD_CONSTANTS.submit}
     </Button>,
   ]
 
   return (
     <ModalChangePasswordStyled
-      title="Đổi mật khẩu"
+      title={MODAL_CHANGE_PASSWORD_CONSTANTS.title}
       centered
       visible={isShowModalChangePassword}
       onCancel={handleCancel}
@@ -84,42 +77,40 @@ const ModalChangePassword = (props: any) => {
     >
       <Form
         form={form}
-        name="normal_login"
-        className="login-form"
-        initialValues={{ remember: true }}
+        className="change-password-form"
         onFinish={onFinish}
       >
         <Form.Item
           name="old_password"
           className="oldpassword"
-          label="Mật khẩu hiện tại"
+          label={MODAL_CHANGE_PASSWORD_CONSTANTS.label.currentPass}
           rules={[
             {
               required: true,
-              message: "Vui lòng điền"
+              message: MODAL_CHANGE_PASSWORD_CONSTANTS.validate.required
             },
             {
               min: 6,
-              message: 'Mật khẩu tối thiểu 6 kí tự'
+              message: MODAL_CHANGE_PASSWORD_CONSTANTS.validate.passMinLength
             }
           ]}
         >
           <Input.Password
-            placeholder="Mật khẩu hiện tại"
+            placeholder={MODAL_CHANGE_PASSWORD_CONSTANTS.label.currentPass}
           />
         </Form.Item>
         <Form.Item
           name="new_password"
           className="newpassword"
-          label="Mật khẩu mới"
+          label={MODAL_CHANGE_PASSWORD_CONSTANTS.label.newPass}
           rules={[
             {
               required: true,
-              message: "Vui lòng điền"
+              message: MODAL_CHANGE_PASSWORD_CONSTANTS.validate.required
             },
             {
               min: 6,
-              message: 'Mật khẩu tối thiểu 6 kí tự'
+              message: MODAL_CHANGE_PASSWORD_CONSTANTS.validate.passMinLength
             },
             ({ getFieldValue }) => ({
               validator(_, value) {
@@ -127,27 +118,27 @@ const ModalChangePassword = (props: any) => {
                   return Promise.resolve();
                 }
   
-                return Promise.reject(new Error('Mật khẩu mới phải khác mật khẩu cũ'));
+                return Promise.reject(new Error(MODAL_CHANGE_PASSWORD_CONSTANTS.validate.verifyOldPass));
               },
             }),
           ]}
         >
           <Input.Password
-            placeholder="Mật khẩu mới"
+            placeholder={MODAL_CHANGE_PASSWORD_CONSTANTS.label.newPass}
           />
         </Form.Item>
         <Form.Item
           name="confirm_password"
           className="confirmpassword"
-          label="Nhập lại mật khẩu mới"
+          label={MODAL_CHANGE_PASSWORD_CONSTANTS.label.confirmPass}
           rules={[
             {
               required: true,
-              message: "Vui lòng điền"
+              message: MODAL_CHANGE_PASSWORD_CONSTANTS.validate.required
             },
             {
               min: 6,
-              message: 'Mật khẩu tối thiểu 6 kí tự'
+              message: MODAL_CHANGE_PASSWORD_CONSTANTS.validate.passMinLength
             },
             ({ getFieldValue }) => ({
               validator(_, value) {
@@ -155,13 +146,13 @@ const ModalChangePassword = (props: any) => {
                   return Promise.resolve();
                 }
   
-                return Promise.reject(new Error('Mật khẩu không giống nhau'));
+                return Promise.reject(new Error(MODAL_CHANGE_PASSWORD_CONSTANTS.validate.verifyNewPass));
               },
             }),
           ]}
         >
           <Input.Password
-            placeholder="nhập lại mật khẩu mới"
+            placeholder={MODAL_CHANGE_PASSWORD_CONSTANTS.label.confirmPass}
           />
         </Form.Item>
       </Form>
