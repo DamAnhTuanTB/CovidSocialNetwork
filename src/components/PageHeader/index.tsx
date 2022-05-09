@@ -45,7 +45,7 @@ export default function PageHeader(props: any) {
         profile={myProfile}
       />
       <div className="header-container">
-        <div className="logo">
+        <div className="logo" onClick={() => history.push('/post')}>
           <img src="/login/facebookLogo.svg" alt="" />
         </div>
         <div className="list-button">

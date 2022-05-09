@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import React, { Fragment, useEffect, useState } from 'react';
 import { useQueryClient } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
-import { useGetListMyPost } from '../../../../hooks/usePost';
+import { useGetListMyPost, useGetListOtherPost } from '../../../../hooks/usePost';
 import { useGetProfileOther } from '../../../../hooks/useProfile';
 import BaseImagePreview from '../../../Base/BaseImagePreview';
+import { LoadingViews } from '../../../Base/LoadingView';
 import PostItem from '../../../Post/views/list-post/views/post-item';
 import ModalCreatePost from '../../../Post/views/modal-create-post';
 import PROFILE_DETAIL_CONSTANTS from './constants';
@@ -41,11 +42,20 @@ const ProfileDetail = (props: any) => {
 
   const [profileOtherUser, setProfileOtherUser] = useState<any>({});
 
-  const { dataPost, refetchPost, isLoadingPost } = useGetListMyPost({
+  const { dataPost, refetchPost, isLoadingPost, isFetchingPost } = useGetListMyPost({
     type: type?.split("-")[0],
     page: currentPage,
     limit: 10,
   });
+
+  const { dataPostOther, refetchPostOther, isLoadingPostOther, isFetchingPostOther } = useGetListOtherPost({
+    idUser: param.id_user,
+    page: currentPage,
+    limit: 10,
+  });
+
+  // console.log(123123123, isFetchingPost);
+
 
   const handleChangePage = (page: any) => {
     history.push(`?type=${type}&page=${page}`);
@@ -75,6 +85,10 @@ const ProfileDetail = (props: any) => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    if (+param.id_user === +myProfile.id) {
+      history.replace("/profile");
+      return;
+    }
     if (!paramsUrlSearch.get("type")) {
       history.replace("?type=list-image");
       return;
@@ -82,13 +96,18 @@ const ProfileDetail = (props: any) => {
     if (paramsUrlSearch.get("type") === "list-image") {
       console.log(123123123);
     } else {
-      setListPost(dataPost?.data);
-      setTotalPost(dataPost?.total)
+      if (isGuest) {
+        setListPost(dataPostOther?.data);
+        setTotalPost(dataPostOther?.total);
+      } else {
+        setListPost(dataPost?.data);
+        setTotalPost(dataPost?.total);
+      }
     }
 
     setCurrentPage(paramsUrlSearch.get("page") || "1");
     setType(paramsUrlSearch.get("type") || "list-image");
-  }, [paramsSeacrh.href, dataPost]);
+  }, [paramsSeacrh.href, param.id_user, dataPost, dataPostOther]);
 
   useEffect(() => {
     if (isGuest && isLoadingError) {
@@ -98,6 +117,8 @@ const ProfileDetail = (props: any) => {
 
     if (isGuest && profileOtherData?.status === 200) {
       setProfileOtherUser(profileOtherData?.data);
+      console.log(123123123, profileOtherData?.data);
+      
     }
   }, [profileOtherData, isLoadingError])
 
@@ -114,7 +135,13 @@ const ProfileDetail = (props: any) => {
         setPostEdit={setPostEdit}
       />
       <div className="detail-user">
-        <BaseImagePreview isLoading className="avatar" src={!isGuest ? myProfile?.avatar || "/defaultAvatar.png" : profileOtherUser?.avatar || "/defaultAvatar.png"} alt="" />
+        {
+          isGuest ? (
+            <BaseImagePreview isLoading className="avatar" src={profileOtherUser?.avatar || "/defaultAvatar.png"} alt="" />
+          ) : (
+            <BaseImagePreview isLoading className="avatar" src={myProfile?.avatar || "/defaultAvatar.png"} alt="" />
+          )
+        }
         <div className="name-user">{!isGuest ? `${myProfile?.first_name} ${myProfile?.last_name}` : `${profileOtherUser?.first_name || ""} ${profileOtherUser?.last_name || ""}`}</div>
         <div className="name-tag">@{!isGuest ? myProfile?.email : profileOtherUser?.email || ""}</div>
         {
@@ -132,74 +159,98 @@ const ProfileDetail = (props: any) => {
             <ListImage />
           </TabPane>
           <TabPane tab="Bài viết" key="success-post">
-            {
-              listPost?.map((item: any) => (
-                <Fragment key={item.id}>
-                  <PostItem
-                    detailPost={item}
-                    isProfile
-                    isGuest={isGuest}
-                    handleClickMoreOption={handleClickMoreOption}
-                    listPost={listPost}
-                    setListPost={setListPost}
-                  />
-                </Fragment>
-              ))
-            }
+            {(isLoadingPost || isLoadingPostOther) ? (
+              <LoadingViews count={20} height={10} />
+            ) : (
+              <>
+                {
+                  listPost?.map((item: any) => (
+                    <Fragment key={item.id}>
+                      <PostItem
+                        detailPost={item}
+                        isProfile
+                        isGuest={isGuest}
+                        handleClickMoreOption={handleClickMoreOption}
+                        listPost={listPost}
+                        setListPost={setListPost}
+                      />
+                    </Fragment>
+                  ))
+                }
+              </>
+            )}
           </TabPane>
           {
             !param.id_user && (
               <>
                 <TabPane tab="Bài viết đã lưu" key="save-post">
-                  {
-                    listPost?.map((item: any) => (
-                      <Fragment key={item.id}>
-                        <PostItem
-                          detailPost={item}
-                          isProfile
-                          isPostSaved
-                          handleClickMoreOption={handleClickMoreOption}
-                          listPost={listPost}
-                          setListPost={setListPost}
-                        />
-                      </Fragment>
-                    ))
-                  }
+                  {isLoadingPost ? (
+                    <LoadingViews count={20} height={10} />
+                  ) : (
+                    <>
+                      {
+                        listPost?.map((item: any) => (
+                          <Fragment key={item.id}>
+                            <PostItem
+                              detailPost={item}
+                              isProfile
+                              isPostSaved
+                              handleClickMoreOption={handleClickMoreOption}
+                              listPost={listPost}
+                              setListPost={setListPost}
+                            />
+                          </Fragment>
+                        ))
+                      }
+                    </>
+                  )}
                 </TabPane>
                 <TabPane tab="Bài viết đang chờ duyệt" key="pending-post">
-                  {
-                    listPost?.map((item: any) => (
-                      <Fragment key={item.id}>
-                        <PostItem
-                          detailPost={item}
-                          isProfile
-                          isPostPending
-                          handleClickMoreOption={handleClickMoreOption}
-                        />
-                      </Fragment>
-                    ))
-                  }
+                  {isLoadingPost ? (
+                    <LoadingViews count={20} height={10} />
+                  ) : (
+                    <>
+                      {
+                        listPost?.map((item: any) => (
+                          <Fragment key={item.id}>
+                            <PostItem
+                              detailPost={item}
+                              isProfile
+                              isPostPending
+                              handleClickMoreOption={handleClickMoreOption}
+                            />
+                          </Fragment>
+                        ))
+                      }
+                    </>
+                  )}
                 </TabPane>
                 <TabPane tab="Bài viết bị hủy" key="cancel-post">
-                  {
-                    listPost?.map((item: any) => (
-                      <Fragment key={item.id}>
-                        <PostItem
-                          detailPost={item}
-                          isProfile
-                          isPostDraft
-                          handleClickMoreOption={handleClickMoreOption}
-                        />
-                      </Fragment>
-                    ))
-                  }
+                  {isLoadingPost ? (
+                    <LoadingViews count={20} height={10} />
+                  ) : (
+                    <>
+                      {
+                        listPost?.map((item: any) => (
+                          <Fragment key={item.id}>
+                            <PostItem
+                              detailPost={item}
+                              isProfile
+                              isPostDraft
+                              handleClickMoreOption={handleClickMoreOption}
+                            />
+                          </Fragment>
+                        ))
+                      }
+                    </>
+                  )}
                 </TabPane>
               </>
             )
           }
         </Tabs>
         {
-          type !== "list-image" && (
+          (type !== "list-image" && totalPost > 0) && (
             <div className="pagination">
               {
                 !isLoadingPost && (

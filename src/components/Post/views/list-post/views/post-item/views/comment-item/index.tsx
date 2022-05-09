@@ -1,6 +1,9 @@
 import { DeleteOutlined } from '@ant-design/icons';
 import { cloneDeep } from 'lodash';
 import React from 'react';
+import { useMutation } from 'react-query';
+import { handleLikeComment } from '../../../../../../../../api/post';
+import handleConvertDateStringToDateTimeComment from '../../../../../../../../helpers/convertDateStringtoDateComment';
 import BaseImagePreview from '../../../../../../../Base/BaseImagePreview';
 import POST_ITEM_CONSTANTS from '../../constants';
 import { CommentItemStyled } from './styled';
@@ -13,21 +16,37 @@ const CommentItem = (props: any) => {
     isAdmin = false,
   } = props;
 
+  const mutationLikeComment = useMutation(handleLikeComment);
+
   const handleClickLike = () => {
-    // console.log(123123123);
     let currentLike = true;
     let changeLike = 1;
     if (detailComment.isLike) {
       currentLike = false;
       changeLike = -1;
     }
-    const newListComment = cloneDeep(listComment);
-    const commentIndex = newListComment.findIndex((item: any) => item.id === detailComment.id);
 
-    newListComment[commentIndex].isLike = currentLike;
-    newListComment[commentIndex].totalLike = newListComment[commentIndex].totalLike + changeLike;
+    mutationLikeComment.mutate({
+      commentId: detailComment.id,
+      isLike: currentLike,
+    }, {
+      onSuccess: (data) => {
+        if (data?.statusCode === 200) {
 
-    setListComment(newListComment);
+          const newListComment = cloneDeep(listComment);
+          const commentIndex = newListComment.findIndex((item: any) => item.id === detailComment.id);
+      
+          newListComment[commentIndex].isLike = currentLike;
+          newListComment[commentIndex].totalLike = +newListComment[commentIndex].totalLike + changeLike;
+      
+          setListComment(newListComment);
+        }
+      },
+      onError: (err) => {
+        console.log(err);
+      }
+    })
+
   }
 
   const handleDeleteComment = () => {
@@ -40,15 +59,15 @@ const CommentItem = (props: any) => {
     <CommentItemStyled>
       <div className="item-comment">
         <div className="avatar">
-          <img src={detailComment?.user?.avatar} alt="" />
+          <img src={detailComment?.commentator_avatar || "/defaultAvatar.png"} alt="" />
         </div>
         <div className="content-comment">
           <div className="name-user">
-            <span>{detailComment?.user?.name}</span>
-            <span>{detailComment.createdAt}</span>
+            <span>{detailComment?.commentator_nick_name}</span>
+            <span>{handleConvertDateStringToDateTimeComment(detailComment.create_at)}</span>
           </div>
           <div className="text">
-            {detailComment.content}
+            {detailComment.content_texts}
           </div>
         </div>
         {
@@ -60,29 +79,29 @@ const CommentItem = (props: any) => {
         }
       </div>
       {
-        detailComment.image && (
+        detailComment.content_images && (
           <div className="image">
-            <BaseImagePreview src={detailComment.image} />
+            <BaseImagePreview isLoading src={detailComment.content_images} className="image-comment" />
             {/* <img src={detailComment.image} alt="" /> */}
           </div>
         )
       }
-      {
-        detailComment.totalLike && (
-          <div className="like">
-            <div
-              className={`button-like ${detailComment.isLike && "liked"}`}
-              onClick={handleClickLike}
-            >
-              {POST_ITEM_CONSTANTS.detailAction.like}
-            </div>
+      <div className="like">
+        <div
+          className={`button-like ${detailComment.isLike && "liked"}`}
+          onClick={handleClickLike}
+        >
+          {POST_ITEM_CONSTANTS.detailAction.like}
+        </div>
+        {
+          +detailComment.totalLike > 0 && (
             <div className="total-like">
               <img src="/post/likeFbIcon.svg" alt="" />
               {detailComment.totalLike}
             </div>
-          </div>
-        )
-      }
+          )
+        }
+      </div>
     </CommentItemStyled>
   );
 };

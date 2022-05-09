@@ -6,6 +6,7 @@ import dataRecord from '../list-post/fakeData';
 import { DetailPostStyled } from './styled';
 import dataCommentRecord from '../list-post/views/post-item/fakeDataComment';
 import ModalDeletePost from '../../../Profile/views/profile-detail/views/modal-delete';
+import { useGetDetailPost, useGetListCommentPost } from '../../../../hooks/usePost';
 
 const DetailPost = (props: any) => {
   const {
@@ -14,8 +15,11 @@ const DetailPost = (props: any) => {
   } = props;
   const param: { id_post: any } = useParams();
 
-  const [detailPost, setDetailPost] = useState(dataRecord.find((item) => item.id === +param.id_post));
-  const [listComment, setListComment] = useState(dataCommentRecord);
+  const { dataDetailPost, refetchDetailPost, isLoadingDetailPost, isFetchingDetailPost } = useGetDetailPost(param?.id_post);
+  const { dataCommentPost, refetchCommentPost, isLoadingCommentPost, isFetchingCommentPost } = useGetListCommentPost(param?.id_post);
+
+  const [detailPost, setDetailPost] = useState({});
+  const [listComment, setListComment] = useState([]);
   const [postDelete, setPostDelete] = useState(null);
 
   const handleConfirmDelete = (idPost: any) => {
@@ -32,7 +36,13 @@ const DetailPost = (props: any) => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
+  }, [])
+
+  useEffect(() => {
+    setDetailPost(dataDetailPost?.data[0]);
+    setListComment(dataCommentPost?.data);
+  }, [param?.id_post, dataDetailPost, dataCommentPost]);
+
   return (
     <DetailPostStyled>
       <ModalDeletePost

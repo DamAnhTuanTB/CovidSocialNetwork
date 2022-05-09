@@ -23,6 +23,8 @@ const ListPostComponentStyled = styled.div`
             }
         }
         .list-hot-post {
+            position: sticky;
+            top: 80px;
             width: 350px;
             background-color: white;
         }

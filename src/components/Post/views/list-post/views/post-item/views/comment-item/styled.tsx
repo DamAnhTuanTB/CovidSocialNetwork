@@ -62,7 +62,7 @@ const CommentItemStyled = styled.div`
         margin-left: 45px;
         width: 200px;
         position: relative;
-        img {
+        .image-comment {
             width: 100%;
             height: auto;
             border-radius: 20px;

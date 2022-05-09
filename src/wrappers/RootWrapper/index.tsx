@@ -7,6 +7,7 @@ import AuthWrapper from '../../wrappers/AuthWrapper';
 import AdminPageWrapper from '../AdminWrapper';
 import ExpertPageWrapper from '../ExpertWrapper';
 import "react-toastify/dist/ReactToastify.css";
+import 'react-loading-skeleton/dist/skeleton.css';
 
 const Login = lazy(() => import('../../pages/Login'));
 
