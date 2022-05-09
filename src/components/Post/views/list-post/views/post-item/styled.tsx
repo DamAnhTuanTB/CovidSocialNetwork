@@ -65,12 +65,14 @@ const PostItemStyle = styled.div`
             white-space: pre-wrap;
         }
         .list-image {
-            img {
+            .item-image {
                 width: 100%;
-                height: auto;
                 :first-child {
                     margin-bottom: 3px;
                 }
+            }
+            .loading-image {
+                height: 300px;
             }
         }
         .list-image-3 {
@@ -95,6 +97,10 @@ const PostItemStyle = styled.div`
                     object-fit: cover;
                     object-position: center;
                 }
+            }
+            .loading-image {
+                height: 100%;
+                width: 100%;
             }
         }
     }
@@ -165,7 +171,7 @@ const PostItemStyle = styled.div`
             .input-comment {
                 display: flex;
                 justify-content: space-between;
-                img {
+                .avatar-user {
                     width: 40px;
                     height: 40px;
                     object-fit: cover;

@@ -17,6 +17,7 @@ const FilterStyle = styled.div`
         align-items: center;
         font-size: 12px;
         .item-filter {
+            cursor: pointer;
             padding: 7px 15px;
             text-transform: uppercase;
             display: flex;

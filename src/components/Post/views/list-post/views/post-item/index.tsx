@@ -4,8 +4,11 @@ import { HeartTwoTone, LikeTwoTone, MessageTwoTone, MoreOutlined } from '@ant-de
 import { Button, Dropdown, Menu } from 'antd';
 import { cloneDeep } from 'lodash';
 import React, { useRef } from 'react';
+import { useMutation } from 'react-query';
 import { useHistory } from 'react-router-dom';
+import { handleLikePost, handleSavePost } from '../../../../../../api/post';
 import handleConvertDateStringToDateTime from '../../../../../../helpers/convertDateStringToDate';
+import toastCustom from '../../../../../../helpers/toastCustom';
 import BaseImagePreview from '../../../../../Base/BaseImagePreview';
 import POST_ITEM_CONSTANTS from './constants';
 import { PostItemStyle } from './styled';
@@ -33,7 +36,7 @@ const PostItem = (props: any) => {
   const history = useHistory();
   const refTextArea = useRef(null);
 
-  const onclickMenu = ({ key } : any) => {
+  const onclickMenu = ({ key }: any) => {
     handleClickMoreOption(key, detailPost);
   }
 
@@ -59,43 +62,103 @@ const PostItem = (props: any) => {
     </Menu>
   );
 
+  const mutationLikePost = useMutation(handleLikePost);
+  const mutationSavePost = useMutation(handleSavePost);
+
+
   const handleClickLikeButton = () => {
-    if (isDetail) {
-      setDetailPost({
-        ...detailPost,
-        isLike: !detailPost.isLike,
-      });
-    } else {
-      // handleClickLike(detailPost);
-      if (!detailPost) return;
-      let currentLike = true;
-      if (detailPost.isLike) {
-        currentLike = false;
-      }
-      const listPostClone = cloneDeep(listPost);
-      const indexItemPostInteract = listPost.findIndex((item: any) => item.id === detailPost.id);
-      listPostClone[indexItemPostInteract].isLike = currentLike;
-      setListPost(listPostClone);
+    let currentLike = true;
+    if (detailPost.isLike) {
+      currentLike = false;
     }
+
+    mutationLikePost.mutate({
+      postId: detailPost.id,
+      isLike: currentLike,
+    }, {
+      onSuccess: (data: any) => {
+        if (data?.statusCode === 200) {
+          if (isDetail) {
+            setDetailPost({
+              ...detailPost,
+              isLike: !detailPost.isLike,
+              totalLike: currentLike ? +detailPost.totalLike + 1 : +detailPost.totalLike - 1
+            });
+          } else {
+
+            const listPostClone = cloneDeep(listPost);
+            const indexItemPostInteract = listPost.findIndex((item: any) => item.id === detailPost.id);
+            listPostClone[indexItemPostInteract].isLike = currentLike;
+            if (currentLike) {
+              listPostClone[indexItemPostInteract].totalLike = +listPostClone[indexItemPostInteract].totalLike + 1;
+            } else {
+              listPostClone[indexItemPostInteract].totalLike = +listPostClone[indexItemPostInteract].totalLike - 1;
+            }
+            setListPost(listPostClone);
+          }
+        }
+      },
+      onError: (err: any) => {
+        console.log(err);
+      }
+    })
+
   }
 
   const handleClickSaveButton = () => {
-    if (isDetail) {
-      setDetailPost({
-        ...detailPost,
-        isSave: !detailPost.isSave,
-      });
-    } else {
-      if (!detailPost) return;
-      let currentSave = true;
-      if (detailPost.isSave) {
-        currentSave = false;
-      }
-      const listPostClone = cloneDeep(listPost);
-      const indexItemPostInteract = listPost.findIndex((item: any) => item.id === detailPost.id);
-      listPostClone[indexItemPostInteract].isSave = currentSave;
-      setListPost(listPostClone);
+    let currentSave = true;
+    if (detailPost.isSave) {
+      currentSave = false;
     }
+
+    mutationSavePost.mutate({
+      postId: detailPost.id,
+      isSave: currentSave,
+    }, {
+      onSuccess: (data: any) => {
+        if (data?.statusCode === 200) {
+          if (currentSave) {
+            toastCustom({
+              mess: POST_ITEM_CONSTANTS.successMessage.savePost,
+              type: "success",
+            })
+          }
+          if (isDetail) {
+            setDetailPost({
+              ...detailPost,
+              isSave: currentSave,
+              totalSave: currentSave ? +detailPost.totalSave + 1 : +detailPost.totalSave - 1
+            });
+          } else {
+
+            const listPostClone = cloneDeep(listPost);
+            const indexItemPostInteract = listPost.findIndex((item: any) => item.id === detailPost.id);
+            listPostClone[indexItemPostInteract].isSave = currentSave;
+            if (currentSave) {
+              listPostClone[indexItemPostInteract].totalSave = +listPostClone[indexItemPostInteract].totalSave + 1;
+            } else {
+              listPostClone[indexItemPostInteract].totalSave = +listPostClone[indexItemPostInteract].totalSave - 1;
+            }
+            setListPost(listPostClone);
+          }
+        }
+      },
+      onError: (err: any) => {
+        console.log(err);
+      }
+    })
+
+    // if (isDetail) {
+    //   setDetailPost({
+    //     ...detailPost,
+    //     isSave: !detailPost.isSave,
+    //   });
+    // } else {
+    //   const listPostClone = cloneDeep(listPost);
+    //   const indexItemPostInteract = listPost.findIndex((item: any) => item.id === detailPost.id);
+    //   listPostClone[indexItemPostInteract].isSave = currentSave;
+    //   setListPost(listPostClone);
+    // }
   }
 
   const handleClickCommentButton = () => {
@@ -140,7 +203,7 @@ const PostItem = (props: any) => {
           {detailPost?.content_images?.split(";")?.map((image: any, index: any) => {
             const key = detailPost.id.toString() + index.toString();
             return (
-              <BaseImagePreview key={key} src={image} alt="" />
+              <BaseImagePreview isLoading key={key} src={`${image}`} className="item-image" alt="" />
             )
           })}
         </div>

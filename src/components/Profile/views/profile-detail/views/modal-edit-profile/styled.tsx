@@ -22,7 +22,7 @@ const ModalEditProfileStyled = styled(Modal)`
     margin: auto;
     margin-bottom: 20px;
     border-radius: 50%;
-    img {    
+    .avatar {    
       width: 120px;
       height: 120px;
       border-radius: 50%;

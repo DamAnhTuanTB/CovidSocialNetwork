@@ -7,6 +7,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import { updateProfile } from '../../../../../../api/profile';
 import { getUrlImage } from '../../../../../../api/uploadimage';
 import toastCustom from '../../../../../../helpers/toastCustom';
+import BaseImagePreview from '../../../../../Base/BaseImagePreview';
 import MODAL_EDIT_PROFILE_CONSTANTS from './constants';
 import { ModalEditProfileStyled } from './styled';
 
@@ -118,7 +119,8 @@ const ModalEditProfile = (props: any) => {
       footer={footerEdit}
     >
       <div className='formedit-avatar'>
-        <img src={avatarPreview ? avatarPreview : "/post/avatar_my1.jpg"} alt=""></img>
+        <BaseImagePreview className="avatar" isLoading cancelPreview src={avatarPreview ? avatarPreview : "defaultAvatar.png"} alt="" />
+        {/* <img src={avatarPreview ? avatarPreview : "/post/avatar_my1.jpg"} alt=""></img> */}
         <span className='button-file'>
           <input onChange={handleChangeAvatar} title={''} type='file' className="input-file" />
           <CameraOutlined className="camera-icon" />

@@ -19,6 +19,9 @@ const POST_ITEM_CONSTANTS = {
   },
   comment: {
     placeholder: "Nhập bình luận",
+  },
+  successMessage: {
+    savePost: "Lưu bài viết thành công",
   }
 };
 

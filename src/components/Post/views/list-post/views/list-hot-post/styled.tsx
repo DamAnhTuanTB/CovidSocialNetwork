@@ -19,20 +19,24 @@ const ListHotPostStyled = styled.div`
                 border-radius: 50%;
                 margin-right: 10px;
             }
+            .post-detail {
+                flex: 1;
+            }
             .post-title {
-                font-size: 14px;
+                cursor: pointer;
+                font-size: 16px;
                 font-weight: bold;
             }
             .post-author {
                 display: flex;
                 align-items: flex-end;
                 .name-author {
-                    font-size: 12px;
+                    font-size: 14px;
                     margin-right: 5px;
                 }
                 .create-at {
                     margin-left: 5px;
-                    font-size: 10px;
+                    font-size: 12px;
                 }
             }
         }

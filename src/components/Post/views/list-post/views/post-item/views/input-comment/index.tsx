@@ -3,22 +3,32 @@
 import { CameraOutlined, CloseOutlined } from '@ant-design/icons';
 import { Progress } from 'antd';
 import React, { useRef, useState } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
 import ReactTextareaAutosize from 'react-textarea-autosize';
+import { createComment } from '../../../../../../../../api/post';
 import { getUrlImage } from '../../../../../../../../api/uploadimage';
+import BaseImagePreview from '../../../../../../../Base/BaseImagePreview';
 import POST_ITEM_CONSTANTS from '../../constants';
 
 const InputComment = (props: any) => {
-  const { 
+  const {
     idPost,
     refTextArea,
-   } = props;
-  const [prog, setProg] = useState(1);
+  } = props;
+  const [prog, setProg] = useState(0);
+  const [commentText, setCommentText] = useState("");
   const [imagePreview, setImagePreview] = useState();
   const [imageUrlComment, setImageUrlComment] = useState();
 
   const refInputFile = useRef(null);
 
+  const queryClient = useQueryClient();
+  const myProfile: any = queryClient.getQueryData("my-profile");
+
+  const mutationCreateComment = useMutation(createComment);
+
   const handleChangeImage = (e: any) => {
+    setProg(1);
     const fileUrl = URL.createObjectURL(e.target.files[0]);
     setImagePreview(fileUrl);
 
@@ -32,21 +42,63 @@ const InputComment = (props: any) => {
     )
   }
 
-  const handleChangeInput = (e: any) => {
+  const checkKeyEnter = (e: any) => {
+    if (e.keyCode === 13 && !e.shiftKey) {
+      e.preventDefault();
+      if (commentText) {
+        handleSubmitComment();
+      }
+    }
+  }
 
+  const handleSubmitComment = (e: any) => {
+    if (prog > 0) return;
+
+    const dataComment = {
+      postId: idPost,
+      content_texts: commentText,
+    }
+
+    if (imageUrlComment) {
+      dataComment.content_images = imageUrlComment;
+    }
+
+    mutationCreateComment.mutate(
+      dataComment,
+      {
+        onSuccess: (data) => {
+          if (data?.statusCode === 201) {
+            // reset state
+            setCommentText("");
+            setImagePreview(null);
+            setImageUrlComment(null);
+
+            queryClient.invalidateQueries("comments-post");
+            queryClient.invalidateQueries("detail-post");
+          }
+        }
+      }
+    )
+    
+    
   }
 
   return (
     <div className="input-comment-container">
       {/* bình luận */}
       <div className="input-comment">
-        <img className="avatar-user" src="/post/avatar_my1.jpg" alt="" />
+
+        {/* <img className="avatar-user" src={myProfile?.avatar || "/defaultAvatar.png"} alt="" /> */}
+        <BaseImagePreview cancelPreview isLoading className="avatar-user" src={myProfile?.avatar || "/defaultAvatar.png"} alt="" />
         <div className="inputs">
           <ReactTextareaAutosize
             placeholder={POST_ITEM_CONSTANTS.comment.placeholder}
-            onChange={handleChangeInput}
+            // onChange={handleChangeInput}
+            onChange={(e) => setCommentText(e.target.value)}
+            value={commentText}
             className="text-input"
             ref={refTextArea}
+            onKeyDown={checkKeyEnter}
           />
           <div className="file-input-container">
             <div className="file-input">
@@ -63,7 +115,14 @@ const InputComment = (props: any) => {
               <img src={imagePreview} alt="" />
               {
                 prog === 0 && (
-                  <div className="reset-button" onClick={() => { refInputFile.current.value = null; setImagePreview(null); }}>
+                  <div
+                    className="reset-button"
+                    onClick={() => {
+                      refInputFile.current.value = null;
+                      setImagePreview(null);
+                      setImageUrlComment(null);
+                    }}
+                  >
                     <CloseOutlined className="reset-icon" />
                   </div>
                 )

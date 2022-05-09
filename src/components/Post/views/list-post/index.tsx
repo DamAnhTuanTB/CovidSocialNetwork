@@ -2,6 +2,7 @@
 import { Pagination } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router';
+import { useGetListPost } from '../../../../hooks/usePost';
 import LIST_POST_CONSTANTS from './constant';
 import dataRecord from './fakeData';
 import { ListPostComponentStyled } from './styled';
@@ -14,8 +15,10 @@ const ListPostComponent = (props: any) => {
   const params = new URL(window.location.href);
   const paramsUrl = params.searchParams;
   const [currentPage, setCurrentPage] = useState(1);
-  const [activeTab, setActiveTab] = useState(paramsUrl.get("sort") || LIST_POST_CONSTANTS.listTab[0]);
-  const [listPost, setListPost] = useState(dataRecord);
+  const [totalPost, setTotalPost] = useState(0);
+  const limitPerPage = 10;
+  const [activeTab, setActiveTab] = useState(paramsUrl.get("sort") || LIST_POST_CONSTANTS.listTab[0].key);
+  const [listPost, setListPost] = useState([]);
   const history = useHistory();
 
   const handleClickTab = (type: any) => {
@@ -26,17 +29,29 @@ const ListPostComponent = (props: any) => {
     history.push(`/post?sort=${activeTab}&page=${page}`);
   };
 
+  const { dataPost, isLoadingPost } = useGetListPost({
+    sortBy: LIST_POST_CONSTANTS.listTab.find((item) => item.key === activeTab)?.value,
+    page: currentPage,
+    limit: limitPerPage,
+  });
+
+
   useEffect(() => {
     window.scrollTo(0, 0);
     if (!paramsUrl.get("sort")) {
       history.replace("/post?sort=new&page=1");
       return;
     }
-    const sortBy = paramsUrl.get("sort") || LIST_POST_CONSTANTS.listTab[0];
+    const sortBy = paramsUrl.get("sort") || LIST_POST_CONSTANTS.listTab[0].key;
     const page = paramsUrl.get("page") || 1;
     setActiveTab(sortBy);
     setCurrentPage(+page);
-  }, [params.href]);
+
+    if (dataPost?.statusCode === 200) {
+      setListPost(dataPost?.data);
+      setTotalPost(dataPost?.total);
+    }
+  }, [params.href, dataPost]);
 
   return (
     <ListPostComponentStyled>
@@ -44,7 +59,7 @@ const ListPostComponent = (props: any) => {
         <div className="list-post">
           <Filter activeTab={activeTab} handleClickTab={handleClickTab} />
           <div>
-            {listPost.map((item) => (
+            {listPost.map((item: any) => (
               <PostItem
                 key={item.id}
                 detailPost={item}
@@ -53,13 +68,18 @@ const ListPostComponent = (props: any) => {
               />
             ))}
           </div>
-          <div className="pagination">
-            <Pagination
-              current={+currentPage}
-              total={50}
-              onChange={handleChangePage}
-            />
-          </div>
+          {
+            totalPost > 0 && (
+              <div className="pagination">
+                <Pagination
+                  defaultPageSize={limitPerPage}
+                  current={+currentPage}
+                  total={totalPost}
+                  onChange={handleChangePage}
+                />
+              </div>
+            )
+          }
         </div>
         <div className="list-hot-post">
           <ListHotPostComponent />
