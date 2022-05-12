@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import PostItem from '../list-post/views/post-item';
-import { useParams } from 'react-router-dom';
-import dataRecord from '../list-post/fakeData';
-import { DetailPostStyled } from './styled';
-import dataCommentRecord from '../list-post/views/post-item/fakeDataComment';
-import ModalDeletePost from '../../../Profile/views/profile-detail/views/modal-delete';
+import { useHistory, useParams } from 'react-router-dom';
 import { useGetDetailPost, useGetListCommentPost } from '../../../../hooks/usePost';
+import ModalDeletePost from '../../../Profile/views/profile-detail/views/modal-delete';
+import PostItem from '../list-post/views/post-item';
+import { DetailPostStyled } from './styled';
 
 const DetailPost = (props: any) => {
   const {
@@ -14,6 +11,7 @@ const DetailPost = (props: any) => {
     isAdmin = false,
   } = props;
   const param: { id_post: any } = useParams();
+  const history = useHistory();
 
   const { dataDetailPost, refetchDetailPost, isLoadingDetailPost, isFetchingDetailPost } = useGetDetailPost(param?.id_post);
   const { dataCommentPost, refetchCommentPost, isLoadingCommentPost, isFetchingCommentPost } = useGetListCommentPost(param?.id_post);
@@ -39,6 +37,11 @@ const DetailPost = (props: any) => {
   }, [])
 
   useEffect(() => {
+    if (dataDetailPost?.statusCode === 400) {
+      history.push("/not-found");
+      return;
+    }
+
     setDetailPost(dataDetailPost?.data[0]);
     setListComment(dataCommentPost?.data);
   }, [param?.id_post, dataDetailPost, dataCommentPost]);

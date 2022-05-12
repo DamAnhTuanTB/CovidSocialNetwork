@@ -1,7 +1,9 @@
 import { DeleteOutlined, EyeOutlined, MessageOutlined } from '@ant-design/icons';
-import { Pagination, Space, Table } from 'antd';
+import { Button, Pagination, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import ModalCreateExpert from '../ModalCreateExpert';
+import ModalProfileExpert from '../ModalProfileExpert';
 import dataRecordExpert from './fakeDataExpert';
 import { ListExpertStyled } from './styled';
 
@@ -14,7 +16,9 @@ const ListExpertComponent = (props: any) => {
   const params = new URL(window.location.href);
   const paramsUrl = params.searchParams;
 
-  const [previewGuest, setPreviewGuest] = useState(null);
+  const [isShowModalCreate, setIsShowModalCreate] = useState(false);
+
+  const [previewExpert, setPreviewExpert] = useState(null);
   const [idExpert, setIdExpert] = useState(null);
 
   const columns = [
@@ -50,14 +54,14 @@ const ListExpertComponent = (props: any) => {
     },
     {
       title: 'Số điện thoại',
-      dataIndex: 'phone',
-      key: 'phone',
+      dataIndex: 'telephone',
+      key: 'telephone',
       width: 120,
     },
     {
       title: 'Ngày sinh',
-      key: 'birthday',
-      dataIndex: 'birthday',
+      key: 'date_of_birth',
+      dataIndex: 'date_of_birth',
       width: 100,
     },
     {
@@ -74,9 +78,9 @@ const ListExpertComponent = (props: any) => {
       width: 70,
       render: (data: any) => (
         <Space>
-          <MessageOutlined className="image-icon" onClick={() => history.push(`/admin/expert-management/list-chat/1`)}/>
-          <EyeOutlined className="seemore-icon" onClick={() => setPreviewGuest(data)} />
-          <DeleteOutlined className="delete-icon" onClick={() => {}} />
+          <MessageOutlined className="image-icon" onClick={() => history.push(`/admin/expert-management/list-chat/1`)} />
+          <EyeOutlined className="seemore-icon" onClick={() => setPreviewExpert(data)} />
+          <DeleteOutlined className="delete-icon" onClick={() => { }} />
         </Space>
       ),
     },
@@ -90,12 +94,17 @@ const ListExpertComponent = (props: any) => {
     setCurrentPage(paramsUrl.get("page") || "1");
   }, [params.href])
 
-  
+
 
   return (
     <ListExpertStyled>
-      <div className="title">
-        {TITLE}
+      <div className="title-container">
+        <div className="title">
+          {TITLE}
+        </div>
+        <div className="list-button">
+          <Button type="primary" onClick={() => setIsShowModalCreate(true)}>Tạo chuyên gia</Button>
+        </div>
       </div>
       <Table
         columns={columns}
@@ -109,6 +118,14 @@ const ListExpertComponent = (props: any) => {
           onChange={handleChangePage}
         />
       </div>
+      <ModalProfileExpert
+        previewExpert={previewExpert}
+        setPreviewExpert={setPreviewExpert}
+      />
+      <ModalCreateExpert
+        isShowModalCreate={isShowModalCreate}
+        setIsShowModalCreate={setIsShowModalCreate}
+      />
     </ListExpertStyled>
   );
 };

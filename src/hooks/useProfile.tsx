@@ -1,5 +1,5 @@
-import { getProfile, getProfileOther } from '../api/profile';
 import { useQuery } from 'react-query';
+import { getProfile, getProfileOther } from '../api/profile';
 
 export function useGetProfile(enabled = false) {
   const { data: profile, refetch: refetchProfile } = useQuery<any>('profile', getProfile, { enabled });
@@ -7,6 +7,6 @@ export function useGetProfile(enabled = false) {
 }
 
 export function useGetProfileOther(id_user: any) {
-  const { data: profileOtherData, refetch: refetchProfileOther, isError, isLoadingError } = useQuery<any>(['profile', {id: id_user}], getProfileOther);
+  const { data: profileOtherData, refetch: refetchProfileOther, isError, isLoadingError } = useQuery<any>(['profile', {id: id_user}], getProfileOther, { enabled: !!id_user });
   return { profileOtherData, refetchProfileOther, isError, isLoadingError };
 }

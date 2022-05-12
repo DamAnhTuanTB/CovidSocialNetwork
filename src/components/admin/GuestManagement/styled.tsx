@@ -7,7 +7,7 @@ const ListGuestStyled = styled.div`
     margin-bottom: 30px;
     font-weight: 500;
   }
-  .image-icon, .seemore-icon {
+  .image-icon, .seemore-icon, .delete-icon {
     cursor: pointer;
     margin-right: 10px;
     svg {

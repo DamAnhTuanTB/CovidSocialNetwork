@@ -24,7 +24,7 @@ const SideBarAdmin = (props: any) => {
         currentActiveMenu.key = item.key;
         return;
       } else {
-        item.subMenu?.map((itemSubmenu) => {
+        item.subMenu?.forEach((itemSubmenu) => {
           if (pathname.startsWith(itemSubmenu?.link)) {
             currentActiveMenu.key = itemSubmenu.key;
             currentActiveMenu.keyParent = item.key;

@@ -8,6 +8,10 @@ import AdminPageWrapper from '../AdminWrapper';
 import ExpertPageWrapper from '../ExpertWrapper';
 import "react-toastify/dist/ReactToastify.css";
 import 'react-loading-skeleton/dist/skeleton.css';
+import LoginAdmin from '../../pages/admin/Login';
+import NotFoundPage from '../../pages/NotFound';
+import LogoutPage from '../../pages/Logout';
+import LoginExpert from '../../pages/expert/Login';
 
 const Login = lazy(() => import('../../pages/Login'));
 
@@ -65,7 +69,11 @@ export default function AppWrapper() {
       <div className="root-wrapper">
         <ToastContainer />
         <Switch>
+          <Route path="/not-found" exact component={NotFoundPage} />
           <Route path="/login" exact component={Login} />
+          <Route path="/logout" exact component={LogoutPage} />
+          <Route path="/admin/login" exact component={LoginAdmin} />
+          <Route path="/expert/login" exact component={LoginExpert} />
           <Route path="/register" exact component={Register} />
           <Route path="/admin" component={AdminPageWrapper} />
           <Route path="/expert" component={ExpertPageWrapper} />

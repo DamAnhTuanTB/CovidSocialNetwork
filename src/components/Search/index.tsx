@@ -55,7 +55,9 @@ const SearchComponent = (props: any) => {
         {
           listPost.map((item: any) => (
             <div className="item-post" key={item?.id}>
-              <BaseImagePreview cancelPreview isLoading src={item?.content_images?.split(";")[0]} className="main-image" />
+              <div className="main-image-container">
+                <BaseImagePreview cancelPreview isLoading src={item?.content_images?.split(";")[0]} className="main-image" />
+              </div>
               {/* <img src={item?.content_images?.split(";")[0]} alt="" /> */}
               <div className="detail-post">
                 <div className="title-post" onClick={() => history.push(`/post/${item.id}`)}>

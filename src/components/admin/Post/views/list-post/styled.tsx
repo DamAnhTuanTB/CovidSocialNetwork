@@ -1,9 +1,16 @@
 import styled from "styled-components";
 
 const ListPostManagementStyled = styled.div`
-  padding: 20px;
+  padding: 20px 50px;
   .ant-tabs-ink-bar-animated {
     transition: unset !important;
+  }
+  .title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    span {
+      font-style: italic;
+    }
   }
   .list-post-container {
     padding-top: 20px;

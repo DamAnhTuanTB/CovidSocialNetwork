@@ -10,6 +10,7 @@ const ListInputSearch = (props: any) => {
     valueSearch = {},
     dateFormat,
     form,
+    isSearchByUser = false,
   } = props;
 
   const history = useHistory();
@@ -18,8 +19,7 @@ const ListInputSearch = (props: any) => {
     if (values.date) {
       values.date = values.date.format(dateFormat);
     }
-    console.log(111111, values);
-    history.push(`/admin/post-management${ConvertObjToParamsURL(values)}`);
+    history.push(`${ConvertObjToParamsURL(values)}`);
   }
 
   return (
@@ -39,13 +39,17 @@ const ListInputSearch = (props: any) => {
           >
             <DatePicker format={dateFormat} />
           </Form.Item>
-          <Form.Item
-            name="author"
-            className="author"
-            label={INPUT_SEARCH_CONSTANTS.label.author}
-          >
-            <Input />
-          </Form.Item>
+          {
+            !isSearchByUser && (
+              <Form.Item
+                name="author"
+                className="author"
+                label={INPUT_SEARCH_CONSTANTS.label.author}
+              >
+                <Input />
+              </Form.Item>
+            )
+          }
           <Form.Item
             name="freeText"
             className="free-text"
@@ -56,7 +60,30 @@ const ListInputSearch = (props: any) => {
           <Form.Item label={INPUT_SEARCH_CONSTANTS.label.typePost} name="type">
             <Select className="select-post">
               {
-                INPUT_SEARCH_CONSTANTS.options.map((item, index) => (
+                isSearchByUser ? (
+                  <>
+                    {
+                      INPUT_SEARCH_CONSTANTS.optionsFindByUser.map((item, index) => (
+                        <Select.Option key={item.value} value={item.value}>{item.label}</Select.Option>
+                      ))
+                    }
+                  </>
+                ) : (
+                  <>
+                    {
+                      INPUT_SEARCH_CONSTANTS.options.map((item, index) => (
+                        <Select.Option key={item.value} value={item.value}>{item.label}</Select.Option>
+                      ))
+                    }
+                  </>
+                )
+              }
+            </Select>
+          </Form.Item>
+          <Form.Item label={INPUT_SEARCH_CONSTANTS.label.typePost} name="typeSort">
+            <Select className="select-sort">
+              {
+                INPUT_SEARCH_CONSTANTS.optionsSort.map((item, index) => (
                   <Select.Option key={item.value} value={item.value}>{item.label}</Select.Option>
                 ))
               }

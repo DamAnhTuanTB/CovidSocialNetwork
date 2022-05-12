@@ -30,6 +30,7 @@ const ProfileDetail = (props: any) => {
 
   const history = useHistory();
 
+  const limitPerPage = 6;
   const [type, setType] = useState(paramsUrlSearch.get("type") || "list-image");
   const [currentPage, setCurrentPage] = useState(paramsUrlSearch.get("page") || "1");
   const [postDelete, setPostDelete] = useState(null);
@@ -45,17 +46,14 @@ const ProfileDetail = (props: any) => {
   const { dataPost, refetchPost, isLoadingPost, isFetchingPost } = useGetListMyPost({
     type: type?.split("-")[0],
     page: currentPage,
-    limit: 10,
+    limit: limitPerPage,
   });
 
   const { dataPostOther, refetchPostOther, isLoadingPostOther, isFetchingPostOther } = useGetListOtherPost({
     idUser: param.id_user,
     page: currentPage,
-    limit: 10,
-  });
-
-  // console.log(123123123, isFetchingPost);
-
+    limit: limitPerPage,
+  }, !!param.id_user);
 
   const handleChangePage = (page: any) => {
     history.push(`?type=${type}&page=${page}`);
@@ -117,8 +115,6 @@ const ProfileDetail = (props: any) => {
 
     if (isGuest && profileOtherData?.status === 200) {
       setProfileOtherUser(profileOtherData?.data);
-      console.log(123123123, profileOtherData?.data);
-      
     }
   }, [profileOtherData, isLoadingError])
 
@@ -250,7 +246,7 @@ const ProfileDetail = (props: any) => {
           }
         </Tabs>
         {
-          (type !== "list-image" && totalPost > 0) && (
+          (type !== "list-image" && totalPost > limitPerPage) && (
             <div className="pagination">
               {
                 !isLoadingPost && (
@@ -258,6 +254,7 @@ const ProfileDetail = (props: any) => {
                     current={+currentPage}
                     total={+totalPost}
                     onChange={handleChangePage}
+                    defaultPageSize={limitPerPage}
                   />
                 )
               }

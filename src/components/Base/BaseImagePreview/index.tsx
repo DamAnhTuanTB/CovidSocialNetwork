@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CloseOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import { BaseImagePreviewStyled } from './styled';
@@ -7,6 +7,20 @@ import LoadingImage from '../LoadingImage';
 const BaseImagePreview = (props: any) => {
   const { src, className, isLoading = false, cancelPreview = false } = props;
   const [isPreview, setIsPreview] = useState(false);
+
+  const [loaded, setLoaded] = useState(false);
+  const [url, setUrl] = useState(src);
+
+  useEffect(() => {
+    setLoaded(false);
+    setUrl(src);
+  }, [src])
+
+  useEffect(() => {
+    if (!loaded) {
+      setUrl(src + "?" + Math.floor(Math.random() * 100));
+    }
+  }, [loaded])
 
   const handleClickPreview = () => {
     if (cancelPreview) return;
@@ -28,9 +42,9 @@ const BaseImagePreview = (props: any) => {
       }
       {
         isLoading ? (
-          <LoadingImage className={className} src={src} alt="" onClick={handleClickPreview} />
+          <LoadingImage loaded={loaded} setLoaded={setLoaded} url={url} setUrl={setUrl} className={className} src={url} alt="" onClick={handleClickPreview} />
         ) : (
-          <img className={className} src={src} alt="" onClick={handleClickPreview} />
+          <img className={className} src={url} alt="" onClick={handleClickPreview} />
         )
       }
     </BaseImagePreviewStyled>
