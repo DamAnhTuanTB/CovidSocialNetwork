@@ -1,13 +1,20 @@
 import styled from "styled-components";
 
-const LoginStyled = styled.div`
+interface Props {
+  isAdmin: boolean,
+  isExpert: boolean,
+}
+
+const LoginStyled = styled.div<Props>`
   display: flex;
   height: 100vh;
+  background-color: ${props => (props.isAdmin) && "#1254a2"};
+  background-color: ${props => (props.isExpert) && "#1254a2"};
   .login-container {
     width: 900px;
     margin: auto;
     display: flex;
-    justify-content: space-between;
+    justify-content: ${props => (props.isAdmin || props.isExpert) ? "center" : "space-between" };
     .logo {
       width: 450px;
       .logo-image {
@@ -24,9 +31,15 @@ const LoginStyled = styled.div`
     .form-login {
         width: 400px;
         background-color: white;
-        padding: 20px 20px;
+        padding: ${props => (props.isAdmin || props.isExpert) ? "20px 40px" : "20px 20px" };
         border-radius: 10px;
         box-shadow: 0 2px 4px rgb(0 0 0 / 10%), 0 8px 16px rgb(0 0 0 / 10%);
+        .title-admin {
+          font-size: 24px;
+          font-weight: 500;
+          margin-bottom: 20px;
+          text-align: center;
+        }
         .ant-form-item {
           margin-bottom: 20px;
         }

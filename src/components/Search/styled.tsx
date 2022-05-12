@@ -5,7 +5,7 @@ const SearchComponentStyled = styled.div`
   .search-component {
     margin: auto;
     width: 100%;
-    padding: 0 10px;
+    padding: 0 20px;
     min-height: 150px;
     max-width: 700px;
     .title {
@@ -17,12 +17,23 @@ const SearchComponentStyled = styled.div`
       display: flex;
       padding: 20px 0px;
       border-top: 2px solid #d6d6d6;
-      .main-image {
-        max-width: 250px;
-        width: 240px;
-        height: 150px;
-        object-fit: cover;
-        object-position: center;
+      .main-image-container {
+        .img-preview {
+          position: relative;
+          padding-top: 60%;
+          width: 100%;
+          min-width: 240px;
+          .main-image {
+            /* max-width: 250px; */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+          }
+        }
       }
       .detail-post {
         flex: 1;
@@ -73,6 +84,16 @@ const SearchComponentStyled = styled.div`
     .pagination{
       margin-top: 20px;
       margin-bottom: 50px;
+    }
+  }
+
+  @media (max-width: 638px) {
+    .item-post {
+      flex-direction: column;
+      .detail-post {
+        padding-left: 0 !important;
+        margin-top: 10px;
+      }
     }
   }
 `;

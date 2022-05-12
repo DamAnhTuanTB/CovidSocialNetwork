@@ -11,6 +11,7 @@ const PostManagementComponent = (props: any) => {
     <div>
       <Route exact path={match?.url} render={() => <ListPostManagement match={match} />} />
       <Route exact path={`${match?.url}/:id_post`} render={() => <DetailPost isAdmin match={match} />} />
+      <Route exact path={`${match?.url}/find-by-user/:id_user`} render={() => <ListPostManagement match={match} isSearchByUser />} />
     </div>
   );
 };

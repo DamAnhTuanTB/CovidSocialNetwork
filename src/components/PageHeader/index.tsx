@@ -17,8 +17,8 @@ export default function PageHeader(props: any) {
   const history = useHistory();
 
   const queryClient = useQueryClient();
-  const myProfile : any = queryClient.getQueryData("my-profile");
-  
+  const myProfile: any = queryClient.getQueryData("my-profile");
+
   const showNotify = (data: any) => {
     console.log("pageheader", data);
   }
@@ -99,6 +99,9 @@ export default function PageHeader(props: any) {
               </Button>
             )
           }
+          <div className="icon-header icon-logout">
+            <img src='/logout-user.svg' className="" alt='' onClick={() => history.push("/logout")} />
+          </div>
         </div>
       </div>
     </PageHeaderStyled>

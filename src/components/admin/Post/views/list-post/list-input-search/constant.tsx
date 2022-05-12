@@ -1,7 +1,7 @@
 const INPUT_SEARCH_CONSTANTS = {
   options: [
     {
-      value: "news",
+      value: "success",
       label: "Bảng tin"
     },
     {
@@ -12,6 +12,34 @@ const INPUT_SEARCH_CONSTANTS = {
       value: "pending",
       label: "Bài viết đang chờ duyệt"
     },
+    {
+      value: "cancel",
+      label: "Bài viết đã hủy"
+    },
+  ],
+  optionsFindByUser: [
+    {
+      value: "success",
+      label: "Bài viết đã duyệt"
+    },
+    {
+      value: "pending",
+      label: "Bài viết đang chờ duyệt"
+    },
+    {
+      value: "cancel",
+      label: "Bài viết đã hủy"
+    },
+  ],
+  optionsSort: [
+    {
+      value: "asc",
+      label: "Cũ đến mới",
+    },
+    {
+      value: "desc",
+      label: "Mới đến cũ",
+    }
   ],
   label: {
     date: "Ngày đăng",

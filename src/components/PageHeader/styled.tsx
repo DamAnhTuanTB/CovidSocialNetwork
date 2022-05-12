@@ -52,6 +52,18 @@ const PageHeaderStyled = styled.div`
                     background-color: #ebebeb;
                 }
             }
+            .icon-logout {
+                margin-right: 0;
+                margin-left: 10px;
+                img {
+                    margin: auto;
+                    height: 60%;
+                    width: 60%;
+                }
+                :hover {
+                    background-color: transparent;
+                }
+            }
             .user-avatar {
                 margin-right: 10px;
                 border-radius: 50%;

@@ -9,11 +9,21 @@ import toastCustom from '../../../helpers/toastCustom';
 import LOGIN_PATIENT_CONSTANTS from './constant';
 import { LoginStyled } from './styled';
 
-const LoginComponent = () => {
+const LoginComponent = (props: any) => {
+  const {
+    isAdmin = false,
+    isExpert = false,
+  } = props;
   const history = useHistory();
   const mutation = useMutation(login);
 
   const onFinish = (values: object) => {
+    if (isAdmin) {
+      return;
+    }
+    if (isExpert) {
+      return;
+    }
     mutation.mutate(values, {
       onSuccess: (data) => {
         if (data?.data?.token) {
@@ -33,13 +43,27 @@ const LoginComponent = () => {
     });
   };
   return (
-    <LoginStyled>
+    <LoginStyled isAdmin={isAdmin} isExpert={isExpert}>
       <div className="login-container">
-        <div className="logo">
-          <img src="/login/facebookLogo.svg" className="logo-image" alt="" />
-          <div className="logo-description">{LOGIN_PATIENT_CONSTANTS.slogan}</div>
-        </div>
+        {
+          !isAdmin && !isExpert && (
+            <div className="logo">
+              <img src="/login/facebookLogo.svg" className="logo-image" alt="" />
+              <div className="logo-description">{LOGIN_PATIENT_CONSTANTS.slogan}</div>
+            </div>
+          )
+        }
         <div className="form-login">
+          {
+            isAdmin && (
+              <div className="title-admin">Đăng nhập ADMIN</div>
+            )
+          }
+          {
+            isExpert && (
+              <div className="title-admin">Đăng nhập chuyên gia</div>
+            )
+          }
           <Form
             name="normal_login"
             className="login-form"
@@ -84,28 +108,31 @@ const LoginComponent = () => {
             <Button type="primary" htmlType="submit" className="login-form-button">
               {LOGIN_PATIENT_CONSTANTS.submit}
             </Button>
-            <Form.Item className="forgot-pass">
-              <Link className="login-form-forgot" to="">
-                {LOGIN_PATIENT_CONSTANTS.forgotPass}
-              </Link>
-            </Form.Item>
 
-            <Divider />
+            {
+              !isAdmin && !isExpert && (
+                <>
+                  <Form.Item className="forgot-pass">
+                    <Link className="login-form-forgot" to="">
+                      {LOGIN_PATIENT_CONSTANTS.forgotPass}
+                    </Link>
+                  </Form.Item>
 
-            <Form.Item>
-              <Button type="default" className="register-button" onClick={() => history.push('/register')}>
-                {LOGIN_PATIENT_CONSTANTS.register}
-              </Button>
-            </Form.Item>
+                  <Divider />
+
+                  <Form.Item>
+                    <Button type="default" className="register-button" onClick={() => history.push('/register')}>
+                      {LOGIN_PATIENT_CONSTANTS.register}
+                    </Button>
+                  </Form.Item>
+                </>
+              )
+            }
           </Form>
         </div>
       </div>
     </LoginStyled>
   );
-};
-
-LoginComponent.propTypes = {
-
 };
 
 export default LoginComponent;

@@ -23,6 +23,7 @@ const PostItem = (props: any) => {
     isPostSaved = false,
     isPostPending = false,
     isPostDraft = false,
+    isPostCancelAdmin = false,
     isGuest = false,
     handleClickMoreOption = () => { },
     detailPost = {},
@@ -183,7 +184,7 @@ const PostItem = (props: any) => {
         </div>
         {
           // nếu là profile của bản thân hoặc nếu là admin và không phải bài đang đợi duyệt
-          ((isProfile && !isGuest) || (isAdmin && !isPostPending)) && (
+          ((isProfile && !isGuest) || (isAdmin && !isPostPending && !isPostCancelAdmin)) && (
             <Dropdown overlay={!isAdmin ? menu : menuAdmin} placement="bottomRight">
               <div className="more-option">
                 <MoreOutlined />
@@ -209,7 +210,7 @@ const PostItem = (props: any) => {
         </div>
       </div>
       {
-        (!isPostDraft && !isPostPending) && (
+        (!isPostDraft && !isPostPending && !isPostCancelAdmin) && (
           <div className="footer-post">
             <div className="detail-interaction">
               <div className="detail-like">

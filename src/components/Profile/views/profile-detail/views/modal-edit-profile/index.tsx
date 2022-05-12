@@ -119,8 +119,8 @@ const ModalEditProfile = (props: any) => {
       footer={footerEdit}
     >
       <div className='formedit-avatar'>
-        <BaseImagePreview className="avatar" isLoading cancelPreview src={avatarPreview ? avatarPreview : "defaultAvatar.png"} alt="" />
-        {/* <img src={avatarPreview ? avatarPreview : "/post/avatar_my1.jpg"} alt=""></img> */}
+        {/* <BaseImagePreview className="avatar" isLoading cancelPreview src={avatarPreview ? avatarPreview : "defaultAvatar.png"} alt="" /> */}
+        <img className="avatar" src={avatarPreview ? avatarPreview : "/post/avatar_my1.jpg"} alt=""></img>
         <span className='button-file'>
           <input onChange={handleChangeAvatar} title={''} type='file' className="input-file" />
           <CameraOutlined className="camera-icon" />

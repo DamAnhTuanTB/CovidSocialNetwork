@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Form, Pagination, Tabs } from 'antd';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import dataRecord from '../../../../Post/views/list-post/fakeData';
 import PostItem from '../../../../Post/views/list-post/views/post-item';
 import { ListPostManagementStyled } from './styled';
@@ -9,16 +9,22 @@ import ModalCreatePost from '../../../../Post/views/modal-create-post';
 import ListInputSearch from './list-input-search';
 import moment from 'moment';
 import ConvertObjToParamsURL from '../../../../../helpers/convertObjToUrl';
+import LIST_POST_MANAGEMENT_CONSTANTS from './constants';
 
 const { TabPane } = Tabs;
 
 const dateFormat = 'DD-MM-YYYY';
 
 const ListPostManagement = (props: any) => {
+  const {
+    isSearchByUser = false,
+  } = props;
 
   const history = useHistory();
   const paramsSeacrh = new URL(window.location.href);
   const paramsUrlSearch = paramsSeacrh.searchParams;
+
+  const param: { id_post: any } = useParams();
 
   const [form] = Form.useForm();
 
@@ -29,13 +35,14 @@ const ListPostManagement = (props: any) => {
 
   const [valueSearch, setValueSearch] = useState({
     date: null,
-    type: "news",
+    type: "success",
     freeText: "",
     author: "",
+    typeSort: "desc",
   });
 
   const handleChangePage = (page: any) => {
-    history.push(`/admin/post-management${ConvertObjToParamsURL(valueSearch)}&page=${page}`);
+    history.push(`${ConvertObjToParamsURL(valueSearch)}&page=${page}`);
   };
 
   const handleConfirmDelete = (idPost: any) => {
@@ -69,6 +76,9 @@ const ListPostManagement = (props: any) => {
     if (paramsUrlSearch.get("freeText")) {
       (newValueSearch as any).freeText = paramsUrlSearch.get("freeText");
     }
+    if (paramsUrlSearch.get("typeSort")) {
+      (newValueSearch as any).typeSort = paramsUrlSearch.get("typeSort");
+    }
     setCurrentPage(paramsUrlSearch.get("page") || "1");
 
     setValueSearch({
@@ -96,7 +106,20 @@ const ListPostManagement = (props: any) => {
         itemPost={postEdit}
         setPostEdit={setPostEdit}
       />
-      <ListInputSearch valueSearch={valueSearch} dateFormat={dateFormat} form={form} />
+      <div className="title">
+        {
+          isSearchByUser ? (
+            <>
+              {LIST_POST_MANAGEMENT_CONSTANTS.titleFindByUser}
+              <span>{"123123123"}</span>
+            </>
+          ) : (
+            <>{LIST_POST_MANAGEMENT_CONSTANTS.title}</>
+          )
+        }
+
+      </div>
+      <ListInputSearch valueSearch={valueSearch} dateFormat={dateFormat} form={form} isSearchByUser={isSearchByUser} />
       <div className="list-post-container">
         {
           listPost.map((item, index) => {
@@ -107,6 +130,8 @@ const ListPostManagement = (props: any) => {
             }
             if ((valueSearch as any).type === "pending") {
               (propsPostItem as any).isPostPending = true;
+            } else if ((valueSearch as any).type === "cancel") {
+              (propsPostItem as any).isPostCancelAdmin = true;
             } else {
               (propsPostItem as any).listPost = listPost;
               (propsPostItem as any).setListPost = setListPost;
