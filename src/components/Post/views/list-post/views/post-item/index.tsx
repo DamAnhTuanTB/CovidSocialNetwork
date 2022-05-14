@@ -6,6 +6,7 @@ import { cloneDeep } from 'lodash';
 import React, { useRef } from 'react';
 import { useMutation } from 'react-query';
 import { useHistory } from 'react-router-dom';
+import { handleLikePostAdmin } from '../../../../../../api/admin/post';
 import { handleLikePost, handleSavePost } from '../../../../../../api/post';
 import handleConvertDateStringToDateTime from '../../../../../../helpers/convertDateStringToDate';
 import toastCustom from '../../../../../../helpers/toastCustom';
@@ -63,9 +64,16 @@ const PostItem = (props: any) => {
     </Menu>
   );
 
-  const mutationLikePost = useMutation(handleLikePost);
+  const mutationLikePost = useMutation(isAdmin ? handleLikePostAdmin : handleLikePost);
   const mutationSavePost = useMutation(handleSavePost);
 
+  const handleClickAuthorPost = () => {
+    if (isAdmin) {
+      history.push(`/admin/post-management/find-by-user/${detailPost.author_id}`);
+    } else {
+      history.push(`/profile/${detailPost.author_id}`);
+    }
+  }
 
   const handleClickLikeButton = () => {
     let currentLike = true;
@@ -173,9 +181,9 @@ const PostItem = (props: any) => {
   return (
     <PostItemStyle className="post-item">
       <div className="header-post">
-        <img src={detailPost?.author_avatar} alt="" />
+        <img src={detailPost?.author_avatar || "/defaultAvatar.png"} alt="" />
         <div>
-          <div className="post-author">
+          <div className="post-author" onClick={handleClickAuthorPost}>
             {detailPost?.author_nick_name}
           </div>
           <div className="create-at">
@@ -235,14 +243,18 @@ const PostItem = (props: any) => {
                 <MessageTwoTone twoToneColor="#a3a3a3" />
                 <div className="text">{POST_ITEM_CONSTANTS.detailAction.comment}</div>
               </div>
-              <div
-                aria-hidden
-                className="save-button action-button"
-                onClick={handleClickSaveButton}
-              >
-                <HeartTwoTone twoToneColor={detailPost?.isSave ? "#f21831" : "#a3a3a3"} />
-                <div className={`text ${detailPost?.isSave && "text-save"}`}>{POST_ITEM_CONSTANTS.detailAction.save}</div>
-              </div>
+              {
+                !isAdmin && (
+                  <div
+                    aria-hidden
+                    className="save-button action-button"
+                    onClick={handleClickSaveButton}
+                  >
+                    <HeartTwoTone twoToneColor={detailPost?.isSave ? "#f21831" : "#a3a3a3"} />
+                    <div className={`text ${detailPost?.isSave && "text-save"}`}>{POST_ITEM_CONSTANTS.detailAction.save}</div>
+                  </div>
+                )
+              }
             </div>
           </div>
         )
@@ -250,7 +262,7 @@ const PostItem = (props: any) => {
       {
         (isDetail && !isProfile && !isPostDraft && !isPostPending) && (
           <div className="list-comment">
-            <InputComment idPost={detailPost.id} refTextArea={refTextArea} />
+            <InputComment isAdmin={isAdmin} idPost={detailPost.id} refTextArea={refTextArea} />
             <div>
               {
                 listComment.map((item) => {

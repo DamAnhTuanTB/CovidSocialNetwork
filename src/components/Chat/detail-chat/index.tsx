@@ -8,6 +8,7 @@ import { Prompt, useParams } from "react-router-dom";
 import ReactTextareaAutosize from "react-textarea-autosize";
 import socketio from 'socket.io-client';
 import StarRating from '../../Base/BaseRatingStar';
+import CHAT_DETAIL_CONSTANTS from './constants';
 import dataRecordMessages from './fakeDataMessages';
 import { DetailChatComponentStyled } from "./styled";
 import ModalRatting from './views/modal-ratting';
@@ -71,7 +72,7 @@ const DetailChatComponent = (props: any) => {
       console.log(111111, param.chat_id);
       // call api get chat detail
     }
-  }, [])
+  }, [param.chat_id])
 
   useEffect(() => {
     if (bottomChatRef?.current) {
@@ -86,8 +87,19 @@ const DetailChatComponent = (props: any) => {
         <div className={`chat-box ${isAdmin && "chat-box-admin"}`}>
           <div className="header-chat">
             <div className="user-received-detail">
-              <img src="/post/avatar_my1.jpg" alt="" />
-              <div>Tuan Cules</div>
+              {
+                (!isExpert && !isAdmin) ? (
+                  <>
+                    <img src="/defaultAvatar.png" alt="" />
+                    <div>{CHAT_DETAIL_CONSTANTS.anonymous}</div>
+                  </>
+                ) : (
+                  <>
+                    <img src="/post/avatar_my1.jpg" alt="" />
+                    <div>Tuan Cules</div>
+                  </>
+                )
+              }
             </div>
             <div className="rate">
               {

@@ -16,12 +16,12 @@ export function useGetListOtherPost(paramSearch: any, enabled: boolean) {
     return { dataPostOther, refetchPostOther, isLoadingPostOther, isFetchingPostOther };
 }
 
-export function useGetDetailPost(idPost: any) {
-    const { data: dataDetailPost, refetch: refetchDetailPost, isLoading: isLoadingDetailPost, isFetching: isFetchingDetailPost } = useQuery<any>(['detail-post', {id: idPost}], () => getDetailPost(idPost), { enabled: !!idPost });
+export function useGetDetailPost(idPost: any, isGuest: any) {
+    const { data: dataDetailPost, refetch: refetchDetailPost, isLoading: isLoadingDetailPost, isFetching: isFetchingDetailPost } = useQuery<any>(['detail-post', {id: idPost}], () => getDetailPost(idPost), { enabled: (!!idPost && isGuest) });
     return { dataDetailPost, refetchDetailPost, isLoadingDetailPost, isFetchingDetailPost };
 }
 
-export function useGetListCommentPost(idPost: any) {
-    const { data: dataCommentPost, refetch: refetchCommentPost, isLoading: isLoadingCommentPost, isFetching: isFetchingCommentPost } = useQuery<any>(['comments-post', {id: idPost}], () => getListCommentPost({idPost: idPost}), {enabled: !!idPost});
+export function useGetListCommentPost(idPost: any, isGuest: any) {
+    const { data: dataCommentPost, refetch: refetchCommentPost, isLoading: isLoadingCommentPost, isFetching: isFetchingCommentPost } = useQuery<any>(['comments-post', {id: idPost}], () => getListCommentPost({idPost: idPost}), {enabled: (!!idPost && isGuest)});
     return { dataCommentPost, refetchCommentPost, isLoadingCommentPost, isFetchingCommentPost };
 }

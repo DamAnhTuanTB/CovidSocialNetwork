@@ -7,6 +7,7 @@ import { ChangePasswordExpertStyled } from './styled';
 const ChangePasswordExpert = (props: any) => {
   const {
     previewExpert = {},
+    isExpert = false,
   } = props;
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
@@ -15,6 +16,8 @@ const ChangePasswordExpert = (props: any) => {
     const bodyUpdatePassword = { ...values };
     delete bodyUpdatePassword.confirm_password;
     setLoading(true);
+    console.log(bodyUpdatePassword);
+    
     console.log(previewExpert.id);
 
     // mutation.mutate(bodyUpdatePassword, {
@@ -55,20 +58,62 @@ const ChangePasswordExpert = (props: any) => {
         className="change-password-form"
         onFinish={onFinish}
       >
+        {
+          isExpert && (
+            <Form.Item
+              name="old_password"
+              className="oldpassword"
+              label={CHANGE_PASSWORD_CONSTANTS.label.currentPass}
+              rules={[
+                {
+                  required: true,
+                  message: CHANGE_PASSWORD_CONSTANTS.validate.required
+                },
+                {
+                  min: 6,
+                  message: CHANGE_PASSWORD_CONSTANTS.validate.passMinLength
+                }
+              ]}
+            >
+              <Input.Password
+                placeholder={CHANGE_PASSWORD_CONSTANTS.label.currentPass}
+              />
+            </Form.Item>
+          )
+        }
         <Form.Item
           name="new_password"
           className="newpassword"
           label={CHANGE_PASSWORD_CONSTANTS.label.newPass}
-          rules={[
-            {
-              required: true,
-              message: CHANGE_PASSWORD_CONSTANTS.validate.required
-            },
-            {
-              min: 6,
-              message: CHANGE_PASSWORD_CONSTANTS.validate.passMinLength
-            },
-          ]}
+          rules={
+            !isExpert ? [
+              {
+                required: true,
+                message: CHANGE_PASSWORD_CONSTANTS.validate.required
+              },
+              {
+                min: 6,
+                message: CHANGE_PASSWORD_CONSTANTS.validate.passMinLength
+              },
+            ] : [
+              {
+                required: true,
+                message: CHANGE_PASSWORD_CONSTANTS.validate.required
+              },
+              {
+                min: 6,
+                message: CHANGE_PASSWORD_CONSTANTS.validate.passMinLength
+              },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('old_password') !== value) {
+                    return Promise.resolve();
+                  }
+
+                  return Promise.reject(new Error(CHANGE_PASSWORD_CONSTANTS.validate.verifyOldPass));
+                },
+              }),
+            ]}
         >
           <Input.Password
             placeholder={CHANGE_PASSWORD_CONSTANTS.label.newPass}
