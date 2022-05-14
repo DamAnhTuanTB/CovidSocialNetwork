@@ -2,6 +2,7 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { cloneDeep } from 'lodash';
 import React from 'react';
 import { useMutation } from 'react-query';
+import { handleLikeCommentAdmin } from '../../../../../../../../api/admin/post';
 import { handleLikeComment } from '../../../../../../../../api/post';
 import handleConvertDateStringToDateTimeComment from '../../../../../../../../helpers/convertDateStringtoDateComment';
 import BaseImagePreview from '../../../../../../../Base/BaseImagePreview';
@@ -16,7 +17,7 @@ const CommentItem = (props: any) => {
     isAdmin = false,
   } = props;
 
-  const mutationLikeComment = useMutation(handleLikeComment);
+  const mutationLikeComment = useMutation(isAdmin ? handleLikeCommentAdmin : handleLikeComment);
 
   const handleClickLike = () => {
     let currentLike = true;

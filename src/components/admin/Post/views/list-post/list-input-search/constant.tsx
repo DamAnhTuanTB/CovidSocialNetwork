@@ -5,7 +5,7 @@ const INPUT_SEARCH_CONSTANTS = {
       label: "Bảng tin"
     },
     {
-      value: "my-post",
+      value: "success_admin",
       label: "Bài viết của admin"
     },
     {
@@ -33,11 +33,11 @@ const INPUT_SEARCH_CONSTANTS = {
   ],
   optionsSort: [
     {
-      value: "asc",
+      value: "ASC",
       label: "Cũ đến mới",
     },
     {
-      value: "desc",
+      value: "DESC",
       label: "Mới đến cũ",
     }
   ],

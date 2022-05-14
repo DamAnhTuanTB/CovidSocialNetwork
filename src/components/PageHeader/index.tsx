@@ -3,6 +3,7 @@ import { Button, Input } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useQueryClient } from 'react-query';
 import { useHistory } from 'react-router-dom';
+import ModalProfileExpert from '../admin/ExpertManagement/views/ModalProfileExpert';
 import BaseImagePreview from '../Base/BaseImagePreview';
 import ModalCreatePost from '../Post/views/modal-create-post';
 import PAGE_HEADER_CONSTANTS from './constants';
@@ -14,6 +15,7 @@ export default function PageHeader(props: any) {
   } = props;
   const [isShowNotification, setIsShowNotification] = useState(false);
   const [isShowModal, setIsShowModal] = useState(false);
+  const [previewExpert, setPreviewExpert] = useState<any>(null);
   const history = useHistory();
 
   const queryClient = useQueryClient();
@@ -26,6 +28,29 @@ export default function PageHeader(props: any) {
   const handleSearchPost = (value: any) => {
     if (value) {
       history.push(`/search?freeText=${value}`);
+    }
+  }
+
+  const handleClickProfile = () => {
+    if (isExpert) {
+      setPreviewExpert({
+        avatar: "https://firebasestorage.googleapis.com/v0/b/fir-upload-image-a79ce.appspot.com/o/file%2Fapple.jpg?alt=media&token=e70705e0-d740-413d-90fd-aaeb0f23dace",
+        create_at: "2022-04-29T08:15:36.000Z",
+        date_of_birth: "2000-10-24",
+        email: "tuancules24@gmail.com",
+        first_name: "Tuấn",
+        id: "5",
+        is_active: null,
+        last_name: "Lê 2",
+        nick_name: "tuancules",
+        role: "patient",
+        telephone: "0912342223",
+        update_at: "2022-04-29",
+      });
+      console.log(myProfile);
+
+    } else {
+      history.push("/profile");
     }
   }
 
@@ -44,6 +69,15 @@ export default function PageHeader(props: any) {
         setIsShowModalCreate={setIsShowModal}
         profile={myProfile}
       />
+      {
+        isExpert && (
+          <ModalProfileExpert
+            isExpert
+            previewExpert={previewExpert}
+            setPreviewExpert={setPreviewExpert}
+          />
+        )
+      }
       <div className="header-container">
         <div className="logo" onClick={() => history.push('/post')}>
           <img src="/login/facebookLogo.svg" alt="" />
@@ -89,7 +123,7 @@ export default function PageHeader(props: any) {
               </div>
             )
           }
-          <div className="user-avatar" onClick={() => history.push("/profile")}>
+          <div className="user-avatar" onClick={handleClickProfile}>
             <BaseImagePreview isLoading cancelPreview className="avatar" src={myProfile?.avatar || "/defaultAvatar.png"} alt="" />
           </div>
           {

@@ -12,12 +12,12 @@ const LIST_MENU_SIDEBAR = [
     link: "",
     subMenu: [
       {
-        label: "Danh sách khách hàng",
+        label: "Danh sách bệnh nhân",
         key: "guest-management",
         link: "/admin/guest-management",
       },
       {
-        label: "Danh sách bác sĩ",
+        label: "Danh sách chuyên gia",
         key: "expert-management",
         link: "/admin/expert-management",
       }

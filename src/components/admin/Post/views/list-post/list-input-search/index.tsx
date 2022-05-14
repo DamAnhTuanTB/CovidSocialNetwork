@@ -16,8 +16,8 @@ const ListInputSearch = (props: any) => {
   const history = useHistory();
 
   const onFinish = (values: any) => {
-    if (values.date) {
-      values.date = values.date.format(dateFormat);
+    if (values.createAt) {
+      values.createAt = values.createAt.format(dateFormat);
     }
     history.push(`${ConvertObjToParamsURL(values)}`);
   }
@@ -33,7 +33,7 @@ const ListInputSearch = (props: any) => {
           onFinish={onFinish}
         >
           <Form.Item
-            name="date"
+            name="createAt"
             className="date"
             label={INPUT_SEARCH_CONSTANTS.label.date}
           >
@@ -42,7 +42,7 @@ const ListInputSearch = (props: any) => {
           {
             !isSearchByUser && (
               <Form.Item
-                name="author"
+                name="nickName"
                 className="author"
                 label={INPUT_SEARCH_CONSTANTS.label.author}
               >
@@ -51,13 +51,13 @@ const ListInputSearch = (props: any) => {
             )
           }
           <Form.Item
-            name="freeText"
+            name="title"
             className="free-text"
             label={INPUT_SEARCH_CONSTANTS.label.freeText}
           >
             <Input />
           </Form.Item>
-          <Form.Item label={INPUT_SEARCH_CONSTANTS.label.typePost} name="type">
+          <Form.Item label={INPUT_SEARCH_CONSTANTS.label.typePost} name="typePost">
             <Select className="select-post">
               {
                 isSearchByUser ? (

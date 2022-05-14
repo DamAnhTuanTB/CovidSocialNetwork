@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import { useGetDetailPostAdmin, useGetListCommentPostAdmin } from '../../../../hooks/admin/usePostAdmin';
 import { useGetDetailPost, useGetListCommentPost } from '../../../../hooks/usePost';
 import ModalDeletePost from '../../../Profile/views/profile-detail/views/modal-delete';
 import PostItem from '../list-post/views/post-item';
@@ -13,8 +14,12 @@ const DetailPost = (props: any) => {
   const param: { id_post: any } = useParams();
   const history = useHistory();
 
-  const { dataDetailPost, refetchDetailPost, isLoadingDetailPost, isFetchingDetailPost } = useGetDetailPost(param?.id_post);
-  const { dataCommentPost, refetchCommentPost, isLoadingCommentPost, isFetchingCommentPost } = useGetListCommentPost(param?.id_post);
+  const { dataDetailPost, refetchDetailPost, isLoadingDetailPost, isFetchingDetailPost } = useGetDetailPost(param?.id_post, !isAdmin);
+  const { dataCommentPost, refetchCommentPost, isLoadingCommentPost, isFetchingCommentPost } = useGetListCommentPost(param?.id_post, !isAdmin);
+
+  const { dataDetailPostAdmin, refetchDetailPostAdmin, isLoadingDetailPostAdmin, isFetchingDetailPostAdmin } = useGetDetailPostAdmin(param?.id_post, isAdmin);
+  const { dataCommentPostAdmin, refetchCommentPostAdmin, isLoadingCommentPostAdmin, isFetchingCommentPostAdmin } = useGetListCommentPostAdmin(param?.id_post, isAdmin);
+
 
   const [detailPost, setDetailPost] = useState({});
   const [listComment, setListComment] = useState([]);
@@ -41,10 +46,15 @@ const DetailPost = (props: any) => {
       history.push("/not-found");
       return;
     }
-
-    setDetailPost(dataDetailPost?.data[0]);
-    setListComment(dataCommentPost?.data);
-  }, [param?.id_post, dataDetailPost, dataCommentPost]);
+    if (isAdmin) {
+      setDetailPost(dataDetailPostAdmin?.data[0]);
+      setListComment(dataCommentPostAdmin?.data);
+    } else {
+      setDetailPost(dataDetailPost?.data[0]);
+      setListComment(dataCommentPost?.data);
+    }
+    
+  }, [param?.id_post, dataDetailPost, dataCommentPost, dataDetailPostAdmin, dataCommentPostAdmin]);
 
   return (
     <DetailPostStyled>

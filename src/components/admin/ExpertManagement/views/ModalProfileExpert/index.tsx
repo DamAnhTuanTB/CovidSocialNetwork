@@ -7,7 +7,8 @@ import FormProfile from './views/form-profile';
 const ModalProfileExpert = (props: any) => {
   const {
     previewExpert = {},
-    setPreviewExpert = () => { }
+    setPreviewExpert = () => { },
+    isExpert = false,
   } = props;
 
   const handleCancel = () => {
@@ -45,9 +46,10 @@ const ModalProfileExpert = (props: any) => {
             previewExpert={previewExpert}
             isEditProfile={isEditProfile}
             setIsEditProfile={setIsEditProfile}
+            isExpert={isExpert}
           />
         ) : (
-          <ChangePasswordExpert previewExpert={previewExpert}/>
+          <ChangePasswordExpert previewExpert={previewExpert} isExpert={isExpert}/>
         )
       }
     </ModalProfileExpertStyled>

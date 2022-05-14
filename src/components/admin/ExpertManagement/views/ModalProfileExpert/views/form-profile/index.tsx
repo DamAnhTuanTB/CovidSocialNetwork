@@ -11,7 +11,8 @@ const FormProfile = (props: any) => {
   const {
     previewExpert = {},
     isEditProfile = false,
-    setIsEditProfile = () => { }
+    setIsEditProfile = () => { },
+    isExpert = false,
   } = props;
 
   const [form] = Form.useForm();

@@ -23,6 +23,8 @@ const ListChatComponent = (props: any) => {
 		const date = paramsUrl.get('date');
 		if (date) {
 			setDateSearch(date);
+		} else {
+			setDateSearch(undefined);
 		}
 	}, [params.href])
 

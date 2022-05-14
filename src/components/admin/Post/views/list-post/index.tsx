@@ -10,6 +10,7 @@ import ListInputSearch from './list-input-search';
 import moment from 'moment';
 import ConvertObjToParamsURL from '../../../../../helpers/convertObjToUrl';
 import LIST_POST_MANAGEMENT_CONSTANTS from './constants';
+import { useGetListPostAdmin, useGetListPostByUserAdmin } from '../../../../../hooks/admin/usePostAdmin';
 
 const { TabPane } = Tabs;
 
@@ -24,25 +25,42 @@ const ListPostManagement = (props: any) => {
   const paramsSeacrh = new URL(window.location.href);
   const paramsUrlSearch = paramsSeacrh.searchParams;
 
-  const param: { id_post: any } = useParams();
+  const param: { id_user: any } = useParams();
 
   const [form] = Form.useForm();
 
   const [postDelete, setPostDelete] = useState(null);
   const [postEdit, setPostEdit] = useState(null);
-  const [listPost, setListPost] = useState(dataRecord);
+  const [listPost, setListPost] = useState([]);
+  const [totalPost, setTotalPost] = useState(0);
+  const limitPostPerPage = 2;
   const [currentPage, setCurrentPage] = useState(paramsUrlSearch.get("page") || "1");
 
   const [valueSearch, setValueSearch] = useState({
-    date: null,
-    type: "success",
-    freeText: "",
-    author: "",
-    typeSort: "desc",
+    createAt: null,
+    typePost: "success",
+    title: "",
+    nickName: "",
+    typeSort: "DESC",
+    limit: limitPostPerPage,
   });
 
+  const { dataPost, isLoadingPost } = useGetListPostAdmin({...valueSearch, page: currentPage}, !param.id_user);
+
+  const { 
+    dataPostByUser, refetchPostByUser, isLoadingPostByUser, isFetchingPostByUser 
+  } = useGetListPostByUserAdmin({...valueSearch, page: currentPage}, param.id_user)
+  console.log(11111, param.id_user);
+
+
   const handleChangePage = (page: any) => {
-    history.push(`${ConvertObjToParamsURL(valueSearch)}&page=${page}`);
+    console.log(page);
+    
+    const newValueSearch = {...valueSearch};
+    newValueSearch.createAt = (newValueSearch as any)?.createAt?.format(dateFormat);
+    console.log(newValueSearch);
+    
+    history.push(`${ConvertObjToParamsURL(newValueSearch)}&page=${page}`);
   };
 
   const handleConfirmDelete = (idPost: any) => {
@@ -64,17 +82,23 @@ const ListPostManagement = (props: any) => {
   useEffect(() => {
     window.scrollTo(0, 0);
     const newValueSearch = {};
-    if (paramsUrlSearch.get("type")) {
-      (newValueSearch as any).type = paramsUrlSearch.get("type");
+    if (paramsUrlSearch.get("typePost")) {
+      (newValueSearch as any).typePost = paramsUrlSearch.get("typePost");
     }
-    if (paramsUrlSearch.get("author")) {
-      (newValueSearch as any).author = paramsUrlSearch.get("author");
+    if (paramsUrlSearch.get("nickName")) {
+      (newValueSearch as any).nickName = paramsUrlSearch.get("nickName");
+    } else {
+      (newValueSearch as any).nickName = "";
     }
-    if (paramsUrlSearch.get("date")) {
-      (newValueSearch as any).date = moment(paramsUrlSearch.get("date"), dateFormat);
+    if (paramsUrlSearch.get("createAt")) {
+      (newValueSearch as any).createAt = moment(paramsUrlSearch.get("createAt"), dateFormat);
+    } else {
+      (newValueSearch as any).createAt = null;
     }
-    if (paramsUrlSearch.get("freeText")) {
-      (newValueSearch as any).freeText = paramsUrlSearch.get("freeText");
+    if (paramsUrlSearch.get("title")) {
+      (newValueSearch as any).title = paramsUrlSearch.get("title");
+    } else {
+      (newValueSearch as any).title = "";
     }
     if (paramsUrlSearch.get("typeSort")) {
       (newValueSearch as any).typeSort = paramsUrlSearch.get("typeSort");
@@ -91,6 +115,15 @@ const ListPostManagement = (props: any) => {
     })
   }, [paramsSeacrh.href]);
 
+  useEffect(() => {
+    if (!isSearchByUser) {
+      setListPost(dataPost?.data);
+      setTotalPost(dataPost?.total);
+    } else {
+      setListPost(dataPostByUser?.data);
+      setTotalPost(dataPostByUser?.total);
+    }
+  }, [dataPost, dataPostByUser])
 
   return (
     <ListPostManagementStyled>
@@ -122,20 +155,20 @@ const ListPostManagement = (props: any) => {
       <ListInputSearch valueSearch={valueSearch} dateFormat={dateFormat} form={form} isSearchByUser={isSearchByUser} />
       <div className="list-post-container">
         {
-          listPost.map((item, index) => {
+          listPost?.length > 0 && listPost.map((item: any, index) => {
             const propsPostItem = {
               detailPost: item,
               isAdmin: true,
               handleClickMoreOption: handleClickMoreOption,
             }
-            if ((valueSearch as any).type === "pending") {
+            if ((valueSearch as any).typePost === "pending") {
               (propsPostItem as any).isPostPending = true;
-            } else if ((valueSearch as any).type === "cancel") {
+            } else if ((valueSearch as any).typePost === "cancel") {
               (propsPostItem as any).isPostCancelAdmin = true;
             } else {
               (propsPostItem as any).listPost = listPost;
               (propsPostItem as any).setListPost = setListPost;
-              if ((valueSearch as any).type === "my-post") {
+              if ((valueSearch as any).typePost === "success_admin") {
                 (propsPostItem as any).isAdminOwner = true;
               }
             }
@@ -201,13 +234,18 @@ const ListPostManagement = (props: any) => {
         </TabPane>
       </Tabs> */}
 
-      <div className="pagination">
-        <Pagination
-          current={+currentPage}
-          total={50}
-          onChange={handleChangePage}
-        />
-      </div>
+      {
+        totalPost > limitPostPerPage && (
+          <div className="pagination">
+            <Pagination
+              current={+currentPage}
+              total={totalPost}
+              defaultPageSize={limitPostPerPage}
+              onChange={handleChangePage}
+            />
+          </div>
+        )
+      }
     </ListPostManagementStyled>
   );
 };

@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { useHistory } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
+import { updatePostAdmin } from '../../../../api/admin/post';
 import { createPost, updatePost } from '../../../../api/post';
 import { getUrlImage } from '../../../../api/uploadimage';
 import toastCustom from '../../../../helpers/toastCustom';
@@ -34,7 +35,7 @@ const ModalCreatePost = (props: any) => {
   const [loadingSubmit, setLoadingSubmit] = useState(false);
 
   const mutationCreatePost = useMutation(createPost);
-  const mutationUpdatePost = useMutation(updatePost);
+  const mutationUpdatePost = useMutation(isAdmin ? updatePostAdmin : updatePost);
 
   useEffect(() => {
     if (isEdit && itemPost?.id) {
@@ -102,8 +103,13 @@ const ModalCreatePost = (props: any) => {
                 mess: MODAL_CREATE_POST_CONSTANTS.successMessage.edit,
                 type: "success",
               });
-              queryClient.invalidateQueries('my-posts');
-              history.push(`/profile?type=pending-post`);
+              if (isAdmin) {
+                history.push('/admin/post-management?typePost=success_admin');
+                queryClient.invalidateQueries('admin-all-posts');
+              } else {
+                queryClient.invalidateQueries('my-posts');
+                history.push(`/profile?type=pending-post`);
+              }
               handleCancel();
             }
           },

@@ -5,6 +5,7 @@ import { Progress } from 'antd';
 import React, { useRef, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import ReactTextareaAutosize from 'react-textarea-autosize';
+import { createCommentAdmin } from '../../../../../../../../api/admin/post';
 import { createComment } from '../../../../../../../../api/post';
 import { getUrlImage } from '../../../../../../../../api/uploadimage';
 import BaseImagePreview from '../../../../../../../Base/BaseImagePreview';
@@ -12,6 +13,7 @@ import POST_ITEM_CONSTANTS from '../../constants';
 
 const InputComment = (props: any) => {
   const {
+    isAdmin = false,
     idPost,
     refTextArea,
   } = props;
@@ -25,7 +27,7 @@ const InputComment = (props: any) => {
   const queryClient = useQueryClient();
   const myProfile: any = queryClient.getQueryData("my-profile");
 
-  const mutationCreateComment = useMutation(createComment);
+  const mutationCreateComment = useMutation(isAdmin ? createCommentAdmin : createComment);
 
   const handleChangeImage = (e: any) => {
     setProg(1);
@@ -73,8 +75,14 @@ const InputComment = (props: any) => {
             setImagePreview(null);
             setImageUrlComment(null);
 
-            queryClient.invalidateQueries("comments-post");
-            queryClient.invalidateQueries("detail-post");
+            if (isAdmin) {
+              queryClient.invalidateQueries("admin-comments-post");
+              queryClient.invalidateQueries("admin-detail-post");
+            } else {
+              queryClient.invalidateQueries("comments-post");
+              queryClient.invalidateQueries("detail-post");
+            }
+            
           }
         }
       }
