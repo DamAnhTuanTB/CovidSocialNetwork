@@ -34,7 +34,7 @@ export const createPostAdmin = async (params: any) => {
 }
 
 export const deletePostAdmin = async (idPost: any) => {
-  const res = await sendDelete(`http://localhost:8888/covid-network-social/admin/post/delete/${idPost}`);
+  const res = await sendDelete(`http://localhost:8888/covid-network-social/admin/post/delete-post/${idPost}`);
   return res?.data;
 }
 
@@ -75,5 +75,10 @@ export const handleLikeCommentAdmin = async (params: any) => {
 
 export const getListCommentPostAdmin = async (param: any) => {
   const res = await sendGet(`http://localhost:8888/covid-network-social/admin/post/get-all-comment-post`, param);
+  return res?.data;
+}
+
+export const deleteCommentPostAdmin = async (idComment: any) => {
+  const res = await sendDelete(`http://localhost:8888/covid-network-social/admin/post/delete-comment/${idComment}`);
   return res?.data;
 }
