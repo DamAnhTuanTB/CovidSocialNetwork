@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { useHistory } from 'react-router-dom';
 import TextareaAutosize from 'react-textarea-autosize';
-import { updatePostAdmin } from '../../../../api/admin/post';
+import { createPostAdmin, updatePostAdmin } from '../../../../api/admin/post';
 import { createPost, updatePost } from '../../../../api/post';
 import { getUrlImage } from '../../../../api/uploadimage';
 import toastCustom from '../../../../helpers/toastCustom';
@@ -34,7 +34,7 @@ const ModalCreatePost = (props: any) => {
 
   const [loadingSubmit, setLoadingSubmit] = useState(false);
 
-  const mutationCreatePost = useMutation(createPost);
+  const mutationCreatePost = useMutation(isAdmin ? createPostAdmin : createPost);
   const mutationUpdatePost = useMutation(isAdmin ? updatePostAdmin : updatePost);
 
   useEffect(() => {
@@ -129,8 +129,13 @@ const ModalCreatePost = (props: any) => {
               type: "success",
             })
           }
-          history.push(`/profile?type=pending-post`);
-          queryClient.invalidateQueries('my-posts');
+          if (isAdmin) {
+            history.push('/admin/post-management?typePost=success_admin');
+            queryClient.invalidateQueries('admin-all-posts');
+          } else {
+            queryClient.invalidateQueries('my-posts');
+            history.push(`/profile?type=pending-post`);
+          }
           handleCancel();
         },
         onError: (err: any) => {

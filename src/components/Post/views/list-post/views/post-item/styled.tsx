@@ -19,6 +19,7 @@ const PostItemStyle = styled.div`
             margin-right: 10px;
         }
         .post-author {
+            cursor: pointer;
             font-weight: bold;
             font-size: 16px;
         }
