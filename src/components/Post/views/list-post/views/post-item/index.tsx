@@ -4,7 +4,7 @@ import { HeartTwoTone, LikeTwoTone, MessageTwoTone, MoreOutlined } from '@ant-de
 import { Button, Dropdown, Menu } from 'antd';
 import { cloneDeep } from 'lodash';
 import React, { useRef, useState } from 'react';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { useHistory } from 'react-router-dom';
 import { handleLikePostAdmin } from '../../../../../../api/admin/post';
 import { handleLikePost, handleSavePost } from '../../../../../../api/post';
@@ -40,6 +40,9 @@ const PostItem = (props: any) => {
   const refTextArea = useRef(null);
   const [idPostApproveOrCancel, setIdPostApproveOrCancel] = useState(null);
   const [upcomingStatusPost, setUpcomingStatusPost] = useState(null);
+
+  const queryClient = useQueryClient();
+  const myProfile: any = queryClient.getQueryData("my-profile");
 
   const onclickMenu = ({ key }: any) => {
     handleClickMoreOption(key, detailPost);
@@ -199,8 +202,14 @@ const PostItem = (props: any) => {
           </div>
         </div>
         {
-          // nếu là profile của bản thân hoặc nếu là admin và không phải bài đang đợi duyệt
-          ((isProfile && !isGuest) || (isAdmin && !isPostPending && !isPostCancelAdmin)) && (
+          // nếu là profile của bản thân 
+          // hoặc nếu là admin và không phải bài đang đợi duyệt
+          // hoặc ở trang detail bài viết của bản thân
+          (
+            (isProfile && !isGuest)
+            || (isAdmin && !isPostPending && !isPostCancelAdmin)
+            || (isDetail && detailPost?.author_id === myProfile?.id)
+          ) && (
             <Dropdown overlay={!isAdmin ? menu : menuAdmin} placement="bottomRight">
               <div className="more-option">
                 <MoreOutlined />

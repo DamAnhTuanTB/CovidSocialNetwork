@@ -16,6 +16,7 @@ const ModalCreatePost = (props: any) => {
   const {
     isAdmin = false,
     isEdit = false,
+    isDetail = false,
     itemPost = {},
     setPostEdit = () => { },
     isShowModalCreate = false,
@@ -104,8 +105,12 @@ const ModalCreatePost = (props: any) => {
                 type: "success",
               });
               if (isAdmin) {
-                history.push('/admin/post-management?typePost=success_admin');
-                queryClient.invalidateQueries('admin-all-posts');
+                if (isDetail) {
+                  queryClient.invalidateQueries('admin-detail-post');
+                } else {
+                  history.push('/admin/post-management?typePost=success_admin');
+                  queryClient.invalidateQueries('admin-all-posts');
+                }
               } else {
                 queryClient.invalidateQueries('my-posts');
                 history.push(`/profile?type=pending-post`);

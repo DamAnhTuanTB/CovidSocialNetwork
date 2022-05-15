@@ -4,6 +4,7 @@ import { useGetDetailPostAdmin, useGetListCommentPostAdmin } from '../../../../h
 import { useGetDetailPost, useGetListCommentPost } from '../../../../hooks/usePost';
 import ModalDeletePost from '../../../Profile/views/profile-detail/views/modal-delete';
 import PostItem from '../list-post/views/post-item';
+import ModalCreatePost from '../modal-create-post';
 import { DetailPostStyled } from './styled';
 
 const DetailPost = (props: any) => {
@@ -21,9 +22,10 @@ const DetailPost = (props: any) => {
   const { dataCommentPostAdmin, refetchCommentPostAdmin, isLoadingCommentPostAdmin, isFetchingCommentPostAdmin } = useGetListCommentPostAdmin(param?.id_post, isAdmin);
 
 
-  const [detailPost, setDetailPost] = useState({});
+  const [detailPost, setDetailPost] = useState<any>({});
   const [listComment, setListComment] = useState([]);
   const [postDelete, setPostDelete] = useState(null);
+  const [postEdit, setPostEdit] = useState(null);
 
   const handleConfirmDelete = (idPost: any) => {
     console.log(13123123, idPost);
@@ -32,8 +34,12 @@ const DetailPost = (props: any) => {
   const handleClickMoreOption = (key: any, post: any) => {
     console.log(key, post);
 
-    if (key === "delete-admin") {
+    if (key === "delete-admin" || (key === "delete" && !isAdmin)) {
       setPostDelete(post);
+    }
+
+    if ((key === "edit" && !isAdmin) || key === "edit-admin") {
+      setPostEdit(post);
     }
   }
 
@@ -59,15 +65,24 @@ const DetailPost = (props: any) => {
   return (
     <DetailPostStyled>
       <ModalDeletePost
-        isAdmin
+        isAdmin={isAdmin}
+        isDetail
         setPostDelete={setPostDelete}
         itemPost={postDelete}
         handleConfirmDelete={handleConfirmDelete}
+      />
+      <ModalCreatePost
+        isEdit
+        isDetail
+        isAdmin={isAdmin}
+        itemPost={postEdit}
+        setPostEdit={setPostEdit}
       />
       <div className="detail-post-container">
         <PostItem
           isDetail
           isAdmin={isAdmin}
+          isAdminOwner={(!!detailPost?.isAdmin && isAdmin)}
           detailPost={detailPost}
           listComment={listComment}
           setListComment={setListComment}

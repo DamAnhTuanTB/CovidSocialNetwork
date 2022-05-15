@@ -1,6 +1,7 @@
 import { Button, Modal } from 'antd';
 import React, { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
+import { useHistory } from 'react-router-dom';
 import { deletePostAdmin } from '../../../../../../api/admin/post';
 import { deletePost } from '../../../../../../api/post';
 import toastCustom from '../../../../../../helpers/toastCustom';
@@ -9,6 +10,7 @@ import MODAL_DELETE_POST_CONSTANTS from './constants';
 const ModalDeletePost = (props: any) => {
   const {
     isAdmin = false,
+    isDetail = false,
     title = "",
     setPostDelete = () => { },
     itemPost = {},
@@ -19,6 +21,7 @@ const ModalDeletePost = (props: any) => {
 
   const queryClient = useQueryClient();
 
+  const history = useHistory();
   const [loading, setLoading] = useState(false);
   const onSubmit = () => {
 
@@ -37,8 +40,14 @@ const ModalDeletePost = (props: any) => {
             if (isAdmin) {
               queryClient.invalidateQueries("admin-all-posts");
               queryClient.invalidateQueries("admin-all-post-user");
+              if (isDetail) {
+                history.push("/admin/post-management");
+              }
             } else {
               queryClient.invalidateQueries("my-posts");
+              if (isDetail) {
+                history.push("/post");
+              }
             }
           }
         },
