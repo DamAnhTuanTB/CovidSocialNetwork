@@ -1,24 +1,27 @@
 import { Button, Modal } from 'antd';
 import React, { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
+import { deletePostAdmin } from '../../../../../../api/admin/post';
 import { deletePost } from '../../../../../../api/post';
 import toastCustom from '../../../../../../helpers/toastCustom';
 import MODAL_DELETE_POST_CONSTANTS from './constants';
 
 const ModalDeletePost = (props: any) => {
   const {
+    isAdmin = false,
     title = "",
     setPostDelete = () => { },
     itemPost = {},
     handleConfirmDelete = () => { }
   } = props;
 
-  const mutation = useMutation(deletePost);
+  const mutation = useMutation(isAdmin ? deletePostAdmin : deletePost);
 
   const queryClient = useQueryClient();
 
   const [loading, setLoading] = useState(false);
   const onSubmit = () => {
+
     setLoading(true);
     mutation.mutate(
       itemPost?.id,
@@ -31,16 +34,28 @@ const ModalDeletePost = (props: any) => {
               type: "success"
             })
             setPostDelete(null);
-            queryClient.invalidateQueries("my-posts");
+            if (isAdmin) {
+              queryClient.invalidateQueries("admin-all-posts");
+              queryClient.invalidateQueries("admin-all-post-user");
+            } else {
+              queryClient.invalidateQueries("my-posts");
+            }
           }
         },
         onError: (err) => {
+          setLoading(false);
           console.log(err);
           toastCustom({
             mess: MODAL_DELETE_POST_CONSTANTS.message.error,
-            type: "success"
+            type: "error"
           })
           setPostDelete(null);
+          if (isAdmin) {
+            queryClient.invalidateQueries("admin-all-posts");
+            queryClient.invalidateQueries("admin-all-post-user");
+          } else {
+            queryClient.invalidateQueries("my-posts");
+          }
         }
       }
     )

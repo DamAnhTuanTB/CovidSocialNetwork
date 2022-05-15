@@ -3,7 +3,7 @@
 import { HeartTwoTone, LikeTwoTone, MessageTwoTone, MoreOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Menu } from 'antd';
 import { cloneDeep } from 'lodash';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useHistory } from 'react-router-dom';
 import { handleLikePostAdmin } from '../../../../../../api/admin/post';
@@ -15,6 +15,7 @@ import POST_ITEM_CONSTANTS from './constants';
 import { PostItemStyle } from './styled';
 import CommentItem from './views/comment-item';
 import InputComment from './views/input-comment';
+import ModalChangeStatusPost from './views/modal-change-status-post';
 
 const PostItem = (props: any) => {
   const {
@@ -37,6 +38,8 @@ const PostItem = (props: any) => {
   } = props;
   const history = useHistory();
   const refTextArea = useRef(null);
+  const [idPostApproveOrCancel, setIdPostApproveOrCancel] = useState(null);
+  const [upcomingStatusPost, setUpcomingStatusPost] = useState(null);
 
   const onclickMenu = ({ key }: any) => {
     handleClickMoreOption(key, detailPost);
@@ -73,6 +76,11 @@ const PostItem = (props: any) => {
     } else {
       history.push(`/profile/${detailPost.author_id}`);
     }
+  }
+
+  const handleApproveOrCancelPost = (status: any) => {
+    setIdPostApproveOrCancel(detailPost.id);
+    setUpcomingStatusPost(status);
   }
 
   const handleClickLikeButton = () => {
@@ -221,13 +229,36 @@ const PostItem = (props: any) => {
         (!isPostDraft && !isPostPending && !isPostCancelAdmin) && (
           <div className="footer-post">
             <div className="detail-interaction">
+
               <div className="detail-like">
-                <img src="/post/likeFbIcon.svg" alt="" />
-                {detailPost?.totalLike}
+                {
+                  detailPost?.totalLike > 0 && (
+                    <>
+                      <img src="/post/likeFbIcon.svg" alt="" />
+                      {detailPost?.totalLike}
+                    </>
+                  )
+                }
               </div>
               <div className="detail-other">
-                <div>{detailPost?.totalComment}{POST_ITEM_CONSTANTS.detailAction.suffix.comment}</div>
-                <div>{detailPost?.totalSave}{POST_ITEM_CONSTANTS.detailAction.suffix.save}</div>
+                <div>
+                  {
+                    detailPost?.totalComment > 0 && (
+                      <>
+                        {detailPost?.totalComment}{POST_ITEM_CONSTANTS.detailAction.suffix.comment}
+                      </>
+                    )
+                  }
+                </div>
+                <div>
+                  {
+                    detailPost?.totalSave > 0 && (
+                      <>
+                        {detailPost?.totalSave}{POST_ITEM_CONSTANTS.detailAction.suffix.save}
+                      </>
+                    )
+                  }
+                </div>
               </div>
             </div>
             <div className="list-button">
@@ -283,10 +314,18 @@ const PostItem = (props: any) => {
       }
       {
         (isAdmin && isPostPending) && (
-          <div className="list-approve-button-admin">
-            <Button type="primary">{POST_ITEM_CONSTANTS.adminAction.approve}</Button>
-            <Button type="text">{POST_ITEM_CONSTANTS.adminAction.delete}</Button>
-          </div>
+          <>
+            <div className="list-approve-button-admin">
+              <Button type="primary" onClick={() => handleApproveOrCancelPost("success")}>{POST_ITEM_CONSTANTS.adminAction.approve}</Button>
+              <Button type="text" onClick={() => handleApproveOrCancelPost("cancel")}>{POST_ITEM_CONSTANTS.adminAction.delete}</Button>
+            </div>
+            <ModalChangeStatusPost
+              status={upcomingStatusPost}
+              setStatus={setUpcomingStatusPost}
+              idPostApproveOrCancel={idPostApproveOrCancel}
+              setIdPostApproveOrCancel={setIdPostApproveOrCancel}
+            />
+          </>
         )
       }
     </PostItemStyle>

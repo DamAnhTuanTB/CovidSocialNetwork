@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Form, Pagination, Tabs } from 'antd';
+import { Button, Form, Pagination, Tabs } from 'antd';
 import { useHistory, useParams } from 'react-router-dom';
 import dataRecord from '../../../../Post/views/list-post/fakeData';
 import PostItem from '../../../../Post/views/list-post/views/post-item';
@@ -11,6 +11,7 @@ import moment from 'moment';
 import ConvertObjToParamsURL from '../../../../../helpers/convertObjToUrl';
 import LIST_POST_MANAGEMENT_CONSTANTS from './constants';
 import { useGetListPostAdmin, useGetListPostByUserAdmin } from '../../../../../hooks/admin/usePostAdmin';
+import { useQueryClient } from 'react-query';
 
 const { TabPane } = Tabs;
 
@@ -33,7 +34,7 @@ const ListPostManagement = (props: any) => {
   const [postEdit, setPostEdit] = useState(null);
   const [listPost, setListPost] = useState([]);
   const [totalPost, setTotalPost] = useState(0);
-  const limitPostPerPage = 2;
+  const limitPostPerPage = 10;
   const [currentPage, setCurrentPage] = useState(paramsUrlSearch.get("page") || "1");
 
   const [valueSearch, setValueSearch] = useState({
@@ -45,21 +46,25 @@ const ListPostManagement = (props: any) => {
     limit: limitPostPerPage,
   });
 
-  const { dataPost, isLoadingPost } = useGetListPostAdmin({...valueSearch, page: currentPage}, !param.id_user);
+  const [isShowModalCreate, setIsShowModalCreate] = useState(false);
+  const queryClient = useQueryClient();
+  const profileAdmin: any = queryClient.getQueryData("profile-admin");
 
-  const { 
-    dataPostByUser, refetchPostByUser, isLoadingPostByUser, isFetchingPostByUser 
-  } = useGetListPostByUserAdmin({...valueSearch, page: currentPage}, param.id_user)
+  const { dataPost, isLoadingPost } = useGetListPostAdmin({ ...valueSearch, page: currentPage }, !param.id_user);
+
+  const {
+    dataPostByUser, refetchPostByUser, isLoadingPostByUser, isFetchingPostByUser
+  } = useGetListPostByUserAdmin({ ...valueSearch, page: currentPage }, param.id_user)
   console.log(11111, param.id_user);
 
 
   const handleChangePage = (page: any) => {
     console.log(page);
-    
-    const newValueSearch = {...valueSearch};
+
+    const newValueSearch = { ...valueSearch };
     newValueSearch.createAt = (newValueSearch as any)?.createAt?.format(dateFormat);
     console.log(newValueSearch);
-    
+
     history.push(`${ConvertObjToParamsURL(newValueSearch)}&page=${page}`);
   };
 
@@ -127,6 +132,12 @@ const ListPostManagement = (props: any) => {
 
   return (
     <ListPostManagementStyled>
+      <ModalCreatePost
+        isAdmin
+        isShowModalCreate={isShowModalCreate}
+        setIsShowModalCreate={setIsShowModalCreate}
+        profile={profileAdmin}
+      />
       <ModalDeletePost
         isAdmin
         setPostDelete={setPostDelete}
@@ -139,18 +150,21 @@ const ListPostManagement = (props: any) => {
         itemPost={postEdit}
         setPostEdit={setPostEdit}
       />
-      <div className="title">
-        {
-          isSearchByUser ? (
-            <>
-              {LIST_POST_MANAGEMENT_CONSTANTS.titleFindByUser}
-              <span>{"123123123"}</span>
-            </>
-          ) : (
-            <>{LIST_POST_MANAGEMENT_CONSTANTS.title}</>
-          )
-        }
+      <div className="title-container">
+        <div className="title">
+          {
+            isSearchByUser ? (
+              <>
+                {LIST_POST_MANAGEMENT_CONSTANTS.titleFindByUser}
+                <span>{"123123123"}</span>
+              </>
+            ) : (
+              <>{LIST_POST_MANAGEMENT_CONSTANTS.title}</>
+            )
+          }
 
+        </div>
+        <Button type="primary" onClick={() => setIsShowModalCreate(true)}>{LIST_POST_MANAGEMENT_CONSTANTS.createPost}</Button>
       </div>
       <ListInputSearch valueSearch={valueSearch} dateFormat={dateFormat} form={form} isSearchByUser={isSearchByUser} />
       <div className="list-post-container">
@@ -185,55 +199,6 @@ const ListPostManagement = (props: any) => {
           )
         }
       </div>
-
-      {/* <Tabs defaultActiveKey={typePost} key={typePost} onChange={handleChangeKey}>
-        <TabPane tab="Bảng tin" key="list-post">
-          {
-            listPost.map((item) => (
-              <Fragment key={item.id}>
-                <PostItem
-                  detailPost={item}
-                  isAdmin
-                  handleClickMoreOption={handleClickMoreOption}
-                  listPost={listPost}
-                  setListPost={setListPost}
-                />
-              </Fragment>
-            ))
-          }
-        </TabPane>
-        <TabPane tab="Bài viết của bạn" key="my-post">
-          {
-            listPost.map((item) => (
-              <Fragment key={item.id}>
-                <PostItem
-                  detailPost={item}
-                  isAdmin
-                  isAdminOwner
-                  handleClickMoreOption={handleClickMoreOption}
-                  listPost={listPost}
-                  setListPost={setListPost}
-                />
-              </Fragment>
-            ))
-          }
-        </TabPane>
-        <TabPane tab="Bài viết đang chờ duyệt" key="unapproved">
-          {
-            listPost.map((item) => (
-              <Fragment key={item.id}>
-                <PostItem
-                  detailPost={item}
-                  isAdmin
-                  isPostPending
-                  handleClickMoreOption={handleClickMoreOption}
-                />
-              </Fragment>
-            ))
-          }
-        </TabPane>
-      </Tabs> */}
-
       {
         totalPost > limitPostPerPage && (
           <div className="pagination">

@@ -1,12 +1,13 @@
 import { DeleteOutlined } from '@ant-design/icons';
 import { cloneDeep } from 'lodash';
-import React from 'react';
+import React, { useState } from 'react';
 import { useMutation } from 'react-query';
 import { handleLikeCommentAdmin } from '../../../../../../../../api/admin/post';
 import { handleLikeComment } from '../../../../../../../../api/post';
 import handleConvertDateStringToDateTimeComment from '../../../../../../../../helpers/convertDateStringtoDateComment';
 import BaseImagePreview from '../../../../../../../Base/BaseImagePreview';
 import POST_ITEM_CONSTANTS from '../../constants';
+import ModalDeleteComment from '../modal-delete-comment';
 import { CommentItemStyled } from './styled';
 
 const CommentItem = (props: any) => {
@@ -16,6 +17,8 @@ const CommentItem = (props: any) => {
     setListComment = () => { },
     isAdmin = false,
   } = props;
+
+  const [idCommentDelete, setIdCommentDelete] = useState(null);
 
   const mutationLikeComment = useMutation(isAdmin ? handleLikeCommentAdmin : handleLikeComment);
 
@@ -36,10 +39,10 @@ const CommentItem = (props: any) => {
 
           const newListComment = cloneDeep(listComment);
           const commentIndex = newListComment.findIndex((item: any) => item.id === detailComment.id);
-      
+
           newListComment[commentIndex].isLike = currentLike;
           newListComment[commentIndex].totalLike = +newListComment[commentIndex].totalLike + changeLike;
-      
+
           setListComment(newListComment);
         }
       },
@@ -51,9 +54,9 @@ const CommentItem = (props: any) => {
   }
 
   const handleDeleteComment = () => {
-    // console.log(111111, detailComment);
-    const newListComment = cloneDeep(listComment);
-    setListComment(newListComment.filter((item: any) => item.id !== detailComment.id));
+    setIdCommentDelete(detailComment.id);
+    // const newListComment = cloneDeep(listComment);
+    // setListComment(newListComment.filter((item: any) => item.id !== detailComment.id));
   }
 
   return (
@@ -73,9 +76,12 @@ const CommentItem = (props: any) => {
         </div>
         {
           isAdmin && (
-            <div className="delete-icon" onClick={handleDeleteComment}>
-              <DeleteOutlined />
-            </div>
+            <>
+              <div className="delete-icon" onClick={handleDeleteComment}>
+                <DeleteOutlined />
+              </div>
+              <ModalDeleteComment idCommentDelete={idCommentDelete} setIdCommentDelete={setIdCommentDelete}/>
+            </>
           )
         }
       </div>

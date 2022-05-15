@@ -1,7 +1,10 @@
+import Cookies from 'js-cookie';
 import React, { Suspense } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { useQueryClient } from 'react-query';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import HeaderAdmin from '../../components/admin/Header';
 import SideBarAdmin from '../../components/admin/SideBar';
+import { useGetProfile } from '../../hooks/useProfile';
 import ChangePasswordAdminPage from '../../pages/admin/ChangePassword';
 import ExpertManagementPage from '../../pages/admin/Expert';
 import GuestManagementPage from '../../pages/admin/Guest';
@@ -9,11 +12,17 @@ import PostsPageManagement from '../../pages/admin/Post';
 import { AdminStyled } from './styled';
 
 export default function AdminPageWrapper() {
-  // const isAuthenticated = !!Cookies.get('token');
-  // const { profile } = useGetProfile(isAuthenticated);
+  const isAuthenticated = !!Cookies.get('token');
+  // const isAuthenticated = !!Cookies.get('tokenAdmin');
+  const { profile } = useGetProfile(isAuthenticated);
+  // const { profile } = useGetProfileAdmin(isAuthenticated);
 
-  // if (!isAuthenticated) return <Redirect to="/login" />;
-  // if (!profile) return null;
+  const queryClient = useQueryClient();
+
+  queryClient.setQueryData("profile-admin", profile);
+
+  if (!isAuthenticated) return <Redirect to="/admin/login" />;
+  if (!profile) return null;
   return (
     <AdminStyled>
       <HeaderAdmin />

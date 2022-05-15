@@ -15,7 +15,7 @@ const POST_ITEM_CONSTANTS = {
   },
   adminAction: {
     approve: "Duyệt bài viết",
-    delete: "Xóa bài viết"
+    delete: "Hủy bài viết"
   },
   comment: {
     placeholder: "Nhập bình luận",

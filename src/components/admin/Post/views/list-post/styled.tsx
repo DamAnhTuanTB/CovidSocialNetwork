@@ -5,12 +5,18 @@ const ListPostManagementStyled = styled.div`
   .ant-tabs-ink-bar-animated {
     transition: unset !important;
   }
-  .title {
-    font-size: 24px;
+  .title-container {
     margin-bottom: 20px;
-    span {
-      font-style: italic;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    .title {
+      font-size: 24px;
+      span {
+        font-style: italic;
+      }
     }
+
   }
   .list-post-container {
     padding-top: 20px;
