@@ -34,10 +34,8 @@ const ModalEditProfile = (props: any) => {
   const onFinish = (values: any) => {
     setLoading(true);
     const bodyUpdateProfile = { ...values };
-    bodyUpdateProfile.date_of_birth = bodyUpdateProfile.date_of_birth.format("YYYY/MM/DD");
+    bodyUpdateProfile.date_of_birth = bodyUpdateProfile.date_of_birth.format("YYYY-MM-DD");
     bodyUpdateProfile.avatar = avatar;
-
-
 
     mutation.mutate(bodyUpdateProfile, {
       onSuccess: (res: any) => {
@@ -50,7 +48,7 @@ const ModalEditProfile = (props: any) => {
           queryClient.setQueryData("my-profile", (oldData) => {
             return {
               ...oldData,
-              ...bodyUpdateProfile
+              ...bodyUpdateProfile,
             }
           });
           queryClient.invalidateQueries('profile');
@@ -71,7 +69,6 @@ const ModalEditProfile = (props: any) => {
 
   const handleCancel = () => {
     setIsShowModalEditProfile(false);
-    form.resetFields();
     setAvatar(undefined);
     setAvatarPreview(undefined);
   }
@@ -101,13 +98,23 @@ const ModalEditProfile = (props: any) => {
   }
 
   useEffect(() => {
-    const cloneProfile = { ...profile };
-    cloneProfile.date_of_birth = moment(cloneProfile.date_of_birth, "YYYY/MM/DD");
-
-    setInitialValues(cloneProfile);
-    setAvatar(profile?.avatar);
-    setAvatarPreview(profile?.avatar);
+    if (isShowModalEditProfile) {
+      const cloneProfile = { ...profile };
+      
+      if (cloneProfile.date_of_birth) {
+        cloneProfile.date_of_birth = moment(cloneProfile.date_of_birth, "YYYY-MM-DD");
+      }
+      
+      setInitialValues(cloneProfile);
+      
+      setAvatar(profile?.avatar);
+      setAvatarPreview(profile?.avatar);
+    }
   }, [isShowModalEditProfile])
+
+  useEffect(() => {
+    form.setFieldsValue(initialValues);
+  }, [initialValues])
 
   return (
     <ModalEditProfileStyled

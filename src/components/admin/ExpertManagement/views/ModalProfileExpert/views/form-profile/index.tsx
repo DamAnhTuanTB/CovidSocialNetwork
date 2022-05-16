@@ -44,7 +44,7 @@ const FormProfile = (props: any) => {
   useEffect(() => {
     const cloneProfile = { ...previewExpert };
 
-    cloneProfile.date_of_birth = moment(cloneProfile.date_of_birth, "YYYY/MM/DD");
+    cloneProfile.date_of_birth = moment(cloneProfile.date_of_birth, "YYYY-MM-DD");
 
     setInitialValues(cloneProfile);
 

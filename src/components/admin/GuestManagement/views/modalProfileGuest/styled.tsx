@@ -33,6 +33,7 @@ const ModalProfileGuestStyled = styled(Modal)`
       display: flex;
       align-items: center;
       background-color: #ececec;
+      min-height: 40px;
       padding: 5px 10px;
       border-radius: 5px;
     }

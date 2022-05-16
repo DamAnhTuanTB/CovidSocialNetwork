@@ -1,5 +1,6 @@
 import { Form, Space } from 'antd';
 import React from 'react';
+import { handleConvertDateStringToDate } from '../../../../../helpers/convertDateStringToDate';
 import BaseImagePreview from '../../../../Base/BaseImagePreview';
 import MODAL_PROFILE_CONSTANTS from './constants';
 import { ModalProfileGuestStyled } from './styled';
@@ -29,8 +30,9 @@ const ModalProfileGuest = (props: any) => {
         <BaseImagePreview
           className="avatar-image"
           classNameLoading="loading-image"
-          src={previewGuest?.avatar ? previewGuest?.avatar : "/post/avatar_my1.jpg"}
+          src={previewGuest?.avatar ? previewGuest?.avatar : "/defaultAvatar.png"}
           isLoading
+          cancelPreview={!previewGuest?.avatar}
           alt=""
         />
       </div>
@@ -56,7 +58,7 @@ const ModalProfileGuest = (props: any) => {
           </div>
           <div className="info-item birthday">
             <div className="label">{MODAL_PROFILE_CONSTANTS.label.birthday}</div>
-            <div className="value">{previewGuest?.birthday}</div>
+            <div className="value">{handleConvertDateStringToDate(previewGuest?.date_of_birth)}</div>
           </div>
         </Space>
         <div className="info-item email">
@@ -65,7 +67,7 @@ const ModalProfileGuest = (props: any) => {
         </div>
         <div className="info-item phone">
           <div className="label">{MODAL_PROFILE_CONSTANTS.label.phone}</div>
-          <div className="value">{previewGuest?.phone}</div>
+          <div className="value">{previewGuest?.telephone}</div>
         </div>
       </Form>
     </ModalProfileGuestStyled>

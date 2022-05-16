@@ -3,14 +3,14 @@ import { sendDelete, sendGet, sendPost, sendPut } from "../axios";
 // eslint-disable-next-line import/prefer-default-export
 export const getListPostAdmin = async (params: any) => {
   const newParams = {...params};
-  newParams.createAt = newParams?.createAt?.format("YYYY-MM-DD");
+  newParams.create_at = newParams?.create_at?.format("YYYY-MM-DD");
   const res = await sendGet("http://localhost:8888/covid-network-social/admin/post/get-all-posts", newParams);
   return res?.data;
 }
 
 export const getListPostByUserAdmin = async (params: any) => {
   const newParams = {...params};
-  newParams.createAt = newParams?.createAt?.format("YYYY-MM-DD");
+  newParams.create_at = newParams?.create_at?.format("YYYY-MM-DD");
   const res = await sendGet("http://localhost:8888/covid-network-social/admin/post/get-all-posts-by-userId", newParams);
   return res?.data;
 }

@@ -22,7 +22,8 @@ const POST_ITEM_CONSTANTS = {
   },
   successMessage: {
     savePost: "Lưu bài viết thành công",
-  }
+  },
+  descriptionAdmin: "Quản trị viên",
 };
 
 export default POST_ITEM_CONSTANTS;

@@ -5,11 +5,16 @@ const ModalListImageStyled = styled(Modal)`
   .list-image {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    max-height: 550px;
+    overflow-y: auto;
     .item-image {
       width: 150px;
       height: 150px;
       margin-bottom: 20px;
+      margin-right: 15px;
+      :nth-child(4n) {
+        margin-right: 0;
+      }
       .img-preview {
         width: 100%;
         height: 100%;
@@ -21,6 +26,19 @@ const ModalListImageStyled = styled(Modal)`
           object-position: center;
         }
       }
+    }
+    .no-image-text {
+      font-size: 20px;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background-color: #DFDFDF;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #8F8F8F;
+      border-radius: 5px;
     }
   }
   .loading-spin {

@@ -1,19 +1,17 @@
-import React, { Fragment, useEffect, useState } from 'react';
-import { Button, Form, Pagination, Tabs } from 'antd';
-import { useHistory, useParams } from 'react-router-dom';
-import dataRecord from '../../../../Post/views/list-post/fakeData';
-import PostItem from '../../../../Post/views/list-post/views/post-item';
-import { ListPostManagementStyled } from './styled';
-import ModalDeletePost from '../../../../Profile/views/profile-detail/views/modal-delete';
-import ModalCreatePost from '../../../../Post/views/modal-create-post';
-import ListInputSearch from './list-input-search';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Button, Form, Pagination } from 'antd';
 import moment from 'moment';
-import ConvertObjToParamsURL from '../../../../../helpers/convertObjToUrl';
-import LIST_POST_MANAGEMENT_CONSTANTS from './constants';
-import { useGetListPostAdmin, useGetListPostByUserAdmin } from '../../../../../hooks/admin/usePostAdmin';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useQueryClient } from 'react-query';
-
-const { TabPane } = Tabs;
+import { useHistory, useParams } from 'react-router-dom';
+import ConvertObjToParamsURL from '../../../../../helpers/convertObjToUrl';
+import { useGetListPostAdmin, useGetListPostByUserAdmin } from '../../../../../hooks/admin/usePostAdmin';
+import PostItem from '../../../../Post/views/list-post/views/post-item';
+import ModalCreatePost from '../../../../Post/views/modal-create-post';
+import ModalDeletePost from '../../../../Profile/views/profile-detail/views/modal-delete';
+import LIST_POST_MANAGEMENT_CONSTANTS from './constants';
+import ListInputSearch from './list-input-search';
+import { ListPostManagementStyled } from './styled';
 
 const dateFormat = 'DD-MM-YYYY';
 
@@ -24,6 +22,7 @@ const ListPostManagement = (props: any) => {
 
   const history = useHistory();
   const paramsSeacrh = new URL(window.location.href);
+
   const paramsUrlSearch = paramsSeacrh.searchParams;
 
   const param: { id_user: any } = useParams();
@@ -32,19 +31,20 @@ const ListPostManagement = (props: any) => {
 
   const [postDelete, setPostDelete] = useState(null);
   const [postEdit, setPostEdit] = useState(null);
-  const [listPost, setListPost] = useState([]);
+  const [listPost, setListPost] = useState<any>([]);
   const [totalPost, setTotalPost] = useState(0);
   const limitPostPerPage = 10;
   const [currentPage, setCurrentPage] = useState(paramsUrlSearch.get("page") || "1");
-
-  const [valueSearch, setValueSearch] = useState({
-    createAt: null,
+  const initValueSearch = {
+    create_at: null,
     typePost: "success",
     title: "",
-    nickName: "",
+    nick_name: "",
     typeSort: "DESC",
     limit: limitPostPerPage,
-  });
+  }
+
+  const [valueSearch, setValueSearch] = useState(initValueSearch);
 
   const [isShowModalCreate, setIsShowModalCreate] = useState(false);
   const queryClient = useQueryClient();
@@ -62,8 +62,8 @@ const ListPostManagement = (props: any) => {
     console.log(page);
 
     const newValueSearch = { ...valueSearch };
-    newValueSearch.createAt = (newValueSearch as any)?.createAt?.format(dateFormat);
-    console.log(newValueSearch);
+    delete (newValueSearch as any).limit
+    newValueSearch.create_at = (newValueSearch as any)?.create_at?.format(dateFormat);
 
     history.push(`${ConvertObjToParamsURL(newValueSearch)}&page=${page}`);
   };
@@ -90,15 +90,15 @@ const ListPostManagement = (props: any) => {
     if (paramsUrlSearch.get("typePost")) {
       (newValueSearch as any).typePost = paramsUrlSearch.get("typePost");
     }
-    if (paramsUrlSearch.get("nickName")) {
-      (newValueSearch as any).nickName = paramsUrlSearch.get("nickName");
+    if (paramsUrlSearch.get("nick_name")) {
+      (newValueSearch as any).nick_name = paramsUrlSearch.get("nick_name");
     } else {
-      (newValueSearch as any).nickName = "";
+      (newValueSearch as any).nick_name = "";
     }
-    if (paramsUrlSearch.get("createAt")) {
-      (newValueSearch as any).createAt = moment(paramsUrlSearch.get("createAt"), dateFormat);
+    if (paramsUrlSearch.get("create_at")) {
+      (newValueSearch as any).create_at = moment(paramsUrlSearch.get("create_at"), dateFormat);
     } else {
-      (newValueSearch as any).createAt = null;
+      (newValueSearch as any).create_at = null;
     }
     if (paramsUrlSearch.get("title")) {
       (newValueSearch as any).title = paramsUrlSearch.get("title");
@@ -111,13 +111,16 @@ const ListPostManagement = (props: any) => {
     setCurrentPage(paramsUrlSearch.get("page") || "1");
 
     setValueSearch({
-      ...valueSearch,
+      ...initValueSearch,
       ...newValueSearch,
     })
     form.setFieldsValue({
-      ...valueSearch,
+      ...initValueSearch,
       ...newValueSearch,
     })
+
+    console.log(123123, paramsSeacrh);
+
   }, [paramsSeacrh.href]);
 
   useEffect(() => {
@@ -156,7 +159,7 @@ const ListPostManagement = (props: any) => {
             isSearchByUser ? (
               <>
                 {LIST_POST_MANAGEMENT_CONSTANTS.titleFindByUser}
-                <span>{"123123123"}</span>
+                <span>{listPost?.length && listPost[0]?.author_nick_name}</span>
               </>
             ) : (
               <>{LIST_POST_MANAGEMENT_CONSTANTS.title}</>
@@ -169,7 +172,14 @@ const ListPostManagement = (props: any) => {
       <ListInputSearch valueSearch={valueSearch} dateFormat={dateFormat} form={form} isSearchByUser={isSearchByUser} />
       <div className="list-post-container">
         {
-          listPost?.length > 0 && listPost.map((item: any, index) => {
+          (listPost?.length === 0 && !isLoadingPost && !isLoadingPostByUser) && (
+            <div className="no-post">
+              {LIST_POST_MANAGEMENT_CONSTANTS.noPost}
+            </div>
+          )
+        }
+        { 
+          listPost?.length > 0 && listPost.map((item: any, index: any) => {
             const propsPostItem = {
               detailPost: item,
               isAdmin: true,
