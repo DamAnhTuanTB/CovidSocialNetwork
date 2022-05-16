@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 // @ts-nocheck
 import { HeartTwoTone, LikeTwoTone, MessageTwoTone, MoreOutlined } from '@ant-design/icons';
-import { Button, Dropdown, Menu } from 'antd';
+import { Button, Dropdown, Menu, Tag } from 'antd';
 import { cloneDeep } from 'lodash';
 import React, { useRef, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
@@ -74,6 +74,13 @@ const PostItem = (props: any) => {
   const mutationSavePost = useMutation(handleSavePost);
 
   const handleClickAuthorPost = () => {
+    if (isAdmin && detailPost?.isAdmin) {
+      history.push("/admin/post-management?typePost=success_admin");
+      return;
+    }
+    if (detailPost?.isAdmin) {
+      return;
+    }
     if (isAdmin) {
       history.push(`/admin/post-management/find-by-user/${detailPost.author_id}`);
     } else {
@@ -196,8 +203,18 @@ const PostItem = (props: any) => {
         <div>
           <div className="post-author" onClick={handleClickAuthorPost}>
             {detailPost?.author_nick_name}
+            {/* {
+              detailPost?.isAdmin ? (
+                <span className="description-admin">Quản trị viên</span>
+              ) : (null)
+            } */}
           </div>
           <div className="create-at">
+            {
+              detailPost?.isAdmin ? (
+                <Tag className="description-admin" color={"#3199D5"}>{POST_ITEM_CONSTANTS.descriptionAdmin}</Tag>
+              ) : (null)
+            }
             {handleConvertDateStringToDateTime(detailPost?.create_at)}
           </div>
         </div>

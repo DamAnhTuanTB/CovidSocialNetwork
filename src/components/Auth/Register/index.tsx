@@ -15,7 +15,7 @@ const RegisterComponent = () => {
   const onFinish = (values: any) => {
     const bodyRegister = { ...values };
     delete bodyRegister.confirmPassword;
-    bodyRegister.date_of_birth = bodyRegister.date_of_birth.format("YYYY/MM/DD");
+    bodyRegister.date_of_birth = bodyRegister.date_of_birth.format("YYYY-MM-DD");
 
     mutation.mutate(bodyRegister, {
       onSuccess: (data) => {

@@ -11,7 +11,8 @@ const axiosInstance = Axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // eslint-disable-next-line no-param-reassign
-    const token = Cookies.get('tokenAdmin');
+    // const token = Cookies.get('tokenAdmin');
+    const token = Cookies.get('token');
     if (token) {
       config.headers!.Authorization = `Bearer ${token}`;
     }

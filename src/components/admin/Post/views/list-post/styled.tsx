@@ -23,6 +23,12 @@ const ListPostManagementStyled = styled.div`
     width: 100%;
     max-width: 700px;
     margin: auto;
+    .no-post {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      font-size: 20px;
+    }
   }
   .ant-tabs-tab {
     padding: 12px 5px;

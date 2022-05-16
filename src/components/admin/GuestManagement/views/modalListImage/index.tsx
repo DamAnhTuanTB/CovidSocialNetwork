@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ReactLoading from "react-loading";
+import { useGetListImageByIdGuest } from '../../../../../hooks/admin/useGuestAdmin';
 import BaseImagePreview from '../../../../Base/BaseImagePreview';
 import { ModalListImageStyled } from './styled';
 
@@ -11,23 +12,30 @@ const ModalListImage = (props: any) => {
     setIdGuest = () => { },
   } = props;
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [listImage, setListImage] = useState<any>([]);
 
   const handleCancel = () => {
     if (loading) return;
 
     setIdGuest(null);
+    setListImage([]);
   }
 
+  const { dataListImageGuest, isLoadingListImageGuest } = useGetListImageByIdGuest(idGuest);
+
   useEffect(() => {
-    if (idGuest) {
-      setLoading(true);
-      setTimeout(() => {
-        setLoading(false);
-      }, 2000)
-      console.log(idGuest);
+    if (idGuest && dataListImageGuest) {
+      console.log(dataListImageGuest);
+      const listImagePost = dataListImageGuest?.data[0]?.posts_images ? dataListImageGuest?.data[0]?.posts_images?.split(";") : [];
+      const listImageComment = dataListImageGuest?.data[0]?.comment_images ? dataListImageGuest?.data[0]?.comment_images?.split(";") : [];
+      setListImage([
+        ...listImagePost,
+        ...listImageComment
+      ])
+      
     }
-  }, [idGuest])
+  }, [idGuest, dataListImageGuest])
 
   return (
     <ModalListImageStyled
@@ -42,25 +50,26 @@ const ModalListImage = (props: any) => {
         {
           loading ? (
             <div className="loading-spin">
-              <ReactLoading type="spinningBubbles" color="#909090" height={100} width={100}/>
+              <ReactLoading type="spinningBubbles" color="#909090" height={100} width={100} />
             </div>
           ) : (
             <>
-              <div className="item-image">
-                <BaseImagePreview className="img" isLoading src="https://firebasestorage.googleapis.com/v0/b/fir-upload-image-a79ce.appspot.com/o/file%2Fbarca.jpg?alt=media&token=5d91f27b-eb37-41cb-a174-675538d1a90c" alt="" />
-              </div>
-              <div className="item-image">
-                <BaseImagePreview className="img" isLoading src="/post/backgroundPC.jpg" alt="" />
-              </div>
-              <div className="item-image">
-                <BaseImagePreview className="img" isLoading src="/post/backgroundPC.jpg" alt="" />
-              </div>
-              <div className="item-image">
-                <BaseImagePreview className="img" isLoading src="/post/backgroundPC.jpg" alt="" />
-              </div>
-              <div className="item-image">
-                <BaseImagePreview className="img" isLoading src="/post/backgroundPC.jpg" alt="" />
-              </div>
+              {
+                (listImage && listImage?.length > 0) && listImage?.map((item: any, index: any) => {
+                  const key = item + index;
+                  if (!item) return null;
+                  return (
+                    <div className="item-image" key={key}>
+                      <BaseImagePreview className="img" isLoading src={item} alt="" />
+                    </div>
+                  )
+                })
+              }
+              {
+                (listImage && listImage?.length === 0) && (
+                  <div className="no-image-text">Bệnh nhân chưa đăng tải ảnh nào</div>
+                )
+              }
             </>
           )
         }

@@ -2,8 +2,10 @@ import { DeleteOutlined, EyeOutlined, FileImageOutlined } from '@ant-design/icon
 import { Pagination, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import dataRecordGuest from './fakeDataGuest';
+import { handleConvertDateStringToDate } from '../../../helpers/convertDateStringToDate';
+import { useGetListGuest } from '../../../hooks/admin/useGuestAdmin';
 import { ListGuestStyled } from './styled';
+import ModalDeleteGuest from './views/modal-delete-guest';
 import ModalListImage from './views/modalListImage';
 import ModalProfileGuest from './views/modalProfileGuest';
 
@@ -15,16 +17,25 @@ const ListGuestComponent = (props: any) => {
   const [currentPage, setCurrentPage] = useState("1");
   const params = new URL(window.location.href);
   const paramsUrl = params.searchParams;
+  const limitPerPage = 7;
 
   const [previewGuest, setPreviewGuest] = useState(null);
   const [idGuest, setIdGuest] = useState(null);
+  const [listGuest, setListGuest] = useState([]);
+  const [totalGuest, setTotalGuest] = useState(0);
+  const [guestDelete, setGuestDelete] = useState();
+
+  const { dataGuest, isLoadingGuest } = useGetListGuest({
+    limit: limitPerPage,
+    page: currentPage,
+  })
 
   const columns = [
     {
-      title: 'Thời gian tạo',
-      dataIndex: 'create_at',
-      key: 'create_at',
-      width: 100,
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id',
+      width: 10,
     },
     {
       title: 'Email',
@@ -52,15 +63,28 @@ const ListGuestComponent = (props: any) => {
     },
     {
       title: 'Số điện thoại',
-      dataIndex: 'phone',
-      key: 'phone',
+      // dataIndex: 'telephone',
+      key: 'telephone',
       width: 120,
+      render: (data: any) => {
+        return (
+          <>
+            {data?.telephone ? data?.telephone : "Không có"}
+          </>
+        )
+      },
     },
     {
       title: 'Ngày sinh',
-      key: 'birthday',
-      dataIndex: 'birthday',
+      key: 'date_of_birth',
       width: 100,
+      render: (data: any) => {
+        return (
+          <>
+            {handleConvertDateStringToDate(data?.date_of_birth)}
+          </>
+        )
+      },
     },
     {
       title: '',
@@ -68,9 +92,9 @@ const ListGuestComponent = (props: any) => {
       width: 70,
       render: (data: any) => (
         <Space>
-          <FileImageOutlined className="image-icon" onClick={() => setIdGuest(data.id)}/>
+          <FileImageOutlined className="image-icon" onClick={() => setIdGuest(data.id)} />
           <EyeOutlined className="seemore-icon" onClick={() => setPreviewGuest(data)} />
-          <DeleteOutlined className="delete-icon" onClick={() => {}} />
+          <DeleteOutlined className="delete-icon" onClick={() => setGuestDelete(data)} />
         </Space>
       ),
     },
@@ -84,7 +108,12 @@ const ListGuestComponent = (props: any) => {
     setCurrentPage(paramsUrl.get("page") || "1");
   }, [params.href])
 
-  
+  useEffect(() => {
+    if (dataGuest?.statusCode === 200) {
+      setListGuest(dataGuest?.data);
+      setTotalGuest(dataGuest?.total);
+    }
+  }, [dataGuest])
 
   return (
     <ListGuestStyled>
@@ -93,16 +122,21 @@ const ListGuestComponent = (props: any) => {
       </div>
       <Table
         columns={columns}
-        dataSource={dataRecordGuest}
+        dataSource={listGuest}
         pagination={false}
       />
-      <div className="pagination">
-        <Pagination
-          current={+currentPage}
-          total={50}
-          onChange={handleChangePage}
-        />
-      </div>
+      {
+        listGuest?.length > limitPerPage && (
+          <div className="pagination">
+            <Pagination
+              current={+currentPage}
+              defaultPageSize={limitPerPage}
+              total={totalGuest}
+              onChange={handleChangePage}
+            />
+          </div>
+        )
+      }
       <ModalProfileGuest
         previewGuest={previewGuest}
         setPreviewGuest={setPreviewGuest}
@@ -110,6 +144,10 @@ const ListGuestComponent = (props: any) => {
       <ModalListImage
         idGuest={idGuest}
         setIdGuest={setIdGuest}
+      />
+      <ModalDeleteGuest
+        guestDelete={guestDelete}
+        setGuestDelete={setGuestDelete}
       />
     </ListGuestStyled>
   );

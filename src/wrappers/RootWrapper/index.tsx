@@ -12,6 +12,7 @@ import LoginAdmin from '../../pages/admin/Login';
 import NotFoundPage from '../../pages/NotFound';
 import LogoutPage from '../../pages/Logout';
 import LoginExpert from '../../pages/expert/Login';
+import PendingPostPage from '../../pages/PendingPostPage';
 
 const Login = lazy(() => import('../../pages/Login'));
 
@@ -70,6 +71,7 @@ export default function AppWrapper() {
         <ToastContainer />
         <Switch>
           <Route path="/not-found" exact component={NotFoundPage} />
+          <Route path="/post-pending" exact component={PendingPostPage} />
           <Route path="/login" exact component={Login} />
           <Route path="/logout" exact component={LogoutPage} />
           <Route path="/admin/login" exact component={LoginAdmin} />

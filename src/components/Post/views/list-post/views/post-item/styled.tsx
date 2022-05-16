@@ -22,9 +22,19 @@ const PostItemStyle = styled.div`
             cursor: pointer;
             font-weight: bold;
             font-size: 16px;
+            .description-admin {
+                margin-left: 20px;
+                font-weight: 400;
+                font-size: 12px;
+            }
         }
         .create-at {
             font-size: 12px;
+            .description-admin {
+                margin-right: 20px;
+                font-weight: 400;
+                font-size: 12px;
+            }
         }
         .more-option {
             cursor: pointer;
