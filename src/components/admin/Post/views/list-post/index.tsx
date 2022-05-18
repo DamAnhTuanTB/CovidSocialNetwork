@@ -53,9 +53,8 @@ const ListPostManagement = (props: any) => {
   const { dataPost, isLoadingPost } = useGetListPostAdmin({ ...valueSearch, page: currentPage }, !param.id_user);
 
   const {
-    dataPostByUser, refetchPostByUser, isLoadingPostByUser, isFetchingPostByUser
+    dataPostByUser, isLoadingPostByUser
   } = useGetListPostByUserAdmin({ ...valueSearch, page: currentPage }, param.id_user)
-  console.log(11111, param.id_user);
 
 
   const handleChangePage = (page: any) => {
@@ -118,8 +117,6 @@ const ListPostManagement = (props: any) => {
       ...initValueSearch,
       ...newValueSearch,
     })
-
-    console.log(123123, paramsSeacrh);
 
   }, [paramsSeacrh.href]);
 

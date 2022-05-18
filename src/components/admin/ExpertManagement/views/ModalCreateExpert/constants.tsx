@@ -18,6 +18,8 @@ const MODAL_CREATE_EXPERT_CONSTANTS = {
       required: "Vui lòng điền",
       email: "Email không đúng định dạng",
       phone: "Số điện thoại không đúng định dạng",
+      minLength: "Mật khẩu tối thiểu 6 kí tự",
+      verifyPass: "Mật khẩu không giống nhau",
     },
     placeholder: {
       email: "Email",
@@ -26,6 +28,8 @@ const MODAL_CREATE_EXPERT_CONSTANTS = {
       nickName: "Biệt danh",
       birthday: "Ngày sinh",
       phone: "Số điện thoại",
+      password: "Mật khẩu",
+      repassword: "Nhập lại mật khẩu",
     },
     message: {
       error: {
@@ -33,7 +37,12 @@ const MODAL_CREATE_EXPERT_CONSTANTS = {
       }
     }
   },
-  listTab: ["Thông tin cá nhân", "Đổi mật khẩu"]
+  listTab: ["Thông tin cá nhân", "Đổi mật khẩu"],
+  message: {
+    success: "Tạo chuyên gia thành công",
+    error: "Tạo chuyên gia không thành công",
+    errorSystem: "Lỗi hệ thống",
+  }
 };
 
 export default MODAL_CREATE_EXPERT_CONSTANTS;

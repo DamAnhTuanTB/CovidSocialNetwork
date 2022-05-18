@@ -1,11 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 
 import { Menu } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import LIST_MENU_SIDEBAR from './constant';
 import { SideBarAdminStyled } from './styled';
-
-const { SubMenu } = Menu;
 
 const SideBarAdmin = (props: any) => {
   const params = new URL(window.location.href);
@@ -40,8 +39,6 @@ const SideBarAdmin = (props: any) => {
   return (
     <SideBarAdminStyled>
       <Menu
-        onClick={(e) => console.log(123123, e)
-        }
         defaultSelectedKeys={[keyChild]}
         defaultOpenKeys={[keyParent]}
         selectedKeys={[keyChild]}

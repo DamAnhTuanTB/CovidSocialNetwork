@@ -5,7 +5,7 @@ const SearchComponentStyled = styled.div`
   .search-component {
     margin: auto;
     width: 100%;
-    padding: 0 20px;
+    padding: 0 20px 20px;
     min-height: 150px;
     max-width: 700px;
     .title {

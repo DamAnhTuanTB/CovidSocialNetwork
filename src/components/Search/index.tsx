@@ -56,7 +56,13 @@ const SearchComponent = (props: any) => {
           listPost.map((item: any) => (
             <div className="item-post" key={item?.id}>
               <div className="main-image-container">
-                <BaseImagePreview cancelPreview isLoading src={item?.content_images?.split(";")[0]} className="main-image" />
+                {
+                  item?.content_images ? (
+                    <BaseImagePreview cancelPreview isLoading src={item?.content_images?.split(";")[0]} className="main-image" />
+                  ) : (
+                    <BaseImagePreview cancelPreview isLoading src={"/defaultImagePost.jpg"} className="main-image" />
+                  )
+                }
               </div>
               {/* <img src={item?.content_images?.split(";")[0]} alt="" /> */}
               <div className="detail-post">

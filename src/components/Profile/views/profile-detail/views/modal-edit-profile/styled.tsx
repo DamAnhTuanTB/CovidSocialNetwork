@@ -3,6 +3,11 @@ import styled from "styled-components";
 import { Modal } from 'antd';
 
 const ModalEditProfileStyled = styled(Modal)`
+  input[disabled], .ant-picker-disabled {
+    cursor: default;
+    background-color: #F5F5F5;
+    color: black;
+  }
   .ant-form-item {
     margin-bottom: 10px;
   }

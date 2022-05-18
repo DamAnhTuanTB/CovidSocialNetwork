@@ -1,6 +1,10 @@
 import styled from "styled-components";
 
-const PageHeaderStyled = styled.div`
+interface Props {
+    totalNotify: number,
+}
+
+const PageHeaderStyled = styled.div<Props>`
     background-color: white;
     border-bottom: 1px solid #d0d0d0;
     width: calc(100vw);
@@ -38,7 +42,7 @@ const PageHeaderStyled = styled.div`
             }
             .icon-header {
                 cursor: pointer;
-                border-radius: 3px;
+                border-radius: 50%;
                 height: 40px;
                 width: 40px;
                 display: flex;
@@ -82,6 +86,24 @@ const PageHeaderStyled = styled.div`
             }
             .notification {
                 position: relative;
+                svg {
+                    animation: ${ (props) => props.totalNotify ? "rotation 1.5s infinite linear" : "none"};
+                }
+                .unread-notification {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    background-color: red;
+                    color: white;
+
+                    border-radius: 50%;
+                    width: 20px;
+                    height: 20px;
+                    font-size: 12px;
+                }
                 .dropdown {
                     z-index: 100;
                     width: 400px;
@@ -153,6 +175,37 @@ const PageHeaderStyled = styled.div`
                 }
             }
         }
+    }
+
+    @keyframes rotation {
+        0% {
+            transform: rotate(0deg);
+        }
+        10% {
+            transform: rotate(30deg);
+        }
+
+        30% {
+            transform: rotate(-30deg);
+        }
+        50% {
+            transform: rotate(30deg);
+        }
+        60% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(0deg);
+        }
+        /* 50% {
+            transform: rotate(0deg);
+        }
+        75% {
+            transform: rotate(-30deg);
+        } */
+        /* 100% {
+            transform: rotate(30deg);
+        } */
     }
 `;
 

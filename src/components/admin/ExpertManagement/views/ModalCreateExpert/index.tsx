@@ -1,7 +1,11 @@
 import { CameraOutlined } from '@ant-design/icons';
 import { Button, DatePicker, Form, Input, Progress, Space } from 'antd';
 import React, { useState } from 'react';
+import { useMutation } from 'react-query';
+import { createExpertAdmin } from '../../../../../api/admin/expert-management';
 import { getUrlImage } from '../../../../../api/uploadimage';
+import { disabledDateFromToday } from '../../../../../helpers/disableDateFromToday';
+import toastCustom from '../../../../../helpers/toastCustom';
 import MODAL_CREATE_EXPERT_CONSTANTS from './constants';
 import { ModalCreateExpertStyled } from './styled';
 
@@ -12,17 +16,44 @@ const ModalCreateExpert = (props: any) => {
   } = props;
   const [form] = Form.useForm();
   const [prog, setProg] = useState(0);
-  const [initialValues, setInitialValues] = useState({});
   const [avatar, setAvatar] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState("");
 
+  const mutation = useMutation(createExpertAdmin);
+
   const handleCancel = () => {
+    if (prog) {
+      return;
+    }
     form.resetFields();
+    setAvatar(null);
+    setAvatarPreview("");
     setIsShowModalCreate(false);
   }
 
   const onSubmit = (values: any) => {
-    console.log(values);
+    if (prog) {
+      return;
+    }
+    const bodyCreateExpert = { ...values };
+    bodyCreateExpert.date_of_birth = bodyCreateExpert.date_of_birth.format("YYYY-MM-DD");
+    delete bodyCreateExpert.repassword;
+    if (avatar) {
+      bodyCreateExpert.avatar = avatar;
+    }
+
+    mutation.mutate(
+      bodyCreateExpert,
+      {
+        onSuccess: (data) => {
+          toastCustom({
+            mess: MODAL_CREATE_EXPERT_CONSTANTS.message.success,
+            type: "success",
+          })
+        }
+      }
+    )
+    
   }
 
   const handleChangeAvatar = (e: any) => {
@@ -42,7 +73,7 @@ const ModalCreateExpert = (props: any) => {
 
   return (
     <ModalCreateExpertStyled
-      title="tạo tài khoản chuyên gia"
+      title="Tạo tài khoản chuyên gia"
       centered
       visible={isShowModalCreate}
       onCancel={handleCancel}
@@ -52,7 +83,7 @@ const ModalCreateExpert = (props: any) => {
         <Button key="back" onClick={handleCancel}>
           {MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.cancel}
         </Button>,
-        <Button key="submit" type="primary" onClick={form.submit}>
+        <Button key="submit" type="primary" disabled={!!prog} onClick={form.submit}>
           {MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.submit}
         </Button>,
       ]}
@@ -79,7 +110,7 @@ const ModalCreateExpert = (props: any) => {
         name="normal_register"
         className="update-profile-form"
         layout="vertical"
-        initialValues={initialValues}
+        initialValues={{}}
         onFinish={onSubmit}
       >
         <Space className="ant-space-align-start fullwitdh">
@@ -109,7 +140,7 @@ const ModalCreateExpert = (props: any) => {
             ]}
           >
             <Input
-            
+
               placeholder={MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.placeholder.lastName}
             />
           </Form.Item>
@@ -127,10 +158,31 @@ const ModalCreateExpert = (props: any) => {
             ]}
           >
             <Input
-            
+
               placeholder={MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.placeholder.nickName}
             />
           </Form.Item>
+          <Form.Item
+            name="email"
+            className="Email"
+            label={MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.placeholder.email}
+            rules={[
+              {
+                type: 'email',
+                message: MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.validate.email
+              },
+              {
+                required: true,
+                message: MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.validate.required
+              }
+            ]}
+          >
+            <Input placeholder={MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.placeholder.email} />
+          </Form.Item>
+
+
+        </Space>
+        <Space className="ant-space-align-start fullwitdh">
           <Form.Item
             name="date_of_birth"
             label={MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.placeholder.birthday}
@@ -141,43 +193,77 @@ const ModalCreateExpert = (props: any) => {
               }
             ]}
           >
-            <DatePicker placeholder={MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.placeholder.birthday} format="DD-MM-YYYY" />
+            <DatePicker disabledDate={disabledDateFromToday} placeholder={MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.placeholder.birthday} format="DD-MM-YYYY" />
           </Form.Item>
+          <Form.Item
+            name="telephone"
+            className="phone"
+            label={MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.placeholder.phone}
+            rules={[
+              {
+                required: true,
+                message: MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.validate.required
+              },
+              {
+                pattern: new RegExp(MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.regexPhone),
+                message: MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.validate.phone
+              }
+            ]}
+          >
+            <Input
 
+              placeholder={MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.placeholder.phone}
+            />
+          </Form.Item>
         </Space>
-        <Form.Item
-          name="email"
-          className="Email"
-          label={MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.placeholder.email}
-          rules={[
-            {
-              type: 'email',
-              message: MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.validate.email
-            },
-            {
-              required: true,
-              message: MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.validate.required
-            }
-          ]}
-        >
-          <Input placeholder={MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.placeholder.email} />
-        </Form.Item>
-        <Form.Item
-          name="telephone"
-          className="phone"
-          label={MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.placeholder.phone}
-          rules={[
-            {
-              pattern: new RegExp(MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.regexPhone),
-              message: MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.validate.phone
-            }
-          ]}
-        >
-          <Input
-          
-            placeholder={MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.placeholder.phone}
-          />
-        </Form.Item>
+        <Space className="ant-space-align-start fullwitdh">
+          <Form.Item
+            name="password"
+            className="password"
+
+            label={MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.placeholder.password}
+            rules={[
+              {
+                required: true,
+                message: MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.validate.required
+              },
+              {
+                min: 6,
+                message: MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.validate.minLength,
+              }
+            ]}
+          >
+            <Input.Password placeholder={MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.placeholder.password} />
+          </Form.Item>
+          <Form.Item
+            name="repassword"
+            className="repassword"
+            label={MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.placeholder.repassword}
+            rules={[
+              {
+                required: true,
+                message: MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.validate.required
+              },
+              {
+                min: 6,
+                message: MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.validate.minLength,
+              },
+              ({ getFieldValue }: any) => ({
+                validator(_: any, value: any) {
+                  if (!value || getFieldValue('password') === value) {
+                    return Promise.resolve();
+                  }
+
+                  return Promise.reject(new Error(MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.validate.verifyPass));
+                },
+              }),
+            ]}
+          >
+            <Input.Password
+              placeholder={MODAL_CREATE_EXPERT_CONSTANTS.modalEditConstant.placeholder.repassword}
+            />
+          </Form.Item>
+        </Space>
       </Form>
     </ModalCreateExpertStyled>
   );

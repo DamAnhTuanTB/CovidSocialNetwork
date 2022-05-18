@@ -12,11 +12,11 @@ const ModalListImage = (props: any) => {
     setIdGuest = () => { },
   } = props;
 
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [listImage, setListImage] = useState<any>([]);
 
   const handleCancel = () => {
-    if (loading) return;
+    if (isLoadingListImageGuest) return;
 
     setIdGuest(null);
     setListImage([]);
@@ -26,7 +26,6 @@ const ModalListImage = (props: any) => {
 
   useEffect(() => {
     if (idGuest && dataListImageGuest) {
-      console.log(dataListImageGuest);
       const listImagePost = dataListImageGuest?.data[0]?.posts_images ? dataListImageGuest?.data[0]?.posts_images?.split(";") : [];
       const listImageComment = dataListImageGuest?.data[0]?.comment_images ? dataListImageGuest?.data[0]?.comment_images?.split(";") : [];
       setListImage([
@@ -48,7 +47,7 @@ const ModalListImage = (props: any) => {
     >
       <div className="list-image">
         {
-          loading ? (
+          isLoadingListImageGuest ? (
             <div className="loading-spin">
               <ReactLoading type="spinningBubbles" color="#909090" height={100} width={100} />
             </div>

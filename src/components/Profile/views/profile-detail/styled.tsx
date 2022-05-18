@@ -7,6 +7,8 @@ const ProfileDetailStyled = styled.div`
     justify-content: space-between;
     align-items: flex-start;
     .detail-user {
+        position: sticky;
+        top: 80px;
         width: 350px;
         padding: 40px 0px;
         border-radius: 10px;

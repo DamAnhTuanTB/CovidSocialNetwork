@@ -55,7 +55,11 @@ const PostItem = (props: any) => {
           <Menu.Item key="edit">{POST_ITEM_CONSTANTS.dropdown.edit}</Menu.Item>
         )
       }
-      <Menu.Item key={`${isPostSaved ? "unsave" : "delete"}`}>{isPostSaved ? POST_ITEM_CONSTANTS.dropdown.unsave : POST_ITEM_CONSTANTS.dropdown.delete}</Menu.Item>
+      {
+        !isPostSaved && (
+          <Menu.Item key={`${isPostSaved ? "unsave" : "delete"}`}>{isPostSaved ? POST_ITEM_CONSTANTS.dropdown.unsave : POST_ITEM_CONSTANTS.dropdown.delete}</Menu.Item>
+        )
+      }
     </Menu>
   );
 
@@ -227,11 +231,15 @@ const PostItem = (props: any) => {
             || (isAdmin && !isPostPending && !isPostCancelAdmin)
             || (isDetail && detailPost?.author_id === myProfile?.id)
           ) && (
-            <Dropdown overlay={!isAdmin ? menu : menuAdmin} placement="bottomRight">
-              <div className="more-option">
-                <MoreOutlined />
-              </div>
-            </Dropdown>
+            <>
+              {!isPostSaved && (
+                <Dropdown overlay={isAdmin ? menuAdmin : menu} placement="bottomRight">
+                  <div className="more-option">
+                    <MoreOutlined />
+                  </div>
+                </Dropdown>
+              )}
+            </>
           )
         }
       </div>
@@ -242,14 +250,18 @@ const PostItem = (props: any) => {
         <div className="detail-post">
           {detailPost?.content_texts}
         </div>
-        <div className={`${detailPost?.content_images?.split(";")?.length < 3 ? "list-image" : "list-image-3"}`}>
-          {detailPost?.content_images?.split(";")?.map((image: any, index: any) => {
-            const key = detailPost.id.toString() + index.toString();
-            return (
-              <BaseImagePreview isLoading key={key} src={`${image}`} className="item-image" alt="" />
-            )
-          })}
-        </div>
+        {
+          detailPost?.content_images && (
+            <div className={`${detailPost?.content_images?.split(";")?.length < 3 ? "list-image" : "list-image-3"}`}>
+              {detailPost?.content_images?.split(";")?.map((image: any, index: any) => {
+                const key = detailPost.id.toString() + index.toString();
+                return (
+                  <BaseImagePreview isLoading key={key} src={`${image}`} className="item-image" alt="" />
+                )
+              })}
+            </div>
+          )
+        }
       </div>
       {
         (!isPostDraft && !isPostPending && !isPostCancelAdmin) && (

@@ -1,5 +1,4 @@
-import { sendDelete, sendGet, sendPost, sendPut } from "../axios";
-import { sendGetAdmin } from "./axios";
+import { sendDeleteAdmin, sendGetAdmin } from "./axios";
 
 // eslint-disable-next-line import/prefer-default-export
 export const getListGuest = async (params: any) => {
@@ -13,6 +12,6 @@ export const getListImageByIdGuest = async (idUser: any) => {
 }
 
 export const deleteGuest = async (idUser: any) => {
-  const res = await sendDelete(`http://localhost:8888/covid-network-social/admin/patient/delete-patient/${idUser}`);
+  const res = await sendDeleteAdmin(`http://localhost:8888/covid-network-social/admin/patient/delete-patient/${idUser}`);
   return res?.data;
 }
