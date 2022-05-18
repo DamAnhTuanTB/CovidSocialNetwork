@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // @ts-nocheck
 import { CameraOutlined } from '@ant-design/icons';
 import { Button, DatePicker, Form, Input, Progress, Space } from 'antd';
@@ -7,7 +8,6 @@ import { useMutation, useQueryClient } from 'react-query';
 import { updateProfile } from '../../../../../../api/profile';
 import { getUrlImage } from '../../../../../../api/uploadimage';
 import toastCustom from '../../../../../../helpers/toastCustom';
-import BaseImagePreview from '../../../../../Base/BaseImagePreview';
 import MODAL_EDIT_PROFILE_CONSTANTS from './constants';
 import { ModalEditProfileStyled } from './styled';
 
@@ -17,7 +17,6 @@ const ModalEditProfile = (props: any) => {
     profile = {},
     isShowModalEditProfile,
     setIsShowModalEditProfile = () => { },
-    handleConfirmEditProfile = () => { }
   } = props;
   const [form] = Form.useForm();
   const queryClient = useQueryClient();
@@ -34,6 +33,7 @@ const ModalEditProfile = (props: any) => {
   const onFinish = (values: any) => {
     setLoading(true);
     const bodyUpdateProfile = { ...values };
+    delete bodyUpdateProfile.email;
     bodyUpdateProfile.date_of_birth = bodyUpdateProfile.date_of_birth.format("YYYY-MM-DD");
     bodyUpdateProfile.avatar = avatar;
 
@@ -211,18 +211,8 @@ const ModalEditProfile = (props: any) => {
           name="email"
           className="Email"
           label={MODAL_EDIT_PROFILE_CONSTANTS.placeholder.email}
-          rules={[
-            {
-              type: 'email',
-              message: MODAL_EDIT_PROFILE_CONSTANTS.validate.email
-            },
-            {
-              required: true,
-              message: MODAL_EDIT_PROFILE_CONSTANTS.validate.required
-            }
-          ]}
         >
-          <Input placeholder={MODAL_EDIT_PROFILE_CONSTANTS.placeholder.email} />
+          <Input disabled placeholder={MODAL_EDIT_PROFILE_CONSTANTS.placeholder.email} />
         </Form.Item>
         <Form.Item
           name="telephone"

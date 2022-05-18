@@ -18,17 +18,30 @@ const LoginComponent = (props: any) => {
   const mutation = useMutation(login);
 
   const onFinish = (values: object) => {
-    if (isAdmin) {
-      return;
-    }
-    if (isExpert) {
-      return;
-    }
     mutation.mutate(values, {
       onSuccess: (data) => {
+
         if (data?.data?.token) {
-          Cookies.set('token', data?.data?.token);
-          history.push('/post');
+          if (isAdmin && data?.data?.role === "admin") {
+            Cookies.set('tokenAdmin', data?.data?.token, { expires: 1 });
+            history.push('/admin/post-management');
+            return;
+          }
+          if (isExpert && data?.data?.role === "expert") {
+            Cookies.set('tokenExpert', data?.data?.token, { expires: 1 });
+            history.push('/expert/chat');
+            return;
+          }
+          if (!isAdmin && !isExpert && data?.data?.role === "patient") {
+            Cookies.set('token', data?.data?.token, { expires: 1 });
+            history.push('/post');
+            return;
+          }
+
+          toastCustom({
+            mess: LOGIN_PATIENT_CONSTANTS.errorMessage.errAccount,
+            type: "error",
+          })
         }
       },
       onError: (err: any) => {

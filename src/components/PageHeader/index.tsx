@@ -16,14 +16,15 @@ export default function PageHeader(props: any) {
   const [isShowNotification, setIsShowNotification] = useState(false);
   const [isShowModal, setIsShowModal] = useState(false);
   const [previewExpert, setPreviewExpert] = useState<any>(null);
+  const [totalNotify, setTotalNotify] = useState(10);
   const history = useHistory();
 
   const queryClient = useQueryClient();
   const myProfile: any = queryClient.getQueryData("my-profile");
 
-  const showNotify = (data: any) => {
-    console.log("pageheader", data);
-  }
+  // const showNotify = (data: any) => {
+  //   console.log("pageheader", data);
+  // }
 
   const handleSearchPost = (value: any) => {
     if (value) {
@@ -61,9 +62,15 @@ export default function PageHeader(props: any) {
     // };
   }, [])
 
+  useEffect(() => {
+    if (isShowNotification) {
+      setTotalNotify(0);
+    }
+  }, [isShowNotification])
+
   return (
 
-    <PageHeaderStyled>
+    <PageHeaderStyled totalNotify={totalNotify}>
       <ModalCreatePost
         isShowModalCreate={isShowModal}
         setIsShowModalCreate={setIsShowModal}
@@ -98,7 +105,12 @@ export default function PageHeader(props: any) {
           {
             !isExpert && (
               <div className="notification">
-                <BellOutlined className="icon-header" onClick={() => setIsShowNotification(!isShowNotification)} />
+                <BellOutlined className="icon-header" onClick={() => { setIsShowNotification(!isShowNotification) }} />
+                {
+                  totalNotify > 0 && (
+                    <div className="unread-notification">{totalNotify}</div>
+                  )
+                }
                 {
                   isShowNotification && (
                     <div className="dropdown">

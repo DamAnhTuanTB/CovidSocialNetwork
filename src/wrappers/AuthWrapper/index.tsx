@@ -22,6 +22,10 @@ export default function PageWrapper() {
 
   if (!isAuthenticated) return <Redirect to="/login" />;
   if (!profile) return null;
+  if (profile?.role !== "patient") {
+    Cookies.remove('token');
+    return <Redirect to="/login" />;
+  }
   return (
     <div>
       {/* <SideNav /> */}

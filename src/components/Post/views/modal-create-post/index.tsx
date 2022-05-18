@@ -40,8 +40,13 @@ const ModalCreatePost = (props: any) => {
 
   useEffect(() => {
     if (isEdit && itemPost?.id) {
-      setListImage(itemPost?.content_images?.split(";"));
-      setListImageUrl(itemPost?.content_images?.split(";"));
+      if (itemPost?.content_images) {
+        setListImage(itemPost?.content_images?.split(";"));
+        setListImageUrl(itemPost?.content_images?.split(";"));
+      } else {
+        setListImageUrl([]);
+        setListImage([]);
+      }
       setContent(itemPost?.content_texts);
       setTitle(itemPost?.title);
     }
@@ -72,6 +77,7 @@ const ModalCreatePost = (props: any) => {
   }
 
   const handleCancel = () => {
+    setLoadingSubmit(false);
     if (isEdit) {
       setPostEdit(null);
     } else {
@@ -85,6 +91,7 @@ const ModalCreatePost = (props: any) => {
 
   const onSubmit = () => {
     setLoadingSubmit(true);
+
     const bodyCreatePost = {
       content_texts: content,
       content_images: listImageUrl.join(";"),
@@ -169,7 +176,7 @@ const ModalCreatePost = (props: any) => {
         <Button key="back" onClick={handleCancel}>
           {MODAL_CREATE_POST_CONSTANTS.cancel}
         </Button>,
-        <Button loading={loadingSubmit} key="submit" type="primary" disabled={!title || !content || listImage.length < 1 || !!progressUpload} onClick={onSubmit}>
+        <Button loading={loadingSubmit} key="submit" type="primary" disabled={!title || !content || !!progressUpload} onClick={onSubmit}>
           {MODAL_CREATE_POST_CONSTANTS.submit}
         </Button>,
       ]}

@@ -1,7 +1,6 @@
-import React, { lazy, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { Route, Switch } from 'react-router-dom';
 import PageHeader from '../../components/PageHeader';
-import ChatPage from '../../pages/Chat';
 import ExpertChatPage from '../../pages/expert/Chat';
 
 export default function ExpertPageWrapper() {

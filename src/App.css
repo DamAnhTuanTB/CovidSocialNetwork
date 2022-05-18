@@ -39,17 +39,36 @@
 
 [type='file'],
 [type='image'] {
-cursor: pointer;
+  cursor: pointer;
 }
+
 [type='file']::-webkit-file-upload-button {
--webkit-appearance: button;
-cursor: pointer;
+  -webkit-appearance: button;
+  cursor: pointer;
+}
+
+.ant-table thead th {
+  background-color: #cecece;
+}
+
+.ant-table .ant-table-tbody > tr:hover > td {
+  background: unset;
+}
+
+.ant-table tbody tr:nth-child(odd) {
+  background-color: white;
+
+}
+
+.ant-table tbody tr:nth-child(even) {
+  background-color: #ededed;
 }
 
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }

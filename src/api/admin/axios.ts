@@ -11,8 +11,8 @@ const axiosInstance = Axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     // eslint-disable-next-line no-param-reassign
-    // const token = Cookies.get('tokenAdmin');
-    const token = Cookies.get('token');
+    const token = Cookies.get('tokenAdmin');
+    // const token = Cookies.get('token');
     if (token) {
       config.headers!.Authorization = `Bearer ${token}`;
     }
@@ -22,9 +22,8 @@ axiosInstance.interceptors.request.use(
 );
 
 const logout = () => {
-  Cookies.remove('token');
-  Cookies.remove('refreshToken');
-  history.push('/admin/post-management');
+  Cookies.remove('tokenAdmin');
+  history.push('/admin/login');
 };
 axiosInstance.interceptors.response.use(
   (response) => response,

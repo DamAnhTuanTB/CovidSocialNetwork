@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Pagination, Tabs } from 'antd';
 import PropTypes from 'prop-types';
 import React, { Fragment, useEffect, useState } from 'react';
@@ -43,13 +44,13 @@ const ProfileDetail = (props: any) => {
 
   const [profileOtherUser, setProfileOtherUser] = useState<any>({});
 
-  const { dataPost, refetchPost, isLoadingPost, isFetchingPost } = useGetListMyPost({
+  const { dataPost, isLoadingPost } = useGetListMyPost({
     type: type?.split("-")[0],
     page: currentPage,
     limit: limitPerPage,
   });
 
-  const { dataPostOther, refetchPostOther, isLoadingPostOther, isFetchingPostOther } = useGetListOtherPost({
+  const { dataPostOther, isLoadingPostOther } = useGetListOtherPost({
     idUser: param.id_user,
     page: currentPage,
     limit: limitPerPage,
@@ -139,7 +140,7 @@ const ProfileDetail = (props: any) => {
           )
         }
         <div className="name-user">{!isGuest ? `${myProfile?.first_name} ${myProfile?.last_name}` : `${profileOtherUser?.first_name || ""} ${profileOtherUser?.last_name || ""}`}</div>
-        <div className="name-tag">@{!isGuest ? myProfile?.email : profileOtherUser?.email || ""}</div>
+        <div className="name-tag">@{!isGuest ? myProfile?.nick_name : profileOtherUser?.nick_name || ""}</div>
         {
           !param.id_user && (
             <>
