@@ -2,6 +2,7 @@ import styled from "styled-components";
 
 interface Props {
     totalNotify: number,
+    isShowNotification: boolean,
 }
 
 const PageHeaderStyled = styled.div<Props>`
@@ -111,15 +112,26 @@ const PageHeaderStyled = styled.div<Props>`
                 }
                 .dropdown {
                     z-index: 100;
-                    width: 400px;
+                    width: 350px;
                     background-color: white;
                     border: 1px solid #d0d0d0;
                     position: absolute;
-                    top: 55px;
-                    left: -180px;
-                    max-height: 500px;
+                    overflow: auto;
+                    top: 45px;
+                    left: -155px;
+                    max-height: 400px;
                     padding: 10px;
-                    ::after {
+                    ::-webkit-scrollbar {
+                        width: 6px;
+                    }
+                    ::-webkit-scrollbar-track {
+                        background-color: #DFDFDF;
+                    }
+                    ::-webkit-scrollbar-thumb {
+                        background: #8F8F8F;
+                        border-radius: 5px;
+                    }
+                    .dropdown-after {
                         content: "";
                         position: absolute;
                         top: -10px;
@@ -131,7 +143,7 @@ const PageHeaderStyled = styled.div<Props>`
                         border-right: 10px solid transparent;
                         border-bottom: 10px solid white;
                     }
-                    ::before {
+                    .dropdown-before {
                         content: "";
                         position: absolute;
                         top: -11px;
@@ -152,8 +164,16 @@ const PageHeaderStyled = styled.div<Props>`
                         padding: 10px;
                         background-color: #EDF2F7;
                         display: flex;
+                        border-radius: 10px;
                         align-items: flex-start;
-                        img {
+                        margin-bottom: 5px;
+                        position: relative;
+                        z-index: 10;
+                        cursor: pointer;
+                        :last-child {
+                            margin-bottom: 0;
+                        }
+                        .avatar-sender-notification {
                             width: 40px;
                             height: 40px;
                             object-fit: cover;
@@ -164,6 +184,9 @@ const PageHeaderStyled = styled.div<Props>`
                         .detail {
                             .content {
                                 font-size: 16px;
+                                line-height: 20px;
+                                min-height: 40px;
+                                margin-bottom: 5px;
                                 span {
                                     margin-right: 5px;
                                     color: rgba(74,85,104,1);
@@ -180,6 +203,22 @@ const PageHeaderStyled = styled.div<Props>`
                 }
             }
         }
+    }
+
+    .notification {
+        .icon-header {
+            background-color: ${(props) => props.isShowNotification && "#ebebeb"};
+        }
+    }
+
+    .no-notification {
+        font-size: 16px;
+        position: relative;
+        z-index: 10;
+    }
+
+    .ant-divider {
+        margin: 0;
     }
 
     @keyframes rotation {
