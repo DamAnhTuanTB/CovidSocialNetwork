@@ -1,8 +1,10 @@
 import { BellOutlined, MailOutlined, HomeOutlined, HomeFilled } from '@ant-design/icons';
-import { Button, Input } from 'antd';
+import { Button, Divider, Input } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useQueryClient } from 'react-query';
 import { useHistory, useLocation } from 'react-router-dom';
+import { handleConvertDateStringToDate } from '../../helpers/convertDateStringToDate';
+import { useGetNotifilcation } from '../../hooks/useNotification';
 import ModalProfileExpert from '../admin/ExpertManagement/views/ModalProfileExpert';
 import BaseImagePreview from '../Base/BaseImagePreview';
 import ModalCreatePost from '../Post/views/modal-create-post';
@@ -17,11 +19,14 @@ export default function PageHeader(props: any) {
   const [isShowModal, setIsShowModal] = useState(false);
   const [previewExpert, setPreviewExpert] = useState<any>(null);
   const [totalNotify, setTotalNotify] = useState(10);
+  const [listNotification, setListNotification] = useState([]);
   const history = useHistory();
   const location = useLocation();
 
   const queryClient = useQueryClient();
   const myProfile: any = queryClient.getQueryData("my-profile");
+
+  const { notification } = useGetNotifilcation(isShowNotification && !isExpert);
 
   // const showNotify = (data: any) => {
   //   console.log("pageheader", data);
@@ -66,12 +71,17 @@ export default function PageHeader(props: any) {
   useEffect(() => {
     if (isShowNotification) {
       setTotalNotify(0);
+      queryClient.invalidateQueries("notifications");
     }
   }, [isShowNotification])
 
+  useEffect(() => {
+    setListNotification(notification?.data)
+  }, [notification])
+
   return (
 
-    <PageHeaderStyled totalNotify={totalNotify}>
+    <PageHeaderStyled totalNotify={totalNotify} isShowNotification={isShowNotification}>
       <ModalCreatePost
         isShowModalCreate={isShowModal}
         setIsShowModalCreate={setIsShowModal}
@@ -99,18 +109,18 @@ export default function PageHeader(props: any) {
           {
             !isExpert && (
               <>
-              {
-                location.pathname.startsWith("/post") ? (
-                  <HomeFilled className="icon-header home-active" onClick={() => {
-                    history.push("/post");
-                  }} />
-                ) : (
-                  <HomeOutlined className="icon-header" onClick={() => {
-                    history.push("/post");
-                  }} />
-                )
-              }
-              
+                {
+                  location.pathname.startsWith("/post") ? (
+                    <HomeFilled className="icon-header home-active" onClick={() => {
+                      history.push("/post");
+                    }} />
+                  ) : (
+                    <HomeOutlined className="icon-header" onClick={() => {
+                      history.push("/post");
+                    }} />
+                  )
+                }
+
               </>
             )
           }
@@ -133,21 +143,43 @@ export default function PageHeader(props: any) {
                 {
                   isShowNotification && (
                     <div className="dropdown">
-                      <div className="title-notification">
-                        {PAGE_HEADER_CONSTANTS.notificationTitle}
-                      </div>
-                      <div className="item-notification">
-                        <img src="/post/avatar_my1.jpg" alt="" />
-                        <div className="detail">
-                          <div className="content">
-                            <span>Admin</span>
-                            vừa phê duyệt yêu cầu của bạn
-                          </div>
-                          <div className="created-at">
-                            20 tháng 4
-                          </div>
+                      <div className="dropdown-before"></div>
+                      <div className="dropdown-after"></div>
+                      <Divider orientation="left" orientationMargin="0">
+                        <div className="title-notification">
+                          {PAGE_HEADER_CONSTANTS.notificationTitle}
                         </div>
-                      </div>
+                      </Divider>
+                      {
+                        listNotification?.length > 0 ? listNotification?.map((item: any) => (
+                          <div
+                            className="item-notification"
+                            onClick={() => {
+                              history.push(`/post/${item?.postId}`);
+                              setIsShowNotification(false);
+                            }}
+                          >
+                            <BaseImagePreview
+                              isLoading
+                              cancelPreview
+                              className="avatar-sender-notification"
+                              src={item?.sender_avatar || "/defaultAvatar.png"}
+                              alt="" />
+                            <div className="detail">
+                              <div className="content">
+                                <span>{item?.sender_nick_name}</span>
+                                {item?.content_texts}
+                                {" bài viết của bạn"}
+                              </div>
+                              <div className="created-at">
+                                {handleConvertDateStringToDate(item?.create_at)}
+                              </div>
+                            </div>
+                          </div>
+                        )) : (
+                          <div className="no-notification">{PAGE_HEADER_CONSTANTS.noNotification}</div>
+                        )
+                      }
                     </div>
                   )
                 }
