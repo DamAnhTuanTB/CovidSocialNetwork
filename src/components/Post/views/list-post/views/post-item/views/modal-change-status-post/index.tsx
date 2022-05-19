@@ -20,7 +20,6 @@ const ModalChangeStatusPost = (props: any) => {
   const [loading, setLoading] = useState(false);
   const onSubmit = () => {
     setLoading(true);
-    console.log(status, idPostApproveOrCancel);
     
     mutation.mutate(
       {
@@ -30,7 +29,6 @@ const ModalChangeStatusPost = (props: any) => {
       {
         onSuccess: (data) => {
           setLoading(false);
-          console.log(123123123, data);
           
           if (data?.statusCode === 200) {
             toastCustom({

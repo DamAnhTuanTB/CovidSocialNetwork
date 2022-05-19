@@ -42,6 +42,7 @@ const MODAL_CREATE_EXPERT_CONSTANTS = {
     success: "Tạo chuyên gia thành công",
     error: "Tạo chuyên gia không thành công",
     errorSystem: "Lỗi hệ thống",
+    errorEmailExist: "Email đã tồn tại",
   }
 };
 

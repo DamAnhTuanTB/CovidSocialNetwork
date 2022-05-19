@@ -15,7 +15,7 @@ const CHANGE_PASSWORD_CONSTANTS = {
     verifyNewPass: "Mật khẩu không giống nhau"
   },
   message: {
-    success: "Bạn đã đổi mật khẩu thành công",
+    success: "Đổi mật khẩu thành công",
     error: {
       internalServer: "Lỗi hệ thống",
     }

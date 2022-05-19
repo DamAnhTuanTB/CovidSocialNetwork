@@ -1,3 +1,4 @@
+import { Form } from 'antd';
 import React, { useEffect, useState } from 'react';
 import MODAL_PROFILE_EXPERT_CONSTANTS from './constants';
 import { ModalProfileExpertStyled } from './styled';
@@ -12,12 +13,15 @@ const ModalProfileExpert = (props: any) => {
   } = props;
 
   const handleCancel = () => {
+    formProfile.resetFields();
     setPreviewExpert(null);
     setIsEditProfile(false);
     setActiveTab(0);
   }
   const [isEditProfile, setIsEditProfile] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
+
+  const [formProfile] = Form.useForm();
 
   useEffect(() => {
     setIsEditProfile(false);
@@ -47,9 +51,11 @@ const ModalProfileExpert = (props: any) => {
             isEditProfile={isEditProfile}
             setIsEditProfile={setIsEditProfile}
             isExpert={isExpert}
+            form={formProfile}
+            handleCancel={handleCancel}
           />
         ) : (
-          <ChangePasswordExpert previewExpert={previewExpert} isExpert={isExpert}/>
+          <ChangePasswordExpert handleCancel={handleCancel} previewExpert={previewExpert} isExpert={isExpert}/>
         )
       }
     </ModalProfileExpertStyled>
