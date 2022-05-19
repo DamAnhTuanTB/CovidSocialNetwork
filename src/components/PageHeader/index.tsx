@@ -1,8 +1,8 @@
-import { BellOutlined, MailOutlined } from '@ant-design/icons';
+import { BellOutlined, MailOutlined, HomeOutlined, HomeFilled } from '@ant-design/icons';
 import { Button, Input } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useQueryClient } from 'react-query';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import ModalProfileExpert from '../admin/ExpertManagement/views/ModalProfileExpert';
 import BaseImagePreview from '../Base/BaseImagePreview';
 import ModalCreatePost from '../Post/views/modal-create-post';
@@ -18,6 +18,7 @@ export default function PageHeader(props: any) {
   const [previewExpert, setPreviewExpert] = useState<any>(null);
   const [totalNotify, setTotalNotify] = useState(10);
   const history = useHistory();
+  const location = useLocation();
 
   const queryClient = useQueryClient();
   const myProfile: any = queryClient.getQueryData("my-profile");
@@ -93,6 +94,24 @@ export default function PageHeader(props: any) {
           {
             !isExpert && (
               <Input.Search className="input-search" onSearch={handleSearchPost} placeholder="Tìm kiếm" />
+            )
+          }
+          {
+            !isExpert && (
+              <>
+              {
+                location.pathname.startsWith("/post") ? (
+                  <HomeFilled className="icon-header home-active" onClick={() => {
+                    history.push("/post");
+                  }} />
+                ) : (
+                  <HomeOutlined className="icon-header" onClick={() => {
+                    history.push("/post");
+                  }} />
+                )
+              }
+              
+              </>
             )
           }
           <MailOutlined className="icon-header" onClick={() => {
