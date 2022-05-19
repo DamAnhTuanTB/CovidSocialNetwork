@@ -1,10 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { DeleteOutlined, EyeOutlined, MessageOutlined } from '@ant-design/icons';
 import { Button, Pagination, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { handleConvertDateStringToDate } from '../../../../../helpers/convertDateStringToDate';
+import { useGetListExpert } from '../../../../../hooks/admin/useExpertAdmin';
+import ModalDeleteExpert from '../modal-delete-expert';
 import ModalCreateExpert from '../ModalCreateExpert';
 import ModalProfileExpert from '../ModalProfileExpert';
-import dataRecordExpert from './fakeDataExpert';
 import { ListExpertStyled } from './styled';
 
 const TITLE = "Danh sách chuyên gia";
@@ -12,14 +15,23 @@ const TITLE = "Danh sách chuyên gia";
 const ListExpertComponent = (props: any) => {
 
   const history = useHistory();
+  const [listExpert, setListExpert] = useState([]);
+  const [totalExpert, setTotalExpert] = useState(0);
   const [currentPage, setCurrentPage] = useState("1");
   const params = new URL(window.location.href);
   const paramsUrl = params.searchParams;
 
+  const limitPerPage = 7;
+
   const [isShowModalCreate, setIsShowModalCreate] = useState(false);
 
   const [previewExpert, setPreviewExpert] = useState(null);
-  const [idExpert, setIdExpert] = useState(null);
+  const [expertDelete, setExpertDelete] = useState(null);
+
+  const { dataExpert } = useGetListExpert({
+    limit: limitPerPage,
+    page: currentPage,
+  });
 
   const columns = [
     {
@@ -61,15 +73,29 @@ const ListExpertComponent = (props: any) => {
     {
       title: 'Ngày sinh',
       key: 'date_of_birth',
-      dataIndex: 'date_of_birth',
       width: 100,
+      render: (data: any) => {
+        return (
+          <>
+            {handleConvertDateStringToDate(data?.date_of_birth)}
+          </>
+        )
+      },
     },
     {
       title: 'Đánh giá',
-      key: 'rate',
+      key: 'avgRate',
       width: 80,
       render: (data: any) => (
-        <>{`${data.rate} / 5`}</>
+        <div className='avg-rate'>{`${Math.round(data.avgRate * 100) / 100} / 5`}</div>
+      ),
+    },
+    {
+      title: 'Lượt đánh giá',
+      key: 'avgRate',
+      width: 110,
+      render: (data: any) => (
+        <div className='count-rate'>{`${data?.countRate}`}</div>
       ),
     },
     {
@@ -80,7 +106,7 @@ const ListExpertComponent = (props: any) => {
         <Space>
           <MessageOutlined className="image-icon" onClick={() => history.push(`/admin/expert-management/list-chat/1`)} />
           <EyeOutlined className="seemore-icon" onClick={() => setPreviewExpert(data)} />
-          <DeleteOutlined className="delete-icon" onClick={() => { }} />
+          <DeleteOutlined className="delete-icon" onClick={() => setExpertDelete(data)} />
         </Space>
       ),
     },
@@ -92,8 +118,11 @@ const ListExpertComponent = (props: any) => {
 
   useEffect(() => {
     setCurrentPage(paramsUrl.get("page") || "1");
-  }, [params.href])
-
+    if (dataExpert?.statusCode === 200) {
+      setListExpert(dataExpert?.data);
+      setTotalExpert(dataExpert?.total);
+    }
+  }, [params.href, dataExpert])
 
 
   return (
@@ -108,16 +137,21 @@ const ListExpertComponent = (props: any) => {
       </div>
       <Table
         columns={columns}
-        dataSource={dataRecordExpert}
+        dataSource={listExpert}
         pagination={false}
       />
-      <div className="pagination">
-        <Pagination
-          current={+currentPage}
-          total={50}
-          onChange={handleChangePage}
-        />
-      </div>
+      {
+        totalExpert > limitPerPage && (
+          <div className="pagination">
+            <Pagination
+              current={+currentPage}
+              total={totalExpert}
+              defaultPageSize={limitPerPage}
+              onChange={handleChangePage}
+            />
+          </div>
+        )
+      }
       <ModalProfileExpert
         previewExpert={previewExpert}
         setPreviewExpert={setPreviewExpert}
@@ -125,6 +159,10 @@ const ListExpertComponent = (props: any) => {
       <ModalCreateExpert
         isShowModalCreate={isShowModalCreate}
         setIsShowModalCreate={setIsShowModalCreate}
+      />
+      <ModalDeleteExpert
+        expertDelete={expertDelete}
+        setExpertDelete={setExpertDelete}
       />
     </ListExpertStyled>
   );

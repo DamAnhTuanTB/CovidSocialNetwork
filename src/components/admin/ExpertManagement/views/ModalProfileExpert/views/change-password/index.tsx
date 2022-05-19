@@ -1,5 +1,7 @@
 import { Button, Form, Input } from 'antd';
 import React, { useState } from 'react';
+import { useMutation } from 'react-query';
+import { updatePasswordExpert } from '../../../../../../../api/admin/expert-management';
 import toastCustom from '../../../../../../../helpers/toastCustom';
 import CHANGE_PASSWORD_CONSTANTS from './constant';
 import { ChangePasswordExpertStyled } from './styled';
@@ -8,17 +10,39 @@ const ChangePasswordExpert = (props: any) => {
   const {
     previewExpert = {},
     isExpert = false,
+    handleCancel = () => {},
   } = props;
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
+
+  const mutation = useMutation(updatePasswordExpert);
 
   const onFinish = (values: any) => {
     const bodyUpdatePassword = { ...values };
     delete bodyUpdatePassword.confirm_password;
-    setLoading(true);
-    console.log(bodyUpdatePassword);
-    
-    console.log(previewExpert.id);
+
+    mutation.mutate(
+      {
+        ...bodyUpdatePassword,
+        idExpert: previewExpert.id,
+      },
+      {
+        onSuccess: (data: any) => {
+          if (data?.statusCode === 201) {
+            toastCustom({
+              mess: CHANGE_PASSWORD_CONSTANTS.message.success,
+              type: "success",
+            });
+            handleCancel();
+          } 
+        },
+        onError: (err) => {
+          toastCustom({
+            mess: CHANGE_PASSWORD_CONSTANTS.message.error.internalServer,
+            type: "error"
+          })
+        }
+      }
+    )
 
     // mutation.mutate(bodyUpdatePassword, {
     //   onSuccess: (res: any) => {

@@ -1,7 +1,7 @@
 import { CameraOutlined } from '@ant-design/icons';
 import { Button, DatePicker, Form, Input, Progress, Space } from 'antd';
 import React, { useState } from 'react';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { createExpertAdmin } from '../../../../../api/admin/expert-management';
 import { getUrlImage } from '../../../../../api/uploadimage';
 import { disabledDateFromToday } from '../../../../../helpers/disableDateFromToday';
@@ -20,6 +20,7 @@ const ModalCreateExpert = (props: any) => {
   const [avatarPreview, setAvatarPreview] = useState("");
 
   const mutation = useMutation(createExpertAdmin);
+  const queryClient = useQueryClient();
 
   const handleCancel = () => {
     if (prog) {
@@ -50,10 +51,21 @@ const ModalCreateExpert = (props: any) => {
             mess: MODAL_CREATE_EXPERT_CONSTANTS.message.success,
             type: "success",
           })
+          queryClient.invalidateQueries("admin-all-experts");
+          handleCancel();
+        },
+        onError: (err: any) => {
+          const dataErr = err?.response;
+          if (dataErr?.data?.statusCode === 400) {
+            toastCustom({
+              mess: MODAL_CREATE_EXPERT_CONSTANTS.message.errorEmailExist,
+              type: "error",
+            })
+          }
         }
       }
     )
-    
+
   }
 
   const handleChangeAvatar = (e: any) => {

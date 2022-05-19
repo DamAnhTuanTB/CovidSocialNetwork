@@ -21,6 +21,11 @@ const ListExpertStyled = styled.div`
       height: auto;
     }
   }
+  .avg-rate, .count-rate {
+    display: flex;
+    justify-content: center;
+  }
+
   .pagination {
     margin-top: 20px;
   }
