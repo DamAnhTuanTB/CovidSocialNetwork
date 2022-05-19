@@ -56,6 +56,11 @@ const PageHeaderStyled = styled.div<Props>`
                     background-color: #ebebeb;
                 }
             }
+            .home-active {
+                svg {
+                    fill: #1890ff;
+                }
+            }
             .icon-logout {
                 margin-right: 0;
                 margin-left: 10px;
@@ -69,7 +74,7 @@ const PageHeaderStyled = styled.div<Props>`
                 }
             }
             .user-avatar {
-                margin-right: 10px;
+                margin-right: 15px;
                 border-radius: 50%;
                 .avatar {
                     cursor: pointer;
@@ -92,7 +97,7 @@ const PageHeaderStyled = styled.div<Props>`
                 .unread-notification {
                     position: absolute;
                     top: 0;
-                    right: 0;
+                    right: 5px;
                     display: flex;
                     justify-content: center;
                     align-items: center;
