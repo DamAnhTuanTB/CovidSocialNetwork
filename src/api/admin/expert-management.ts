@@ -24,7 +24,7 @@ export const updateExpert = async (params: any) => {
   return res?.data;
 }
 
-export const updatePasswordExpert = async (params: any) => {
+export const updatePasswordExpertByAdmin = async (params: any) => {
   const idExpert = params?.idExpert;
   const newParam = { ...params };
   delete newParam.idExpert

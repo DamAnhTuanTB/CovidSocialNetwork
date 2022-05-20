@@ -191,7 +191,7 @@ export default function PageHeader(props: any) {
           </div>
           {
             !isExpert && (
-              <Button type="primary" onClick={() => setIsShowModal(true)}>
+              <Button type="primary" className="button-create-post" onClick={() => setIsShowModal(true)}>
                 {PAGE_HEADER_CONSTANTS.createPost}
               </Button>
             )

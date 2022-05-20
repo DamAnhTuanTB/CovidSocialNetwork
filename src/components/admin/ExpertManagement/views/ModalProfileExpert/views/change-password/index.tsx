@@ -1,7 +1,8 @@
 import { Button, Form, Input } from 'antd';
-import React, { useState } from 'react';
+import React from 'react';
 import { useMutation } from 'react-query';
-import { updatePasswordExpert } from '../../../../../../../api/admin/expert-management';
+import { updatePasswordExpertByAdmin } from '../../../../../../../api/admin/expert-management';
+import { updatePasswordExpert } from '../../../../../../../api/expert/profile';
 import toastCustom from '../../../../../../../helpers/toastCustom';
 import CHANGE_PASSWORD_CONSTANTS from './constant';
 import { ChangePasswordExpertStyled } from './styled';
@@ -14,7 +15,7 @@ const ChangePasswordExpert = (props: any) => {
   } = props;
   const [form] = Form.useForm();
 
-  const mutation = useMutation(updatePasswordExpert);
+  const mutation = useMutation(isExpert ? updatePasswordExpert : updatePasswordExpertByAdmin );
 
   const onFinish = (values: any) => {
     const bodyUpdatePassword = { ...values };
