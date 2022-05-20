@@ -62,9 +62,11 @@ const PageHeaderStyled = styled.div<Props>`
                     fill: #1890ff;
                 }
             }
+            .button-create-post {
+                margin-right: 10px;
+            }
             .icon-logout {
                 margin-right: 0;
-                margin-left: 10px;
                 img {
                     margin: auto;
                     height: 60%;
