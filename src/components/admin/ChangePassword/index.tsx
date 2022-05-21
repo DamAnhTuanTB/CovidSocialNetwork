@@ -1,13 +1,46 @@
 import { Button, Form, Input } from 'antd';
 import { useForm } from 'antd/lib/form/Form';
 import React from 'react';
+import { useMutation } from 'react-query';
+import { updatePasswordAdmin } from '../../../api/admin/profile';
+import toastCustom from '../../../helpers/toastCustom';
 import CHANGE_PASSWORD_ADMIN_CONSTANTS from './constants';
 import { ChangePasswordStyled } from './styled';
 
 const ChangePasswordAdmin = (props: any) => {
   const [form] = useForm();
+  const mutation = useMutation(updatePasswordAdmin);
   const onFinish = (values: any) => {
-
+    const bodyUpdatePassword = {...values};
+    delete bodyUpdatePassword.confirm_password;
+    mutation.mutate(bodyUpdatePassword, {
+      onSuccess: (res: any) => {
+        if (res?.data?.statusCode === 201) {
+          toastCustom({
+            mess: CHANGE_PASSWORD_ADMIN_CONSTANTS.message.success,
+            type: "success",
+          });
+        }
+        form.resetFields();
+      },
+      onError: (err: any) => {
+        console.log(err);
+        if (err?.response?.data?.statusCode === 500) {
+          toastCustom({
+            mess: CHANGE_PASSWORD_ADMIN_CONSTANTS.message.error.internalServer,
+            type: "error",
+          });
+          return;
+        }
+        if (err?.response?.data?.statusCode === 400) {
+          toastCustom({
+            mess: err?.response?.data?.message,
+            type: "error",
+          });
+          return;
+        }
+      }
+    })
   }
   return (
     <ChangePasswordStyled>

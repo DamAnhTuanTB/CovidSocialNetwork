@@ -30,6 +30,10 @@ export default function PageHeader(props: any) {
 
   const queryClient = useQueryClient();
   const myProfile: any = queryClient.getQueryData("my-profile");
+  const profileExpert: any = queryClient.getQueryData("profile-expert");
+
+  console.log(123123, profileExpert);
+  
 
   const { notification } = useGetNotifilcation(isShowNotification && !isExpert);
 
@@ -45,22 +49,7 @@ export default function PageHeader(props: any) {
 
   const handleClickProfile = () => {
     if (isExpert) {
-      setPreviewExpert({
-        avatar: "https://firebasestorage.googleapis.com/v0/b/fir-upload-image-a79ce.appspot.com/o/file%2Fapple.jpg?alt=media&token=e70705e0-d740-413d-90fd-aaeb0f23dace",
-        create_at: "2022-04-29T08:15:36.000Z",
-        date_of_birth: "2000-10-24",
-        email: "tuancules24@gmail.com",
-        first_name: "Tuấn",
-        id: "5",
-        is_active: null,
-        last_name: "Lê 2",
-        nick_name: "tuancules",
-        role: "patient",
-        telephone: "0912342223",
-        update_at: "2022-04-29",
-      });
-      console.log(myProfile);
-
+      setPreviewExpert(profileExpert);
     } else {
       history.push("/profile");
     }
@@ -129,13 +118,13 @@ export default function PageHeader(props: any) {
               </>
             )
           }
-          <MailOutlined className="icon-header" onClick={() => {
+          {/* <MailOutlined className="icon-header" onClick={() => {
             if (isExpert) {
               history.push("/expert/chat")
             } else {
               history.push("/chat");
             }
-          }} />
+          }} /> */}
           {
             !isChatPage && <MailOutlined className="icon-header" onClick={() => {
               if (isExpert) {
@@ -200,6 +189,9 @@ export default function PageHeader(props: any) {
               </div>
             )
           }
+          <div className="user-avatar" onClick={handleClickProfile}>
+            <BaseImagePreview isLoading cancelPreview className="avatar" src={!isExpert ? (myProfile?.avatar || "/defaultAvatar.png") : (profileExpert?.avatar || "/defaultAvatar.png")} alt="" />
+          </div>
           {
             !isExpert && (
               <Button type="primary" className="button-create-post" onClick={() => setIsShowModal(true)}>

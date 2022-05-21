@@ -19,3 +19,13 @@ export const updatePassword = async (params: any) => {
   const res = await sendPut("http://localhost:8888/covid-network-social/patient/update-password", params);
   return res;
 }
+
+export const getListImageOther = async (id_user: any) => {
+  const res = await sendGet(`http://localhost:8888/covid-network-social/patient/get-all-image-of-patient/${id_user}`);
+  return res?.data;
+}
+
+export const getMyListImage = async () => {
+  const res = await sendGet(`http://localhost:8888/covid-network-social/patient/get-all-image-of-patient`);
+  return res?.data;
+}
