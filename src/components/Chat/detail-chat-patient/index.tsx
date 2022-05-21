@@ -16,7 +16,7 @@ import StarRating from '../../Base/BaseRatingStar';
 import { convertTime } from '../../../commons/utils';
 import { CustomButton } from './styled';
 
-const socket = io('http://localhost:8888');
+const socket = io('http://localhost:4444');
 
 const DetailChatComponent = (props: any) => {
   const [currentMessage, setCurrentMessage] = useState("");

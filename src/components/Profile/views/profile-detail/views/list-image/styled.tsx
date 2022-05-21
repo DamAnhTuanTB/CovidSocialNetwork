@@ -16,7 +16,7 @@ const ListImageStyled = styled.div`
       .img-preview {
         width: 100%;
         height: 100%;
-        img {
+        .image {
           border-radius: 10px;
           width: 100%;
           height: 100%;

@@ -153,7 +153,7 @@ const ProfileDetail = (props: any) => {
       <div className="list-post">
         <Tabs defaultActiveKey={type} key={type} onChange={handleChangeKey}>
           <TabPane tab="Ảnh" key="list-image">
-            <ListImage />
+            <ListImage idUser={param.id_user}/>
           </TabPane>
           <TabPane tab="Bài viết" key="success-post">
             {(isLoadingPost || isLoadingPostOther) ? (

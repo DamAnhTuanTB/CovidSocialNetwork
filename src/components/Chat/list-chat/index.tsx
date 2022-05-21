@@ -10,7 +10,7 @@ import { useGetListChatSessionsOfExpert } from '../../../hooks/chat/useChat';
 import { useQueryClient } from 'react-query';
 import { convertTime } from '../../../commons/utils';
 
-const socket = io('http://localhost:8888');
+const socket = io('http://localhost:4444');
 
 const ListChatComponent = (props: any) => {
 	const {

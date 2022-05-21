@@ -13,8 +13,9 @@ import { useGetProfile } from '../../../hooks/useProfile';
 import { useQueryClient } from 'react-query';
 import { Popover } from 'antd';
 import { convertTime } from '../../../commons/utils';
+import { useGetProfileExpert } from '../../../hooks/expert/useProfileExpert';
 
-const socket = io('http://localhost:8888');
+const socket = io('http://localhost:4444');
 
 const DetailChatComponent = (props: any) => {
   const {
@@ -38,7 +39,7 @@ const DetailChatComponent = (props: any) => {
     }
   }
 
-  const { profile } = useGetProfile(true);
+  const { profile } = useGetProfileExpert(true);
 
   const handleSubmitMessage = () => {
     if (currentMessage) {
