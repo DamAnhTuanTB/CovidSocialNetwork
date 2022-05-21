@@ -15,6 +15,11 @@ export default function PageHeader(props: any) {
   const {
     isExpert = false
   } = props;
+
+  const { pathname } = useLocation();
+
+  let isChatPage = pathname === '/chat';
+
   const [isShowNotification, setIsShowNotification] = useState(false);
   const [isShowModal, setIsShowModal] = useState(false);
   const [previewExpert, setPreviewExpert] = useState<any>(null);
@@ -102,7 +107,7 @@ export default function PageHeader(props: any) {
         </div>
         <div className="list-button">
           {
-            !isExpert && (
+            !isExpert && !isChatPage && (
               <Input.Search className="input-search" onSearch={handleSearchPost} placeholder="Tìm kiếm" />
             )
           }
@@ -132,7 +137,16 @@ export default function PageHeader(props: any) {
             }
           }} />
           {
-            !isExpert && (
+            !isChatPage && <MailOutlined className="icon-header" onClick={() => {
+              if (isExpert) {
+                history.push("/expert/chat")
+              } else {
+                history.push("/chat");
+              }
+            }} />
+          }
+          {
+            !isExpert && !isChatPage && (
               <div className="notification">
                 <BellOutlined className="icon-header" onClick={() => { setIsShowNotification(!isShowNotification) }} />
                 {
@@ -186,9 +200,6 @@ export default function PageHeader(props: any) {
               </div>
             )
           }
-          <div className="user-avatar" onClick={handleClickProfile}>
-            <BaseImagePreview isLoading cancelPreview className="avatar" src={myProfile?.avatar || "/defaultAvatar.png"} alt="" />
-          </div>
           {
             !isExpert && (
               <Button type="primary" className="button-create-post" onClick={() => setIsShowModal(true)}>
@@ -196,9 +207,11 @@ export default function PageHeader(props: any) {
               </Button>
             )
           }
-          <div className="icon-header icon-logout">
-            <img src='/logout-user.svg' className="" alt='' onClick={() => history.push("/logout")} />
-          </div>
+          {
+            !isChatPage && <div className="icon-header icon-logout">
+              <img src='/logout-user.svg' className="" alt='' onClick={() => history.push("/logout")} />
+            </div>
+          }
         </div>
       </div>
     </PageHeaderStyled>

@@ -1,11 +1,16 @@
 import { EyeOutlined } from '@ant-design/icons';
 import { Button, DatePicker, Pagination, Table, Tag } from 'antd';
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import io from 'socket.io-client';
+import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import LIST_CHAT_CONSTANTS from './constants';
-import dataRecordChat from './fakeDataChat';
 import { ListChatStyled } from './styled';
+import { useGetListChatSessionsOfExpert } from '../../../hooks/chat/useChat';
+import { useQueryClient } from 'react-query';
+import { convertTime } from '../../../commons/utils';
+
+const socket = io('http://localhost:8888');
 
 const ListChatComponent = (props: any) => {
 	const {
@@ -17,7 +22,11 @@ const ListChatComponent = (props: any) => {
 
 	const history = useHistory();
 	const [dateSearch, setDateSearch] = useState<string>();
-	const [currentPage, setCurrentPage] = useState("1");
+	const [currentPage, setCurrentPage] = useState(1);
+
+	const queryClient = useQueryClient();
+
+	const { data: listChatSessions } = useGetListChatSessionsOfExpert(currentPage);
 
 	useEffect(() => {
 		const date = paramsUrl.get('date');
@@ -37,7 +46,8 @@ const ListChatComponent = (props: any) => {
 	}
 
 	const handleChangePage = (page: any) => {
-		// history.push(`?page=${page}`)
+		setCurrentPage(page);
+		history.push(`?page=${page}&limit=10`);
 	}
 
 	const handleSearch = () => {
@@ -51,62 +61,77 @@ const ListChatComponent = (props: any) => {
 	const columns = [
 		{
 			title: 'Thời gian',
-			dataIndex: 'time',
-			key: 'time',
-			width: 200,
+			dataIndex: 'updatedAt',
+			key: 'updatedAt',
+			render: (data: any, record: any) => {
+				return (
+					<div>
+						{record?.updatedAt ? convertTime(record?.updatedAt) : convertTime(record?.startedAt)}
+					</div>
+				)
+			}
 		},
 		{
-			title: 'Bác sĩ',
-			dataIndex: 'doctor',
-			key: 'doctor',
-			width: 230,
-		},
-		{
-			title: 'Số điện thoại',
-			dataIndex: 'phone',
-			key: 'phone',
-			width: 150,
-		},
-		{
-			title: 'Thời lượng',
-			dataIndex: 'totalTime',
-			key: 'totalTime',
-			width: 130,
+			title: 'Bệnh nhân',
+			dataIndex: 'patientName',
+			key: 'patientName',
 		},
 		{
 			title: 'Trạng thái',
 			key: 'status',
 			dataIndex: 'status',
-			render: (status: any) => {
-				const color = status === 1 ? "green" : "volcano";
-				const text = status === 1 ? "Đang hoạt động" : "Đã kết thúc";
+			render: (status: any, record: any) => {
+				const color = !record.isEnd ? "green" : "volcano";
+				const text = !record.isEnd ? "Đang hoạt động" : "Đã kết thúc";
 				return (
 					<>
 						<Tag color={color}>
 							{text.toUpperCase()}
 						</Tag>
+
+						{(!record.isEnd && Number(record.isNew) === 1) &&
+							<Tag color="blue">
+								CÓ TIN NHẮN MỚI
+							</Tag>
+						}
+
+						{
+							(record.isEnd && Number(record.isNew) === 1) &&
+							<Tag color="blue">
+								CHƯA ĐỌC
+							</Tag>
+						}
 					</>
 				)
 			},
-			width: 150,
 		},
 		{
 			title: '',
 			key: 'action',
-			render: (data: any) => (
+			render: (data: any, record: any) => (
 				<EyeOutlined
 					className="detail-action"
 					onClick={() => {
 						if (isAdmin) {
 							history.push(`/admin/expert-management/detail-chat/${data.key}`)
 						} else {
-							history.push(`/expert/chat/${data.key}`)
+							history.push(`/expert/chat/${record.id}`)
 						}
 					}}
 				/>
 			),
 		},
 	];
+
+	useEffect(() => {
+		socket.on('expert_receiver_message', () => {
+			queryClient.invalidateQueries('getListChatSessionsOfExpert')
+		})
+
+		socket.on('receive_end_chat_session', () => {
+			queryClient.invalidateQueries('getListChatSessionsOfExpert')
+		})
+	}, []);
 
 	return (
 		<ListChatStyled>
@@ -118,11 +143,11 @@ const ListChatComponent = (props: any) => {
 					<DatePicker onChange={handleChangeDate} value={dateSearch ? moment(dateSearch, dateFormat) : undefined} format={dateFormat} />
 					<Button className="button-search" type="primary" onClick={handleSearch}>Search</Button>
 				</div>
-				<Table columns={columns} dataSource={dataRecordChat} pagination={false} />
+				<Table columns={columns} dataSource={listChatSessions?.data} pagination={false} />
 				<div className="pagination">
 					<Pagination
 						current={+currentPage}
-						total={50}
+						total={listChatSessions?.total}
 						onChange={handleChangePage}
 					/>
 				</div>

@@ -1,4 +1,14 @@
 import styled from "styled-components";
+import { Button } from "antd";
+
+const CustomButton = styled(Button)`
+    background-color: #27aba7;
+    border-color: #27aba7;
+    &&:hover{
+        background-color: #2fc7c2;
+        border-color: #2fc7c2;
+    }
+`
 
 const DetailChatComponentStyled = styled.div`
     display: flex;
@@ -29,6 +39,13 @@ const DetailChatComponentStyled = styled.div`
                 justify-content: space-between;
                 align-items: center;
                 border-bottom: 1px solid #d0d0d0;
+                .group-function-header-chat{
+                    display: flex;
+                    align-items: center;
+                    div {
+                        margin-left: 5px;
+                    }
+                }
                 .user-received-detail {
                     display: flex;
                     align-items: center;
@@ -158,4 +175,4 @@ const DetailChatComponentStyled = styled.div`
     }
 `;
 
-export { DetailChatComponentStyled };
+export { DetailChatComponentStyled, CustomButton };

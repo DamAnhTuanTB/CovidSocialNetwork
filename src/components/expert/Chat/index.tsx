@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route } from 'react-router-dom';
-import DetailChatComponent from '../../Chat/detail-chat';
+import DetailChatComponent from '../../Chat/detail-chat-expert';
 import ListChatComponent from '../../Chat/list-chat';
 
 const ExpertChatComponent = (props: any) => {
@@ -8,7 +8,7 @@ const ExpertChatComponent = (props: any) => {
     return (
         <div>
             <Route exact path={match?.url} render={() => <ListChatComponent match={match} />} />
-            <Route exact path={`${match?.url}/:chat_id`} render={() => <DetailChatComponent isExpert />} />
+            <Route exact path={`${match?.url}/:chat_session_id`} render={() => <DetailChatComponent isExpert />} />
         </div>
     );
 };
