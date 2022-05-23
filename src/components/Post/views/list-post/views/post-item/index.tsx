@@ -106,6 +106,7 @@ const PostItem = (props: any) => {
     mutationLikePost.mutate({
       postId: detailPost.id,
       isLike: currentLike,
+      authorId: detailPost?.author_id,
     }, {
       onSuccess: (data: any) => {
         if (data?.statusCode === 200) {
@@ -145,6 +146,7 @@ const PostItem = (props: any) => {
     mutationSavePost.mutate({
       postId: detailPost.id,
       isSave: currentSave,
+      authorId: detailPost?.author_id
     }, {
       onSuccess: (data: any) => {
         if (data?.statusCode === 200) {
@@ -331,7 +333,7 @@ const PostItem = (props: any) => {
       {
         (isDetail && !isProfile && !isPostDraft && !isPostPending) && (
           <div className="list-comment">
-            <InputComment isAdmin={isAdmin} idPost={detailPost.id} refTextArea={refTextArea} />
+            <InputComment isAdmin={isAdmin} idPost={detailPost.id} detailPost={detailPost} refTextArea={refTextArea} />
             <div>
               {
                 listComment.map((item) => {
@@ -361,6 +363,7 @@ const PostItem = (props: any) => {
               status={upcomingStatusPost}
               setStatus={setUpcomingStatusPost}
               idPostApproveOrCancel={idPostApproveOrCancel}
+              detailPost={detailPost}
               setIdPostApproveOrCancel={setIdPostApproveOrCancel}
             />
           </>
