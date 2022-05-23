@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 const CommentItemStyled = styled.div`
+    margin-bottom: 20px;
     &:hover {
         .delete-icon {
             opacity: 1 !important;
@@ -9,7 +10,6 @@ const CommentItemStyled = styled.div`
     .item-comment {
         display: flex;
         /* padding: 20px; */
-        margin-top: 20px;
         .avatar {
             height: 100%;
             margin-right: 5px;
@@ -79,6 +79,9 @@ const CommentItemStyled = styled.div`
         }
         .liked {
             color: #1877F2;
+        }
+        .admin-disable-like {
+            cursor: default;
         }
         .total-like {
             display: flex;

@@ -15,3 +15,8 @@ export const deleteGuest = async (idUser: any) => {
   const res = await sendDeleteAdmin(`http://localhost:8888/covid-network-social/admin/patient/delete-patient/${idUser}`);
   return res?.data;
 }
+
+export const getDetailPatient = async (idPatient: any) => {
+  const res = await sendGetAdmin(`http://localhost:8888/covid-network-social/admin/patient/patient-detail/${idPatient}`);
+  return res?.data;
+}

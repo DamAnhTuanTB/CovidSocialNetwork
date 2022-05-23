@@ -9,6 +9,11 @@ export const updateProfile = async (params: any) => {
   return res;
 }
 
+export const updateActive = async (isActive: any) => {
+  const res = await sendPut(`http://localhost:8888/covid-network-social/patient/update-active?isActive=${isActive}`);
+  return res;
+}
+
 export const getProfileOther = async (key: any) => {
   const id_user = key?.queryKey[1].id;
   const res = await sendGet(`http://localhost:8888/covid-network-social/patient/profile/${id_user}`);

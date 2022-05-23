@@ -24,6 +24,7 @@ const POST_ITEM_CONSTANTS = {
     savePost: "Lưu bài viết thành công",
   },
   descriptionAdmin: "Quản trị viên",
+  noComment: "Bài viết chưa có bình luận nào",
 };
 
 export default POST_ITEM_CONSTANTS;

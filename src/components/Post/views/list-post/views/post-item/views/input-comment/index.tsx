@@ -15,6 +15,7 @@ const InputComment = (props: any) => {
   const {
     isAdmin = false,
     idPost,
+    detailPost = {},
     refTextArea,
   } = props;
   const [prog, setProg] = useState(0);
@@ -59,6 +60,7 @@ const InputComment = (props: any) => {
     const dataComment = {
       postId: idPost,
       content_texts: commentText,
+      authorId: detailPost?.author_id,
     }
 
     if (imageUrlComment) {

@@ -5,6 +5,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { useQueryClient } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
 import ConvertObjToParamsURL from '../../../../../helpers/convertObjToUrl';
+import { useGetDetailPatient } from '../../../../../hooks/admin/useGuestAdmin';
 import { useGetListPostAdmin, useGetListPostByUserAdmin } from '../../../../../hooks/admin/usePostAdmin';
 import PostItem from '../../../../Post/views/list-post/views/post-item';
 import ModalCreatePost from '../../../../Post/views/modal-create-post';
@@ -33,6 +34,7 @@ const ListPostManagement = (props: any) => {
   const [postEdit, setPostEdit] = useState(null);
   const [listPost, setListPost] = useState<any>([]);
   const [totalPost, setTotalPost] = useState(0);
+  const [detailPatientSearch, setDetailPatientSearch] = useState<any>({});
   const limitPostPerPage = 10;
   const [currentPage, setCurrentPage] = useState(paramsUrlSearch.get("page") || "1");
   const initValueSearch = {
@@ -51,7 +53,8 @@ const ListPostManagement = (props: any) => {
   const profileAdmin: any = queryClient.getQueryData("profile-admin");
 
   const { dataPost, isLoadingPost } = useGetListPostAdmin({ ...valueSearch, page: currentPage }, !param.id_user);
-
+  const { detailPatient } = useGetDetailPatient(param?.id_user);
+  
   const {
     dataPostByUser, isLoadingPostByUser
   } = useGetListPostByUserAdmin({ ...valueSearch, page: currentPage }, param.id_user)
@@ -130,6 +133,12 @@ const ListPostManagement = (props: any) => {
     }
   }, [dataPost, dataPostByUser])
 
+  useEffect(() => {
+    if (isSearchByUser) {
+      setDetailPatientSearch(detailPatient);
+    }
+  }, [detailPatient])
+
   return (
     <ListPostManagementStyled>
       <ModalCreatePost
@@ -156,7 +165,7 @@ const ListPostManagement = (props: any) => {
             isSearchByUser ? (
               <>
                 {LIST_POST_MANAGEMENT_CONSTANTS.titleFindByUser}
-                <span>{listPost?.length && listPost[0]?.author_nick_name}</span>
+                <span>{detailPatientSearch?.nick_name}</span>
               </>
             ) : (
               <>{LIST_POST_MANAGEMENT_CONSTANTS.title}</>

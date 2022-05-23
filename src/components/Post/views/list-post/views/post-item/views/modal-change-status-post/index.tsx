@@ -10,7 +10,8 @@ const ModalChangeStatusPost = (props: any) => {
     status = null,
     idPostApproveOrCancel = null,
     setIdPostApproveOrCancel = () => { },
-    setStatus = () => { }
+    setStatus = () => { },
+    detailPost= {}
   } = props;
 
   const mutation = useMutation(updateStatusPostAdmin);
@@ -25,6 +26,7 @@ const ModalChangeStatusPost = (props: any) => {
       {
         idPost: idPostApproveOrCancel,
         status: status,
+        authorId: detailPost?.author_id,
       },
       {
         onSuccess: (data) => {

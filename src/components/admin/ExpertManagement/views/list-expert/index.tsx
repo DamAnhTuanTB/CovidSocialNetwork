@@ -83,22 +83,6 @@ const ListExpertComponent = (props: any) => {
       },
     },
     {
-      title: 'Đánh giá',
-      key: 'avgRate',
-      width: 80,
-      render: (data: any) => (
-        <div className='avg-rate'>{`${Math.round(data.avgRate * 100) / 100} / 5`}</div>
-      ),
-    },
-    {
-      title: 'Lượt đánh giá',
-      key: 'avgRate',
-      width: 110,
-      render: (data: any) => (
-        <div className='count-rate'>{`${data?.countRate}`}</div>
-      ),
-    },
-    {
       title: '',
       key: 'action',
       width: 70,

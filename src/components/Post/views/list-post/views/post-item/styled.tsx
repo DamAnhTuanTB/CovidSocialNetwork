@@ -1,6 +1,11 @@
 import styled from "styled-components";
 
-const PostItemStyle = styled.div`
+interface Props {
+    isDetail: boolean,
+    className: string,
+}
+
+const PostItemStyle = styled.div<Props>`
     margin-top: 20px;
     background-color: white;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
@@ -29,11 +34,15 @@ const PostItemStyle = styled.div`
             }
         }
         .create-at {
+            cursor: ${(props) => props?.isDetail ? "default" : "pointer"};
             font-size: 12px;
             .description-admin {
                 margin-right: 20px;
                 font-weight: 400;
                 font-size: 12px;
+            }
+            :hover {
+                text-decoration: ${(props) => props?.isDetail ? "unset" : "underline"};
             }
         }
         .more-option {
@@ -62,10 +71,12 @@ const PostItemStyle = styled.div`
     .body-post {
         margin-bottom: 2px ;
         .title-post {
-            padding: 0 15px 15px;
+            padding: 0 15px;
+            margin-bottom: 15px;
             text-align: justify;
             font-size: 16px;
             font-weight: 600;
+            cursor: ${(props) => props?.isDetail ? "default" : "pointer"}
         }
         .detail-post {
             padding: 0 15px 15px;
@@ -173,6 +184,9 @@ const PostItemStyle = styled.div`
                 }
             }
         }
+        .border-top {
+            border-top: 1px solid #d0d0d0;
+        }
         
     }
     .list-comment {
@@ -181,6 +195,7 @@ const PostItemStyle = styled.div`
             .input-comment {
                 display: flex;
                 justify-content: space-between;
+                margin-bottom: 20px;
                 .avatar-user {
                     width: 40px;
                     height: 40px;
@@ -296,6 +311,15 @@ const PostItemStyle = styled.div`
                     }
                 }
             }
+        }
+        .comment {
+            :last-child {
+                margin-bottom: 0px;
+            }
+        }
+        .no-comment {
+            font-size: 16px;
+            font-weight: 400;
         }
     }
     .list-approve-button-admin {

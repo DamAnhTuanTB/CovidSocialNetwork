@@ -15,6 +15,7 @@ import { useQueryClient } from 'react-query';
 import StarRating from '../../Base/BaseRatingStar';
 import { convertTime } from '../../../commons/utils';
 import { CustomButton } from './styled';
+import BaseImagePreview from '../../Base/BaseImagePreview';
 
 const socket = io('http://localhost:4444');
 
@@ -56,7 +57,7 @@ const DetailChatComponent = (props: any) => {
       chatSessionId: infoChatSession?.id,
       endTime: new Date().toISOString()
     });
-    window.location.assign('/');
+    window.location.assign('/post');
   }
 
   const handleSubmitMessage = () => {
@@ -101,7 +102,7 @@ const DetailChatComponent = (props: any) => {
         <div className={`chat-box`}>
           <div className="header-chat">
             <div className="user-received-detail">
-              <img src="/post/avatar_my1.jpg" alt="" />
+              <img className="avatar-image" src="/defaultAvatar.png" alt="" />
               <div>{CHAT_DETAIL_CONSTANTS.anonymous}</div>
             </div>
             <div className="group-function-header-chat">
@@ -115,7 +116,7 @@ const DetailChatComponent = (props: any) => {
           </div>
           <div className="list-messages">
             <div key={'_0'} className='message message-received'>
-              <img src="/post/avatar_my1.jpg" alt="" />
+              <img className="avatar-image" src="/defaultAvatar.png" alt="" />
               <div className='content-message received'>{CHAT_DETAIL_CONSTANTS.welcome}</div>
             </div>
             {
@@ -124,21 +125,21 @@ const DetailChatComponent = (props: any) => {
                 // check send hay received
                 const classMessage = itemMessage?.role === 'patient' ? "message-sended" : "message-received";
                 let classContent = itemMessage?.role === 'patient' ? "sended" : "received";
-                let classImage = "";
+                let classImage = "avatar-image ";
 
                 // check cac tin nhan gui hoac nhan lien tiep
-                if (index < listMessages?.length && itemMessage?.role === 'patient' && 'patient' === listMessages[index + 1]?.role) {
+                if (index < listMessages?.length && itemMessage?.role === listMessages[index + 1]?.role) {
                   classContent += " border-radius-bottom";
-                  classImage = "hide-avatar";
+                  classImage += "hide-avatar";
                 }
 
-                if (index > 0 && itemMessage?.role === 'patient' && 'patient' === listMessages[index - 1]?.role) {
+                if (index > 0 && itemMessage?.role === listMessages[index - 1]?.role) {
                   classContent += " border-radius-top";
                 }
 
                 return (
                   <div key={itemMessage.id + itemMessage.content_texts} className={`message ${classMessage}`}>
-                    <img className={classImage} src={itemMessage?.role === 'patient' ? infoChatSession?.patient.avatar : "/post/avatar_my1.jpg"} alt="" />
+                    <BaseImagePreview isLoading cancelPreview className={classImage} src={itemMessage?.role === 'patient' ? (infoChatSession?.patient.avatar || "/defaultAvatar.png") : "/defaultAvatar.png"} alt=""/>
                     <Popover content={convertTime(itemMessage.created_at)}>
                       <div className={`content-message ${classContent}`}>{itemMessage?.content_texts}</div>
                     </Popover>

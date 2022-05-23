@@ -23,6 +23,8 @@ const CommentItem = (props: any) => {
   const mutationLikeComment = useMutation(isAdmin ? handleLikeCommentAdmin : handleLikeComment);
 
   const handleClickLike = () => {
+    if (isAdmin) return;
+
     let currentLike = true;
     let changeLike = 1;
     if (detailComment.isLike) {
@@ -60,7 +62,7 @@ const CommentItem = (props: any) => {
   }
 
   return (
-    <CommentItemStyled>
+    <CommentItemStyled className="comment">
       <div className="item-comment">
         <div className="avatar">
           <img src={detailComment?.commentator_avatar || "/defaultAvatar.png"} alt="" />
@@ -95,7 +97,7 @@ const CommentItem = (props: any) => {
       }
       <div className="like">
         <div
-          className={`button-like ${detailComment.isLike && "liked"}`}
+          className={`button-like ${detailComment.isLike && "liked"} ${isAdmin && "admin-disable-like"}`}
           onClick={handleClickLike}
         >
           {POST_ITEM_CONSTANTS.detailAction.like}

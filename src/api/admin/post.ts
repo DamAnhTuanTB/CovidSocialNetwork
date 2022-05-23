@@ -40,10 +40,9 @@ export const deletePostAdmin = async (idPost: any) => {
 
 export const updateStatusPostAdmin = async (params: any) => {
   const idPost = params?.idPost;
-  const status = params?.status;
   const newParam = { ...params };
   delete newParam.idPost
-  const res = await sendPutAdmin(`http://localhost:8888/covid-network-social/admin/post/update-status-post/${idPost}?status=${status}`);
+  const res = await sendPutAdmin(`http://localhost:8888/covid-network-social/admin/post/update-status-post/${idPost}`, newParam);
   return res?.data;
 }
 // export const getListMyPost = async (key: any) => {

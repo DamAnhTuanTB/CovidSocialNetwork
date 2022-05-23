@@ -7,3 +7,8 @@ export const updatePasswordExpert = async (params: any) => {
 
 export const getProfileExpert = () =>
   sendGetExpert("http://localhost:8888/covid-network-social/patient/profile").then((res) => res.data);
+
+export const updateActiveExpert = async (isActive: any) => {
+  const res = await sendPutExpert(`http://localhost:8888/covid-network-social/patient/update-active?isActive=${isActive}`);
+  return res;
+}

@@ -7,13 +7,9 @@ import { ListImageStyled } from './styled';
 const LOAD_MORE_IMAGE = "Xem thêm";
 
 const ListImage = (props: any) => {
-  const { idUser } = props;
+  const { idUser, isGuest = false } = props;
   // const [loading, setLoading] = useState(false);
   const [listImage, setListImage] = useState<any>([]);
-
-  // const handleLoadMoreImage = () => {
-  //   setLoading(true);
-  // }
 
   const { dataListMyImage } = useGetMyListImage(!idUser);
 
@@ -35,14 +31,20 @@ const ListImage = (props: any) => {
     <ListImageStyled>
       <div className="list-image">
         {
-          listImage?.length && listImage?.map((item:any, index:any) => {
+          listImage?.length > 0 ? listImage?.map((item:any, index:any) => {
             if (!item) return null;
             return (
               <div className="item-image" key={index}>
                 <BaseImagePreview isLoading className="image" src={item} alt="" />
               </div>
             )
-          })
+          }) : (
+            <div>
+              {
+                isGuest ? "Người dùng chưa đăng ảnh nào" : "Bạn chưa đăng ảnh nào"
+              }
+            </div>
+          )
         }
       </div>
       {/* <div>
