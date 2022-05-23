@@ -52,8 +52,6 @@ const DetailChatComponent = (props: any) => {
 
       socket.emit("expert_send_message", newMessage);
 
-      queryClient.invalidateQueries('getListMessages');
-
       setCurrentMessage("");
     }
   }
@@ -61,10 +59,14 @@ const DetailChatComponent = (props: any) => {
   useEffect(() => {
     socket.on('expert_receiver_message', (data: any) => {
       if (data.id === param.chat_session_id) {
-        queryClient.invalidateQueries('getListMessages');
+        queryClient.invalidateQueries('getListMessagesExpert');
       }
     })
-
+    socket.on('patient_receiver_message', (data: any) => {
+      if (data.id === param.chat_session_id) {
+        queryClient.invalidateQueries('getListMessagesExpert');
+      }
+    })
     socket.on('receive_evaluate_chat_session', (data: any) => {
       if (data.chatSessionId === param.chat_session_id) {
         queryClient.invalidateQueries('getDetailChatSession');
