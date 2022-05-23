@@ -202,20 +202,21 @@ const PostItem = (props: any) => {
     }
   }
 
+  const handleClickToDetail = () => {
+    if (isDetail || isPostCancelAdmin || isPostPending) return;
+
+    history.push(`${isAdmin ? "/admin/post-management" : "/post"}/${detailPost.id}`);
+  }
+
   return (
-    <PostItemStyle className="post-item">
+    <PostItemStyle className="post-item" isDetail={isDetail}>
       <div className="header-post">
         <img src={detailPost?.author_avatar || "/defaultAvatar.png"} alt="" />
         <div>
           <div className="post-author" onClick={handleClickAuthorPost}>
             {detailPost?.author_nick_name}
-            {/* {
-              detailPost?.isAdmin ? (
-                <span className="description-admin">Quản trị viên</span>
-              ) : (null)
-            } */}
           </div>
-          <div className="create-at">
+          <div className="create-at" onClick={handleClickToDetail}>
             {
               detailPost?.isAdmin ? (
                 <Tag className="description-admin" color={"#3199D5"}>{POST_ITEM_CONSTANTS.descriptionAdmin}</Tag>
@@ -246,7 +247,7 @@ const PostItem = (props: any) => {
         }
       </div>
       <div className="body-post">
-        <div className="title-post">
+        <div className="title-post" onClick={handleClickToDetail}>
           {detailPost?.title}
         </div>
         <div className="detail-post">
@@ -301,42 +302,55 @@ const PostItem = (props: any) => {
                 </div>
               </div>
             </div>
-            <div className="list-button">
-              <div
-                aria-hidden
-                className="like-button action-button"
-                onClick={handleClickLikeButton}
-              >
-                <LikeTwoTone twoToneColor={detailPost?.isLike ? "#1877F2" : "#a3a3a3"} />
-                <div className={`text ${detailPost?.isLike && "text-like"}`}>{POST_ITEM_CONSTANTS.detailAction.like}</div>
-              </div>
-              <div className="comment-button action-button" onClick={handleClickCommentButton}>
-                <MessageTwoTone twoToneColor="#a3a3a3" />
-                <div className="text">{POST_ITEM_CONSTANTS.detailAction.comment}</div>
-              </div>
-              {
-                !isAdmin && (
+            {
+              !isAdmin && (
+                <div className="list-button">
                   <div
                     aria-hidden
-                    className="save-button action-button"
-                    onClick={handleClickSaveButton}
+                    className="like-button action-button"
+                    onClick={handleClickLikeButton}
                   >
-                    <HeartTwoTone twoToneColor={detailPost?.isSave ? "#f21831" : "#a3a3a3"} />
-                    <div className={`text ${detailPost?.isSave && "text-save"}`}>{POST_ITEM_CONSTANTS.detailAction.save}</div>
+                    <LikeTwoTone twoToneColor={detailPost?.isLike ? "#1877F2" : "#a3a3a3"} />
+                    <div className={`text ${detailPost?.isLike && "text-like"}`}>{POST_ITEM_CONSTANTS.detailAction.like}</div>
                   </div>
-                )
-              }
-            </div>
+                  <div className="comment-button action-button" onClick={handleClickCommentButton}>
+                    <MessageTwoTone twoToneColor="#a3a3a3" />
+                    <div className="text">{POST_ITEM_CONSTANTS.detailAction.comment}</div>
+                  </div>
+                  {
+                    !isAdmin && (
+                      <div
+                        aria-hidden
+                        className="save-button action-button"
+                        onClick={handleClickSaveButton}
+                      >
+                        <HeartTwoTone twoToneColor={detailPost?.isSave ? "#f21831" : "#a3a3a3"} />
+                        <div className={`text ${detailPost?.isSave && "text-save"}`}>{POST_ITEM_CONSTANTS.detailAction.save}</div>
+                      </div>
+                    )
+                  }
+                </div>
+              )
+            }
+            {
+              isAdmin && isDetail && (
+                <div className='border-top' />
+              )
+            }
           </div>
         )
       }
       {
         (isDetail && !isProfile && !isPostDraft && !isPostPending) && (
           <div className="list-comment">
-            <InputComment isAdmin={isAdmin} idPost={detailPost.id} detailPost={detailPost} refTextArea={refTextArea} />
+            {
+              !isAdmin && (
+                <InputComment isAdmin={isAdmin} idPost={detailPost.id} detailPost={detailPost} refTextArea={refTextArea} />
+              )
+            }
             <div>
               {
-                listComment.map((item) => {
+                listComment?.length > 0 ? listComment?.map((item) => {
                   return (
                     <CommentItem
                       key={item.id}
@@ -346,7 +360,9 @@ const PostItem = (props: any) => {
                       isAdmin={isAdmin}
                     />
                   )
-                })
+                }) : (
+                  <div className="no-comment">{POST_ITEM_CONSTANTS?.noComment}</div>
+                )
               }
             </div>
           </div>

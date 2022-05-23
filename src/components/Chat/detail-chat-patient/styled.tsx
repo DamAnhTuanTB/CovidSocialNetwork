@@ -49,12 +49,12 @@ const DetailChatComponentStyled = styled.div`
                 .user-received-detail {
                     display: flex;
                     align-items: center;
-                    img {
+                    .avatar-image {
+                        margin-right: 10px;
                         width: 45px;
                         height: 45px;
                         object-fit: cover;
                         object-position: center;
-                        margin-right: 10px;
                         border-radius: 50%;
                     }
                     div {
@@ -82,12 +82,11 @@ const DetailChatComponentStyled = styled.div`
                     display: flex;
                     align-items: flex-end;
                     margin-bottom: 5px;
-                    img {
+                    .avatar-image {
                         width: 35px;
                         height: 35px;
                         object-fit: cover;
                         object-position: center;
-                        margin-right: 10px;
                         border-radius: 50%;
                     }
                     .content-message {
@@ -102,6 +101,7 @@ const DetailChatComponentStyled = styled.div`
                 }
                 .received {
                     background-color: #E4E6EB;
+                    margin-left: 10px;
                 }
                 
                 .message-received {
@@ -114,10 +114,6 @@ const DetailChatComponentStyled = styled.div`
                 }
                 .message-sended {
                     flex-direction: row-reverse;
-                    img {
-                        margin-left: 10px;
-                        margin-right: 0;
-                    }
                     .border-radius-top {
                         border-top-right-radius: 5px;
                     }
@@ -128,6 +124,7 @@ const DetailChatComponentStyled = styled.div`
                 .sended {
                     background-color: #0084FF;
                     color: white;
+                    margin-right: 10px;
                 }
             }
             .send-message {

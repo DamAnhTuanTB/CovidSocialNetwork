@@ -14,6 +14,7 @@ import { useQueryClient } from 'react-query';
 import { Popover } from 'antd';
 import { convertTime } from '../../../commons/utils';
 import { useGetProfileExpert } from '../../../hooks/expert/useProfileExpert';
+import BaseImagePreview from '../../Base/BaseImagePreview';
 
 const socket = io('http://localhost:4444');
 
@@ -93,7 +94,7 @@ const DetailChatComponent = (props: any) => {
         <div className={`chat-box ${isAdmin && "chat-box-admin"}`}>
           <div className="header-chat">
             <div className="user-received-detail">
-              <img src={infoChatSession?.patient?.avatar} alt="" />
+              <BaseImagePreview className="main-avatar" src={infoChatSession?.patient?.avatar || "/defaultAvatar.png"} alt="" />
               <div>{infoChatSession?.patient?.first_name}</div>
             </div>
             <div className="group-rate-expert">
@@ -110,21 +111,21 @@ const DetailChatComponent = (props: any) => {
                 // check send hay received
                 const classMessage = itemMessage?.role === 'expert' ? "message-sended" : "message-received";
                 let classContent = itemMessage?.role === 'expert' ? "sended" : "received";
-                let classImage = "";
+                let classImage = "avatar-image ";
 
                 // check cac tin nhan gui hoac nhan lien tiep
-                if (index < listMessages?.length && itemMessage?.role === 'expert' && 'expert' === listMessages[index + 1]?.role) {
+                if (index < listMessages?.length && itemMessage?.role === listMessages[index + 1]?.role) {
                   classContent += " border-radius-bottom";
-                  classImage = "hide-avatar";
+                  classImage += "hide-avatar";
                 }
 
-                if (index > 0 && itemMessage?.role === 'expert' && 'expert' === listMessages[index - 1]?.role) {
+                if (index > 0 && itemMessage?.role === listMessages[index - 1]?.role) {
                   classContent += " border-radius-top";
                 }
 
                 return (
                   <div key={itemMessage.id + itemMessage.content} className={`message ${classMessage}`}>
-                    <img className={classImage} src={itemMessage?.role === 'expert' ? profile?.avatar : infoChatSession?.patient.avatar} alt="" />
+                    <BaseImagePreview isLoading cancelPreview className={classImage} src={itemMessage?.role === 'expert' ? (profile?.avatar || "/defaultAvatar.png") : (infoChatSession?.patient.avatar || "/defaultAvatar.png")} alt=""/>
                     <Popover content={convertTime(itemMessage.created_at)}>
                       <div className={`content-message ${classContent}`}>{itemMessage?.content_texts}</div>
                     </Popover>

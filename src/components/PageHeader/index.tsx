@@ -1,8 +1,12 @@
-import { BellOutlined, MailOutlined, HomeOutlined, HomeFilled } from '@ant-design/icons';
+import { BellOutlined, HomeFilled, HomeOutlined, MailOutlined } from '@ant-design/icons';
 import { Button, Divider, Input } from 'antd';
+import Cookies from 'js-cookie';
 import React, { useEffect, useState } from 'react';
-import { useQueryClient } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { useHistory, useLocation } from 'react-router-dom';
+import io from 'socket.io-client';
+import { updateActiveExpert } from '../../api/expert/profile';
+import { updateActive } from '../../api/profile';
 import { handleConvertDateStringToDate } from '../../helpers/convertDateStringToDate';
 import { useGetNotifilcation } from '../../hooks/useNotification';
 import ModalProfileExpert from '../admin/ExpertManagement/views/ModalProfileExpert';
@@ -23,7 +27,7 @@ export default function PageHeader(props: any) {
   const [isShowNotification, setIsShowNotification] = useState(false);
   const [isShowModal, setIsShowModal] = useState(false);
   const [previewExpert, setPreviewExpert] = useState<any>(null);
-  const [totalNotify, setTotalNotify] = useState(10);
+  const [totalNotify, setTotalNotify] = useState(0);
   const [listNotification, setListNotification] = useState([]);
   const history = useHistory();
   const location = useLocation();
@@ -32,14 +36,14 @@ export default function PageHeader(props: any) {
   const myProfile: any = queryClient.getQueryData("my-profile");
   const profileExpert: any = queryClient.getQueryData("profile-expert");
 
-  console.log(123123, profileExpert);
-  
-
   const { notification } = useGetNotifilcation(isShowNotification && !isExpert);
+  const mutation = useMutation(isExpert ? updateActiveExpert : updateActive);
 
-  // const showNotify = (data: any) => {
-  //   console.log("pageheader", data);
-  // }
+  const showNotify = (data: any) => {
+    if (data?.userIdTo === myProfile?.id && data?.userIdTo !== data?.userIdFrom) {
+      setTotalNotify((total) => total + 1)
+    }
+  }
 
   const handleSearchPost = (value: any) => {
     if (value) {
@@ -55,11 +59,30 @@ export default function PageHeader(props: any) {
     }
   }
 
+  const handleClickLogout = () => {
+    mutation.mutate(0, {
+      onSuccess: (data) => {
+        if (isExpert) {
+          Cookies.remove('tokenExpert');
+          history.push('/expert/login');
+        } else {
+          history.push("/logout");
+        }
+      }, 
+      onError: (err) => {
+        console.log(err);
+      }
+    })
+  }
+
   useEffect(() => {
-    // socket?.on('notify', showNotify);
-    // return () => {
-    //   socket.off('notify', showNotify);
-    // };
+    if (!isExpert) {
+      const socket = io('http://localhost:4444');
+      socket?.on('notify_post', showNotify);
+      return () => {
+        socket.off('notify_post', showNotify);
+      };
+    }
   }, [])
 
   useEffect(() => {
@@ -201,7 +224,7 @@ export default function PageHeader(props: any) {
           }
           {
             !isChatPage && <div className="icon-header icon-logout">
-              <img src='/logout-user.svg' className="" alt='' onClick={() => history.push("/logout")} />
+              <img src='/logout-user.svg' className="" alt='' onClick={handleClickLogout} />
             </div>
           }
         </div>
