@@ -8,7 +8,7 @@ export function useGetInfoChatSession(paramSearch: any) {
 }
 // p
 export function useGetListMessagesPatient(id: number, isEnable: boolean) {
-    const { data, isLoading } = useQuery<any>(['getListMessages', id], () => getListMessagesPatient(id), { enabled: isEnable });
+    const { data, isLoading } = useQuery<any>(['getListMessagesPatient', id], () => getListMessagesPatient(id), { enabled: isEnable });
     return { data, isLoading }
 }
 // e
@@ -18,7 +18,7 @@ export function useGetDetailChatSession(id: number) {
 }
 // e
 export function useGetListMessagesExpert(id: number, isEnable: boolean) {
-    const { data, isLoading } = useQuery<any>(['getListMessages', id], () => getListMessagesExpert(id), { enabled: isEnable });
+    const { data, isLoading } = useQuery<any>(['getListMessagesExpert', id], () => getListMessagesExpert(id), { enabled: isEnable });
     return { data, isLoading }
 }
 // e
