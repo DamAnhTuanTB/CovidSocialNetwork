@@ -86,9 +86,9 @@ const ListExpertComponent = (props: any) => {
       title: '',
       key: 'action',
       width: 70,
-      render: (data: any) => (
+      render: (data: any, record: any) => (
         <Space>
-          <MessageOutlined className="image-icon" onClick={() => history.push(`/admin/expert-management/list-chat/1`)} />
+          <MessageOutlined className="image-icon" onClick={() => history.push(`/admin/expert-management/list-chat/${record.id}`)} />
           <EyeOutlined className="seemore-icon" onClick={() => setPreviewExpert(data)} />
           <DeleteOutlined className="delete-icon" onClick={() => setExpertDelete(data)} />
         </Space>

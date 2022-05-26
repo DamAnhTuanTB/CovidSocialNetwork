@@ -1,3 +1,4 @@
+import { sendGetAdmin } from './admin/axios';
 import { sendGetExpert } from "./expert/axios";
 import { sendGet } from "./axios";
 
@@ -42,6 +43,33 @@ export const getListChatSessionsOfExpert = async (
 ) => {
   const res = await sendGetExpert(
     `http://localhost:8888/covid-network-social/chat/get-list-chat-sessions-of-expert/${id}?date=${date}&status=${status}&page=${page}&limit=${limit}`
+  );
+  return res?.data;
+};
+// a
+export const getListChatSessionsOfExpertAdmin = async (
+  id: number,
+  date?: string,
+  status?: number,
+  page = 1,
+  limit = 10
+) => {
+  const res = await sendGetAdmin(
+    `http://localhost:8888/covid-network-social/chat/get-list-chat-sessions-of-expert/${id}?date=${date}&status=${status}&page=${page}&limit=${limit}`
+  );
+  return res?.data;
+};
+// a
+export const getDetailChatSessionAdmin = async (id: number) => {
+  const res = await sendGetAdmin(
+    `http://localhost:8888/covid-network-social/chat/get-detail-chat-session/${id}`
+  );
+  return res?.data;
+};
+// e
+export const getListMessagesExpertAdmin = async (id: number) => {
+  const res = await sendGetAdmin(
+    `http://localhost:8888/covid-network-social/chat/get-list-messages-expert/${id}`
   );
   return res?.data;
 };

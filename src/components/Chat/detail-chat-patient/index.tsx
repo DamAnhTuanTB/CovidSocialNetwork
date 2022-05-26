@@ -55,7 +55,8 @@ const DetailChatComponent = (props: any) => {
   const handleEndChatSession = () => {
     socket.emit('end_chat_session', {
       chatSessionId: infoChatSession?.id,
-      endTime: new Date().toISOString()
+      endTime: new Date().toISOString(),
+      expertId: infoChatSession?.expert?.id
     });
     window.location.assign('/post');
   }
@@ -139,7 +140,7 @@ const DetailChatComponent = (props: any) => {
 
                 return (
                   <div key={itemMessage.id + itemMessage.content_texts} className={`message ${classMessage}`}>
-                    <BaseImagePreview isLoading cancelPreview className={classImage} src={itemMessage?.role === 'patient' ? (infoChatSession?.patient.avatar || "/defaultAvatar.png") : "/defaultAvatar.png"} alt=""/>
+                    <BaseImagePreview isLoading cancelPreview className={classImage} src={itemMessage?.role === 'patient' ? (infoChatSession?.patient.avatar || "/defaultAvatar.png") : "/defaultAvatar.png"} alt="" />
                     <Popover content={convertTime(itemMessage.created_at)}>
                       <div className={`content-message ${classContent}`}>{itemMessage?.content_texts}</div>
                     </Popover>

@@ -170,12 +170,12 @@ const ListChatComponent = (props: any) => {
 
 	useEffect(() => {
 		socket.on('expert_receiver_message', (data) => {
-			if (Number(data.expectId) === Number(localStorage.getItem('id_expert'))) {
+			if (Number(data.expertId) === Number(localStorage.getItem('id_expert'))) {
 				queryClient.invalidateQueries('getListChatSessionsOfExpert');
 			}
 		})
 		socket.on('receive_end_chat_session', (data) => {
-			if (Number(data.expectId) === Number(localStorage.getItem('id_expert'))) {
+			if (Number(data.expertId) === Number(localStorage.getItem('id_expert'))) {
 				queryClient.invalidateQueries('getListChatSessionsOfExpert');
 			}
 		})
