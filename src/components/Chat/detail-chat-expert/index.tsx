@@ -9,20 +9,15 @@ import io from 'socket.io-client';
 import StarRating from '../../Base/BaseRatingStar';
 import { DetailChatComponentStyled } from "./styled";
 import { useGetDetailChatSession, useGetListMessagesExpert } from '../../../hooks/chat/useChat';
-import { useGetProfile } from '../../../hooks/useProfile';
+import { useGetProfileExpert } from '../../../hooks/expert/useProfileExpert';
 import { useQueryClient } from 'react-query';
 import { Popover } from 'antd';
 import { convertTime } from '../../../commons/utils';
-import { useGetProfileExpert } from '../../../hooks/expert/useProfileExpert';
 import BaseImagePreview from '../../Base/BaseImagePreview';
 
 const socket = io('http://localhost:4444');
 
 const DetailChatComponent = (props: any) => {
-  const {
-    isExpert = false,
-    isAdmin = false,
-  } = props;
   const param = useParams();
   const [currentMessage, setCurrentMessage] = useState("");
   const bottomChatRef = useRef();
@@ -58,6 +53,10 @@ const DetailChatComponent = (props: any) => {
   }
 
   useEffect(() => {
+    socket.emit('expert_read_message', { expertId: profile?.id })
+  }, []);
+
+  useEffect(() => {
     socket.on('expert_receiver_message', (data: any) => {
       if (data.id === param.chat_session_id) {
         queryClient.invalidateQueries('getListMessagesExpert');
@@ -79,6 +78,13 @@ const DetailChatComponent = (props: any) => {
         queryClient.invalidateQueries('getDetailChatSession');
       }
     })
+    // return () => {
+    //   socket.off('expert_receiver_message');
+    //   socket.off('patient_receiver_message');
+    //   socket.off('receive_evaluate_chat_session');
+    //   socket.off('receive_end_chat_session');
+    //   socket.off('expert_send_message');
+    // }
   }, [])
 
   useEffect(() => {
@@ -91,7 +97,7 @@ const DetailChatComponent = (props: any) => {
     <DetailChatComponentStyled>
       <div className="chat-container">
         {/* <InfoDoctorComponent /> */}
-        <div className={`chat-box ${isAdmin && "chat-box-admin"}`}>
+        <div className={`chat-box`}>
           <div className="header-chat">
             <div className="user-received-detail">
               <BaseImagePreview className="main-avatar" src={infoChatSession?.patient?.avatar || "/defaultAvatar.png"} alt="" />
@@ -125,7 +131,7 @@ const DetailChatComponent = (props: any) => {
 
                 return (
                   <div key={itemMessage.id + itemMessage.content} className={`message ${classMessage}`}>
-                    <BaseImagePreview isLoading cancelPreview className={classImage} src={itemMessage?.role === 'expert' ? (profile?.avatar || "/defaultAvatar.png") : (infoChatSession?.patient.avatar || "/defaultAvatar.png")} alt=""/>
+                    <BaseImagePreview isLoading cancelPreview className={classImage} src={itemMessage?.role === 'expert' ? (profile?.avatar || "/defaultAvatar.png") : (infoChatSession?.patient.avatar || "/defaultAvatar.png")} alt="" />
                     <Popover content={convertTime(itemMessage.created_at)}>
                       <div className={`content-message ${classContent}`}>{itemMessage?.content_texts}</div>
                     </Popover>
@@ -136,7 +142,7 @@ const DetailChatComponent = (props: any) => {
             <div ref={bottomChatRef}></div>
           </div>
           {
-            !isAdmin && !infoChatSession?.end_time && (
+            !infoChatSession?.end_time && (
               <div className="send-message">
                 <div className="input-container">
                   <ReactTextareaAutosize

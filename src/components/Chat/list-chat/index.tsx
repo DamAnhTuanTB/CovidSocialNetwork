@@ -83,12 +83,13 @@ const ListChatComponent = (props: any) => {
 	const handleSearch = () => {
 		setDateParam(dateSearch);
 		setStatusParam(statusSearch);
+		setCurrentPage(1);
 		if (dateSearch && statusSearch) {
-			history.push(`?date=${dateSearch}&status=${statusSearch}&page=${currentPage}&limit=10`);
+			history.push(`?date=${dateSearch}&status=${statusSearch}`);
 		} else if (dateSearch && !statusSearch) {
-			history.push(`?date=${dateSearch}&page=${currentPage}&limit=10`);
+			history.push(`?date=${dateSearch}`);
 		} else if (!dateSearch && statusSearch) {
-			history.push(`?status=${statusSearch}&page=${currentPage}&limit=10`)
+			history.push(`?status=${statusSearch}`)
 		} else {
 			history.push('?')
 		}

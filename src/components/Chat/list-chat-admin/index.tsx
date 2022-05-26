@@ -74,12 +74,13 @@ const ListChatAdminComponent = (props: any) => {
     const handleSearch = () => {
         setDateParam(dateSearch);
         setStatusParam(statusSearch);
+        setCurrentPage(1);
         if (dateSearch && statusSearch) {
-            history.push(`?date=${dateSearch}&status=${statusSearch}&page=${currentPage}&limit=10`);
+            history.push(`?date=${dateSearch}&status=${statusSearch}`);
         } else if (dateSearch && !statusSearch) {
-            history.push(`?date=${dateSearch}&page=${currentPage}&limit=10`);
+            history.push(`?date=${dateSearch}`);
         } else if (!dateSearch && statusSearch) {
-            history.push(`?status=${statusSearch}&page=${currentPage}&limit=10`)
+            history.push(`?status=${statusSearch}`)
         } else {
             history.push('?')
         }
@@ -163,6 +164,11 @@ const ListChatAdminComponent = (props: any) => {
         })
         socket.on('receive_end_chat_session', (data) => {
             console.log(data);
+            if (Number(data.expertId) === Number(id_expert)) {
+                queryClient.invalidateQueries('getListChatSessionsOfExpertAdmin');
+            }
+        })
+        socket.on('admin_receiver_expert_read_message', (data) => {
             if (Number(data.expertId) === Number(id_expert)) {
                 queryClient.invalidateQueries('getListChatSessionsOfExpertAdmin');
             }

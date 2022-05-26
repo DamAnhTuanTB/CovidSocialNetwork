@@ -17,7 +17,7 @@ import { convertTime } from '../../../commons/utils';
 import { CustomButton } from './styled';
 import BaseImagePreview from '../../Base/BaseImagePreview';
 
-const socket = io('http://localhost:4444');
+export const socket = io('http://localhost:4444');
 
 const DetailChatComponent = (props: any) => {
   const [currentMessage, setCurrentMessage] = useState("");

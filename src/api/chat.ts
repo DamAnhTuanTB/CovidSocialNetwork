@@ -1,4 +1,4 @@
-import { sendGetAdmin } from './admin/axios';
+import { sendGetAdmin } from "./admin/axios";
 import { sendGetExpert } from "./expert/axios";
 import { sendGet } from "./axios";
 
@@ -69,7 +69,7 @@ export const getDetailChatSessionAdmin = async (id: number) => {
 // e
 export const getListMessagesExpertAdmin = async (id: number) => {
   const res = await sendGetAdmin(
-    `http://localhost:8888/covid-network-social/chat/get-list-messages-expert/${id}`
+    `http://localhost:8888/covid-network-social/chat/admin/get-list-messages-expert/${id}`
   );
   return res?.data;
 };
