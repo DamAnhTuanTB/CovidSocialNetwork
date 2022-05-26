@@ -1,5 +1,5 @@
 import { EyeOutlined } from '@ant-design/icons';
-import { Button, DatePicker, Pagination, Table, Tag } from 'antd';
+import { Button, DatePicker, Pagination, Table, Tag, Select } from 'antd';
 import moment from 'moment';
 import io from 'socket.io-client';
 import { useEffect, useState } from 'react';
@@ -9,6 +9,7 @@ import { ListChatStyled } from './styled';
 import { useGetListChatSessionsOfExpert } from '../../../hooks/chat/useChat';
 import { useQueryClient } from 'react-query';
 import { convertTime } from '../../../commons/utils';
+import { useGetProfileExpert } from '../../../hooks/expert/useProfileExpert';
 
 const socket = io('http://localhost:4444');
 
@@ -16,25 +17,41 @@ const ListChatComponent = (props: any) => {
 	const {
 		isAdmin = false,
 	} = props;
+
 	const dateFormat = 'DD-MM-YYYY';
 	const params = new URL(window.location.href);
 	const paramsUrl = params.searchParams;
 
 	const history = useHistory();
-	const [dateSearch, setDateSearch] = useState<string>();
+	const [dateSearch, setDateSearch] = useState<any>();
+	const [statusSearch, setStatusSearch] = useState<any>();
 	const [currentPage, setCurrentPage] = useState(1);
+
+	const [dateParam, setDateParam] = useState<any>();
+	const [statusParam, setStatusParam] = useState<any>();
+
+	if (!isAdmin) {
+		// eslint-disable-next-line react-hooks/rules-of-hooks
+		const { profile } = useGetProfileExpert();
+		localStorage.setItem('id_expert', profile?.id);
+	}
 
 	const queryClient = useQueryClient();
 
-	const { data: listChatSessions } = useGetListChatSessionsOfExpert(currentPage);
+	const { data: listChatSessions } = useGetListChatSessionsOfExpert(Number(localStorage.getItem('id_expert')), dateParam, statusParam, currentPage);
 
 	useEffect(() => {
 		const date = paramsUrl.get('date');
+		const status = paramsUrl.get('status');
 		if (date) {
 			setDateSearch(date);
-		} else {
-			setDateSearch(undefined);
+			setDateParam(date);
 		}
+		if (status) {
+			setStatusSearch(status);
+			setStatusParam(status);
+		}
+		queryClient.invalidateQueries('getListChatSessionsOfExpert');
 	}, [params.href])
 
 	const handleChangeDate = (value: any) => {
@@ -47,12 +64,31 @@ const ListChatComponent = (props: any) => {
 
 	const handleChangePage = (page: any) => {
 		setCurrentPage(page);
-		history.push(`?page=${page}&limit=10`);
+		if (dateSearch && statusSearch) {
+			history.push(`?date=${dateSearch}&status=${statusSearch}&page=${page}&limit=10`);
+		} else if (dateSearch && !statusSearch) {
+			history.push(`?date=${dateSearch}&page=${page}&limit=10`);
+		} else if (!dateSearch && statusSearch) {
+			history.push(`?status=${statusSearch}&page=${page}&limit=10`)
+		} else {
+			history.push(`?page=${page}&limit=10`);
+		}
+		queryClient.invalidateQueries('getListChatSessionsOfExpert');
 	}
 
+	const onChangeSelect = (value: string) => {
+		setStatusSearch(value);
+	};
+
 	const handleSearch = () => {
-		if (dateSearch) {
-			history.push(`?date=${dateSearch}`);
+		setDateParam(dateSearch);
+		setStatusParam(statusSearch);
+		if (dateSearch && statusSearch) {
+			history.push(`?date=${dateSearch}&status=${statusSearch}&page=${currentPage}&limit=10`);
+		} else if (dateSearch && !statusSearch) {
+			history.push(`?date=${dateSearch}&page=${currentPage}&limit=10`);
+		} else if (!dateSearch && statusSearch) {
+			history.push(`?status=${statusSearch}&page=${currentPage}&limit=10`)
 		} else {
 			history.push('?')
 		}
@@ -75,6 +111,15 @@ const ListChatComponent = (props: any) => {
 			title: 'Bệnh nhân',
 			dataIndex: 'patientName',
 			key: 'patientName',
+			render: (data: any, record: any) => {
+				return (
+					<div>
+						<img src={record.patientAvatar} width="30px" height="30px"></img>
+						&nbsp;
+						{data}
+					</div>
+				)
+			}
 		},
 		{
 			title: 'Trạng thái',
@@ -113,7 +158,7 @@ const ListChatComponent = (props: any) => {
 					className="detail-action"
 					onClick={() => {
 						if (isAdmin) {
-							history.push(`/admin/expert-management/detail-chat/${data.key}`)
+							history.push(`/admin/expert-management/detail-chat/${record.id}`)
 						} else {
 							history.push(`/expert/chat/${record.id}`)
 						}
@@ -124,12 +169,15 @@ const ListChatComponent = (props: any) => {
 	];
 
 	useEffect(() => {
-		socket.on('expert_receiver_message', () => {
-			queryClient.invalidateQueries('getListChatSessionsOfExpert')
+		socket.on('expert_receiver_message', (data) => {
+			if (Number(data.expectId) === Number(localStorage.getItem('id_expert'))) {
+				queryClient.invalidateQueries('getListChatSessionsOfExpert');
+			}
 		})
-
-		socket.on('receive_end_chat_session', () => {
-			queryClient.invalidateQueries('getListChatSessionsOfExpert')
+		socket.on('receive_end_chat_session', (data) => {
+			if (Number(data.expectId) === Number(localStorage.getItem('id_expert'))) {
+				queryClient.invalidateQueries('getListChatSessionsOfExpert');
+			}
 		})
 	}, []);
 
@@ -140,8 +188,21 @@ const ListChatComponent = (props: any) => {
 					{LIST_CHAT_CONSTANTS.title}
 				</div>
 				<div className="search-bar">
-					<DatePicker onChange={handleChangeDate} value={dateSearch ? moment(dateSearch, dateFormat) : undefined} format={dateFormat} />
 					<Button className="button-search" type="primary" onClick={handleSearch}>Search</Button>
+					<Select
+						value={statusSearch}
+						style={{ width: 150 }}
+						placeholder="Select a status"
+						optionFilterProp="children"
+						onChange={onChangeSelect}
+					>
+						<Select.Option value="1">Đang hoạt động</Select.Option>
+						<Select.Option value="2">Đã kết thúc</Select.Option>
+						<Select.Option value="3">Tất cả</Select.Option>
+					</Select>
+					&nbsp;
+					&nbsp;
+					<DatePicker style={{ width: 150 }} onChange={handleChangeDate} value={dateSearch ? moment(dateSearch, dateFormat) : undefined} format={dateFormat} />
 				</div>
 				<Table columns={columns} dataSource={listChatSessions?.data} pagination={false} />
 				<div className="pagination">

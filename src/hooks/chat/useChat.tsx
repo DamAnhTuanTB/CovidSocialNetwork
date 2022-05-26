@@ -22,8 +22,8 @@ export function useGetListMessagesExpert(id: number, isEnable: boolean) {
     return { data, isLoading }
 }
 // e
-export function useGetListChatSessionsOfExpert(page?: number, limit?: number) {
-    const { data, isLoading } = useQuery<any>(['getListChatSessionsOfExpert', [page, limit]], () => getListChatSessionsOfExpert(page, limit));
+export function useGetListChatSessionsOfExpert(id: number, date?: string, status?: number, page?: number, limit?: number) {
+    const { data, isLoading } = useQuery<any>(['getListChatSessionsOfExpert', [id, date, status, page, limit]], () => getListChatSessionsOfExpert(id, date, status, page, limit));
     return { data, isLoading }
 }
 

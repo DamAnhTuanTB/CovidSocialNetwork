@@ -33,9 +33,15 @@ export const getListMessagesExpert = async (id: number) => {
   return res?.data;
 };
 // e
-export const getListChatSessionsOfExpert = async (page = 1, limit = 10) => {
+export const getListChatSessionsOfExpert = async (
+  id: number,
+  date?: string,
+  status?: number,
+  page = 1,
+  limit = 10
+) => {
   const res = await sendGetExpert(
-    `http://localhost:8888/covid-network-social/chat/get-list-chat-sessions-of-expert?page=${page}&limit=${limit}`
+    `http://localhost:8888/covid-network-social/chat/get-list-chat-sessions-of-expert/${id}?date=${date}&status=${status}&page=${page}&limit=${limit}`
   );
   return res?.data;
 };

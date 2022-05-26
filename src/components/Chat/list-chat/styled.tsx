@@ -12,9 +12,11 @@ const ListChatStyled = styled.div`
             margin-bottom: 20px;
         }
         .search-bar {
+            display: flex;
+            flex-direction: row-reverse;
             margin-bottom: 20px;
             .button-search {
-                margin-left: 10px;
+                margin-left: 12px;
             }
         }
         .detail-action {
