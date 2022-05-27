@@ -88,6 +88,14 @@ const DetailChatComponent = (props: any) => {
         queryClient.invalidateQueries('getListMessagesPatient');
       }
     })
+
+    const handleBeforeUnload = (event: any) => {
+      event.preventDefault();
+      event.returnValue = "";
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload)
+
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
   }, []);
 
   useEffect(() => {
