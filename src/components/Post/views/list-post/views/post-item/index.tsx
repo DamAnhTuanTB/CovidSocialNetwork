@@ -3,7 +3,7 @@
 import { HeartTwoTone, LikeTwoTone, MessageTwoTone, MoreOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Menu, Tag } from 'antd';
 import { cloneDeep } from 'lodash';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { useHistory } from 'react-router-dom';
 import { handleLikePostAdmin } from '../../../../../../api/admin/post';
@@ -38,6 +38,9 @@ const PostItem = (props: any) => {
   } = props;
   const history = useHistory();
   const refTextArea = useRef(null);
+  const limitCommentPerPage = 10;
+  const [pageComment, setPageComment] = useState(1);
+  const [listCommentCurrent, setListCommentCurrent] = useState([]);
   const [idPostApproveOrCancel, setIdPostApproveOrCancel] = useState(null);
   const [upcomingStatusPost, setUpcomingStatusPost] = useState(null);
 
@@ -208,6 +211,12 @@ const PostItem = (props: any) => {
     history.push(`${isAdmin ? "/admin/post-management" : "/post"}/${detailPost.id}`);
   }
 
+  useEffect(() => {
+    if (isDetail) {
+      setListCommentCurrent(listComment?.slice(0, limitCommentPerPage * pageComment));
+    }
+  }, [listComment, pageComment])
+
   return (
     <PostItemStyle className="post-item" isDetail={isDetail}>
       <div className="header-post">
@@ -219,7 +228,7 @@ const PostItem = (props: any) => {
           <div className="create-at" onClick={handleClickToDetail}>
             {
               detailPost?.isAdmin ? (
-                <Tag className="description-admin" color={"#3199D5"}>{POST_ITEM_CONSTANTS.descriptionAdmin}</Tag>
+                <Tag className="description-admin" color={"#f1847d"}>{POST_ITEM_CONSTANTS.descriptionAdmin}</Tag>
               ) : (null)
             }
             {handleConvertDateStringToDateTime(detailPost?.create_at)}
@@ -350,7 +359,7 @@ const PostItem = (props: any) => {
             }
             <div>
               {
-                listComment?.length > 0 ? listComment?.map((item) => {
+                listCommentCurrent?.length > 0 ? listCommentCurrent?.map((item) => {
                   return (
                     <CommentItem
                       key={item.id}
@@ -362,6 +371,19 @@ const PostItem = (props: any) => {
                   )
                 }) : (
                   <div className="no-comment">{POST_ITEM_CONSTANTS?.noComment}</div>
+                )
+              }
+              {
+                listCommentCurrent?.length < listComment?.length && (
+                  <div className="load-more-comment" onClick={() => setPageComment(pageComment + 1)}>
+                    Xem thêm
+                    <span>
+                      {
+                        ` ${listComment?.slice(0, (pageComment + 1) * limitCommentPerPage)?.length - listComment?.slice(0, pageComment * limitCommentPerPage)?.length} `
+                      }
+                    </span> 
+                    bình luận
+                  </div>
                 )
               }
             </div>

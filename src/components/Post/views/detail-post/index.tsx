@@ -15,11 +15,11 @@ const DetailPost = (props: any) => {
   const param: { id_post: any } = useParams();
   const history = useHistory();
 
-  const { dataDetailPost, refetchDetailPost, isLoadingDetailPost, isFetchingDetailPost } = useGetDetailPost(param?.id_post, !isAdmin);
-  const { dataCommentPost, refetchCommentPost, isLoadingCommentPost, isFetchingCommentPost } = useGetListCommentPost(param?.id_post, !isAdmin);
+  const { dataDetailPost } = useGetDetailPost(param?.id_post, !isAdmin);
+  const { dataCommentPost } = useGetListCommentPost(param?.id_post, !isAdmin);
 
-  const { dataDetailPostAdmin, refetchDetailPostAdmin, isLoadingDetailPostAdmin, isFetchingDetailPostAdmin } = useGetDetailPostAdmin(param?.id_post, isAdmin);
-  const { dataCommentPostAdmin, refetchCommentPostAdmin, isLoadingCommentPostAdmin, isFetchingCommentPostAdmin } = useGetListCommentPostAdmin(param?.id_post, isAdmin);
+  const { dataDetailPostAdmin } = useGetDetailPostAdmin(param?.id_post, isAdmin);
+  const { dataCommentPostAdmin } = useGetListCommentPostAdmin(param?.id_post, isAdmin);
 
 
   const [detailPost, setDetailPost] = useState<any>({});
@@ -48,6 +48,10 @@ const DetailPost = (props: any) => {
   }, [])
 
   useEffect(() => {
+    if (dataDetailPost?.statusCode === 400 && dataDetailPost?.errorCode === 444) {
+      history.push("/post-pending");
+      return;
+    }
     if (dataDetailPost?.statusCode === 400) {
       history.push("/not-found");
       return;
@@ -59,7 +63,7 @@ const DetailPost = (props: any) => {
       setDetailPost(dataDetailPost?.data[0]);
       setListComment(dataCommentPost?.data);
     }
-    
+
   }, [param?.id_post, dataDetailPost, dataCommentPost, dataDetailPostAdmin, dataCommentPostAdmin]);
 
   return (

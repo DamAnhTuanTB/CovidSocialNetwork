@@ -167,6 +167,10 @@ const ModalCreatePostStyled = styled(Modal)`
             }
         }
     }
+    .limit-image {
+        margin-left: 10px;
+        font-style: italic;
+    }
     .list-preview-image {
         display: flex;
     }

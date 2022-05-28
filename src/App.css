@@ -64,6 +64,15 @@
   background-color: #ededed;
 }
 
+.ant-btn-primary, .ant-btn-primary:hover, .ant-btn-primary:focus {
+  background-color: #f1847d;
+  border-color: #f1847d;
+}
+
+.ant-select-item-option-selected {
+  background-color: rgba(243,194,191,0.2) !important;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

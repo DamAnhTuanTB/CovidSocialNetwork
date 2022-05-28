@@ -114,7 +114,10 @@ export default function PageHeader(props: any) {
         )
       }
       <div className="header-container">
-        <div className="logo" onClick={() => history.push('/post')}>
+        <div
+          className="logo"
+          // onClick={() => history.push('/post')}
+        >
           <img src="/login/logo_2.png" alt="" />
         </div>
         <div className="list-button">
@@ -127,7 +130,7 @@ export default function PageHeader(props: any) {
             !isExpert && (
               <>
                 {
-                  location.pathname.startsWith("/post") ? (
+                  location.pathname === "/post" ? (
                     <HomeFilled className="icon-header home-active" onClick={() => {
                       history.push("/post");
                     }} />

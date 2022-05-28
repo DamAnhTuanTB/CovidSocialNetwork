@@ -17,21 +17,21 @@ const Filter = (props: any) => {
           onClick={(e) => { handleClickTab("new"); }}
           className={`item-filter ${activeTab === "new" && "active"}`}
         >
-          <StarTwoTone twoToneColor={activeTab !== "new" ? "#a3a3a3" : "#3199d5"} /><span>new</span>
+          <StarTwoTone twoToneColor={activeTab !== "new" ? "#a3a3a3" : "#f1847d"} /><span>new</span>
         </div>
         <div
           aria-hidden
           onClick={(e) => { handleClickTab("hot"); }}
           className={`item-filter ${activeTab === "hot" && "active"}`}
         >
-          <FireTwoTone twoToneColor={activeTab !== "hot" ? "#a3a3a3" : "#3199d5"} /><span>hot</span>
+          <FireTwoTone twoToneColor={activeTab !== "hot" ? "#a3a3a3" : "#f1847d"} /><span>hot</span>
         </div>
         <div
           aria-hidden
           onClick={(e) => { handleClickTab("top"); }}
           className={`item-filter ${activeTab === "top" && "active"}`}
         >
-          <FlagTwoTone twoToneColor={activeTab !== "top" ? "#a3a3a3" : "#3199d5"} /><span>top</span>
+          <FlagTwoTone twoToneColor={activeTab !== "top" ? "#a3a3a3" : "#f1847d"} /><span>top</span>
         </div>
       </div>
     </FilterStyle>

@@ -19,6 +19,9 @@ const SideBarAdminStyled = styled.div`
       margin: 0;
     }
   }
+  .ant-menu-item-selected {
+    background-color: #f1847d !important;
+  }
 `;
 
 export { SideBarAdminStyled };
