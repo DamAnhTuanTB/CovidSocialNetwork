@@ -1,7 +1,7 @@
 
 const PAGE_HEADER_CONSTANTS = {
   notificationTitle: "Thông báo",
-  createPost: "Viết bài",
+  createPost: "Tạo bài viết",
   noNotification: "Bạn chưa có thông báo nào"
 };
 

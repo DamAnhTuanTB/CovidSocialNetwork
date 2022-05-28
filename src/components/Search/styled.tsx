@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 const SearchComponentStyled = styled.div`
+    font-family: "Alata";
   display: flex;
   .search-component {
     margin: auto;

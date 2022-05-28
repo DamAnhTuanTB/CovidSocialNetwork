@@ -6,6 +6,7 @@ interface Props {
 }
 
 const PageHeaderStyled = styled.div<Props>`
+    font-family: "Alata";
     background-color: white;
     border-bottom: 1px solid #d0d0d0;
     width: calc(100vw);
@@ -21,8 +22,9 @@ const PageHeaderStyled = styled.div<Props>`
         justify-content: space-between;
         height: 60px;
         .logo {
-            height: 100%;
+            height: 90%;
             img {
+                margin-top: 2px;
                 margin-left: -17px;
                 height: 100%;
                 width: auto;
@@ -95,7 +97,7 @@ const PageHeaderStyled = styled.div<Props>`
             .notification {
                 position: relative;
                 svg {
-                    animation: ${ (props) => props.totalNotify ? "rotation 1.5s infinite linear" : "none"};
+                    animation: ${(props) => props.totalNotify ? "rotation 1.5s infinite linear" : "none"};
                 }
                 .unread-notification {
                     position: absolute;
