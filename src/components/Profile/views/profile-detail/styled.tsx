@@ -38,12 +38,12 @@ const ProfileDetailStyled = styled.div`
             border-radius: 15px;
             font-size: 16px;
             margin-top: 15px;
-            background-color: #F0FAFF;
-            color: #2FB5FA;
+            background-color: rgba(243, 194, 191, 0.2);
+            color: #f1847d;
             padding: 5px 10px;
             font-weight: 500;
             :hover {
-                background-color: #e9eef0;
+                background-color: rgba(241, 132, 125, 0.2);
             }
         }
         .button-change-password {
@@ -62,6 +62,17 @@ const ProfileDetailStyled = styled.div`
             padding-right: 10px;
             margin: 0;
             margin-right: 10px;
+            :hover {
+                color: #f1847d;
+            }
+        }
+        .ant-tabs-tab-active {
+            .ant-tabs-tab-btn {
+                color: #f1847d;
+            }
+        }
+        .ant-tabs-ink-bar {
+            background: #f1847d;
         }
         .ant-tabs-ink-bar-animated {
             transition: unset !important;

@@ -9,6 +9,7 @@ const MODAL_CREATE_POST_CONSTANTS = {
     title: "Tiêu đề bài viết",
     content: "Nội dung bài viết",
     image: "Thêm ảnh vào bài viết",
+    limitImage: "(tối đa 3 ảnh)"
   },
   successMessage: {
     create: "Tạo bài viết thành công. Vui lòng chờ admin phê duyệt",

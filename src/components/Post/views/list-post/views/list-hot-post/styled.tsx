@@ -33,6 +33,9 @@ const ListHotPostStyled = styled.div`
                 .name-author {
                     font-size: 14px;
                     margin-right: 5px;
+                    a {
+                        color: #f1847d;
+                    }
                 }
                 .create-at {
                     margin-left: 5px;

@@ -10,7 +10,7 @@ const FilterStyle = styled.div`
         font-size: 16px;
         padding: 2px 0;
         padding-left: 15px;
-        border-left: 5px solid #3199d5;
+        border-left: 5px solid #f1847d;
     }
     .list-filter {
         display: flex;
@@ -31,8 +31,8 @@ const FilterStyle = styled.div`
             }
         }
         .active {
-            color: #3199d5;
-            border-bottom: 3px solid #3199d5;
+            color: #f1847d;
+            border-bottom: 3px solid #f1847d;
         }
     }
 `;

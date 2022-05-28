@@ -201,7 +201,12 @@ const ModalCreatePost = (props: any) => {
           onChange={(e) => setContent(e.target.value)}
         />
         <div className="add-image">
-          <div>{MODAL_CREATE_POST_CONSTANTS.placeholder.image}</div>
+          <div>
+            {MODAL_CREATE_POST_CONSTANTS.placeholder.image}
+            <span className="limit-image">
+              {MODAL_CREATE_POST_CONSTANTS.placeholder.limitImage}
+            </span>
+          </div>
           <div className="file-input">
             <input ref={refInputFile} disabled={listImage.length >= 3 || !!progressUpload} onChange={handleChangeImage} type="file" />
             <CameraOutlined className="camera-icon" />

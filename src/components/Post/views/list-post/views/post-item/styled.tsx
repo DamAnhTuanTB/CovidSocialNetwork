@@ -322,6 +322,11 @@ const PostItemStyle = styled.div<Props>`
             font-weight: 400;
         }
     }
+    .load-more-comment {
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+    }
     .list-approve-button-admin {
         display: flex;
         padding: 5px 10px 5px;

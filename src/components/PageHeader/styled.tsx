@@ -61,11 +61,13 @@ const PageHeaderStyled = styled.div<Props>`
             }
             .home-active {
                 svg {
-                    fill: #1890ff;
+                    fill: #f1847d;
                 }
             }
             .button-create-post {
                 margin-right: 10px;
+                background-color: #f1847d;
+                border-color: #f1847d;
             }
             .icon-logout {
                 margin-right: 0;
