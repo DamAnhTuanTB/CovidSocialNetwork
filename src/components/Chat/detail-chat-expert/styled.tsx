@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 const DetailChatComponentStyled = styled.div`
+    font-family: "Alata";
     display: flex;
     .chat-container {
         width: 1110px;

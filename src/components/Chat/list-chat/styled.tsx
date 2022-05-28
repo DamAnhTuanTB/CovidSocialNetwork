@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 const ListChatStyled = styled.div`
+    font-family: "Alata";
     display: flex;
     justify-content: center;
     height: calc(100vh - 80px);

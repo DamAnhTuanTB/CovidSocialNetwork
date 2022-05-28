@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { Modal } from 'antd';
 
 const ModalCreatePostStyled = styled(Modal)`
+    font-family: "Alata";
     .body-modal-create {
         max-height: 45vh;
         overflow: auto;

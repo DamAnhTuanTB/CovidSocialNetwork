@@ -1,6 +1,7 @@
 import styled from "styled-components";
 
 const ProfileDetailStyled = styled.div`
+    font-family: "Alata";
     width: 1110px;
     margin: auto;
     display: flex;

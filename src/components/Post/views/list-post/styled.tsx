@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const ListPostComponentStyled = styled.div`
-    font-family: Montserrat,Raleway,sans-serif ;
+    font-family: "Alata";
     display: flex;
     flex-direction: column;
     .list-post-container {

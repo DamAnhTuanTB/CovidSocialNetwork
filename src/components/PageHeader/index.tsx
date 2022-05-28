@@ -68,7 +68,7 @@ export default function PageHeader(props: any) {
         } else {
           history.push("/logout");
         }
-      }, 
+      },
       onError: (err) => {
         console.log(err);
       }
@@ -115,7 +115,7 @@ export default function PageHeader(props: any) {
       }
       <div className="header-container">
         <div className="logo" onClick={() => history.push('/post')}>
-          <img src="/login/facebookLogo.svg" alt="" />
+          <img src="/login/logo_2.png" alt="" />
         </div>
         <div className="list-button">
           {

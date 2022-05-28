@@ -12,7 +12,7 @@ const HeaderAdmin = (props: any) => {
   return (
     <HeaderAdminStyled>
       <div className="logo">
-        <img src="/login/facebookLogo.svg" alt="" />
+        <img src="/login/logo_2.png" alt="" />
       </div>
       <div className="logout">
         <div>Admin</div>

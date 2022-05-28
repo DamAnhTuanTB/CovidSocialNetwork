@@ -9,6 +9,7 @@ import toastCustom from '../../../helpers/toastCustom';
 import LOGIN_PATIENT_CONSTANTS from './constant';
 import { LoginStyled } from './styled';
 
+
 const LoginComponent = (props: any) => {
   const {
     isAdmin = false,
@@ -61,7 +62,7 @@ const LoginComponent = (props: any) => {
         {
           !isAdmin && !isExpert && (
             <div className="logo">
-              <img src="/login/facebookLogo.svg" className="logo-image" alt="" />
+              <img src="/logo_main.png" className="logo-image" alt="" />
               <div className="logo-description">{LOGIN_PATIENT_CONSTANTS.slogan}</div>
             </div>
           )
@@ -69,12 +70,12 @@ const LoginComponent = (props: any) => {
         <div className="form-login">
           {
             isAdmin && (
-              <div className="title-admin">Đăng nhập ADMIN</div>
+              <div className="title-admin">ADMIN</div>
             )
           }
           {
             isExpert && (
-              <div className="title-admin">Đăng nhập chuyên gia</div>
+              <div className="title-admin">CHUYÊN GIA</div>
             )
           }
           <Form

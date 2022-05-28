@@ -44,11 +44,10 @@ const RegisterComponent = () => {
     <RegisterStyled>
       <div className="register-container">
         <div className="logo">
-          <img src="/login/facebookLogo.svg" className="logo-image" alt="" />
+          <img src="/logo_main.png" className="logo-image" alt="" />
           <div className="logo-description">{REGISTER_CONSTANTS.slogan}</div>
         </div>
         <div className="form-register">
-          <div className="title">{REGISTER_CONSTANTS.title}</div>
           <Form
             name="normal_register"
             className="register-form"

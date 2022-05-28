@@ -7,7 +7,7 @@ const HeaderAdminStyled = styled.div`
   height: 60px;
   width: 100%;
   z-index: 100;
-  background-color: midnightblue;
+  background-color: #9fd89d;
   display: flex;
   justify-content: space-between;
   align-items: center;

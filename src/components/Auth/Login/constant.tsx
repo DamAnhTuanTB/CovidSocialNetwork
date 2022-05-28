@@ -1,5 +1,5 @@
 const LOGIN_PATIENT_CONSTANTS = {
-  slogan: "Facebook helps you connect and share with the people in your life.",
+  slogan: "Mạng xã hội dành cho Người bệnh Covid",
   validateMessage: {
     email: "Email không đúng định dạng",
     passwordMinLength: "Mật khẩu tối thiểu 6 kí tự",
