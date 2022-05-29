@@ -106,7 +106,7 @@ const ListChatAdminComponent = (props: any) => {
             render: (data: any, record: any) => {
                 return (
                     <div>
-                        <img src={record.patientAvatar} width="30px" height="30px"></img>
+                        <img alt='' src={record.patientAvatar || "/defaultAvatar.png"} width="30px" height="30px" style={{ borderRadius: "50%" }}></img>
                         &nbsp;
                         {data}
                     </div>
