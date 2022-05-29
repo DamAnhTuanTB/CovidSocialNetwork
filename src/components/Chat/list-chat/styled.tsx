@@ -4,7 +4,7 @@ const ListChatStyled = styled.div`
     font-family: "Alata";
     display: flex;
     justify-content: center;
-    height: calc(100vh - 80px);
+    /* height: calc(100vh - 80px); */
     .list-chat {
         width: 900px;
         .title {
@@ -32,6 +32,7 @@ const ListChatStyled = styled.div`
     }
     .pagination {
         margin-top: 20px;
+        margin-bottom: 20px;
     }
 `;
 
