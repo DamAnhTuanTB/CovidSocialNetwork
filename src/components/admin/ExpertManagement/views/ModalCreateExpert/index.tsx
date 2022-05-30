@@ -105,7 +105,7 @@ const ModalCreateExpert = (props: any) => {
           {/* <BaseImagePreview className="avatar" isLoading cancelPreview src={avatarPreview ? avatarPreview : "defaultAvatar.png"} alt="" /> */}
           <img className="avatar-edit" src={avatarPreview ? avatarPreview : "/defaultAvatar.png"} alt=""></img>
           <span className='button-file'>
-            <input onChange={handleChangeAvatar} title={''} type='file' className="input-file" />
+            <input onChange={handleChangeAvatar} title={''} type='file' accept="image/*" className="input-file" />
             <CameraOutlined className="camera-icon" />
           </span>
           {

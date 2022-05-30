@@ -1,5 +1,5 @@
 import { DeleteOutlined, EyeOutlined, FileImageOutlined } from '@ant-design/icons';
-import { Pagination, Space, Table } from 'antd';
+import { Button, Input, Pagination, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { handleConvertDateStringToDate } from '../../../helpers/convertDateStringToDate';
@@ -15,6 +15,7 @@ const ListGuestComponent = (props: any) => {
 
   const history = useHistory();
   const [currentPage, setCurrentPage] = useState("1");
+  const [freeText, setFreeText] = useState("");
   const params = new URL(window.location.href);
   const paramsUrl = params.searchParams;
   const limitPerPage = 7;
@@ -28,6 +29,7 @@ const ListGuestComponent = (props: any) => {
   const { dataGuest, isLoadingGuest } = useGetListGuest({
     limit: limitPerPage,
     page: currentPage,
+    email: paramsUrl.get("search") || ""
   })
 
   const columns = [
@@ -93,6 +95,7 @@ const ListGuestComponent = (props: any) => {
       render: (data: any) => (
         <Space>
           <FileImageOutlined className="image-icon" onClick={() => setIdGuest(data.id)} />
+          <img className="post-icon" src="/post.png" alt="" onClick={() => history.push(`/admin/post-management/find-by-user/${data.id}`)} />
           <EyeOutlined className="seemore-icon" onClick={() => setPreviewGuest(data)} />
           <DeleteOutlined className="delete-icon" onClick={() => setGuestDelete(data)} />
         </Space>
@@ -101,11 +104,16 @@ const ListGuestComponent = (props: any) => {
   ];
 
   const handleChangePage = (page: any) => {
-    history.push(`?page=${page}`);
+    if (freeText) {
+      history.push(`?page=${page}&search=${freeText}`);
+    } else {
+      history.push(`?page=${page}`);
+    }
   }
 
   useEffect(() => {
     setCurrentPage(paramsUrl.get("page") || "1");
+    setFreeText(paramsUrl.get("search") || "");
   }, [params.href])
 
   useEffect(() => {
@@ -117,8 +125,26 @@ const ListGuestComponent = (props: any) => {
 
   return (
     <ListGuestStyled>
-      <div className="title">
-        {TITLE}
+      <div className="title-container">
+        <div className="title">
+          {TITLE}
+        </div>
+        <div className="list-button">
+          <Input value={freeText} onChange={(e) => setFreeText(e.target.value)} />
+          <Button
+            type="primary"
+            onClick={() => {
+              if (freeText) {
+                history.push(`/admin/guest-management?search=${freeText}`)
+              } else {
+                history.push(`/admin/guest-management`)
+              }
+            }
+            }
+          >
+            Tìm kiếm
+          </Button>
+        </div>
       </div>
       <Table
         columns={columns}
@@ -126,7 +152,7 @@ const ListGuestComponent = (props: any) => {
         pagination={false}
       />
       {
-        listGuest?.length > limitPerPage && (
+        totalGuest > limitPerPage && (
           <div className="pagination">
             <Pagination
               current={+currentPage}

@@ -12,8 +12,10 @@ const ModalProfileExpert = (props: any) => {
     isExpert = false,
   } = props;
 
-  const handleCancel = () => {
-    formProfile.resetFields();
+  const handleCancel = (isSubmitEdit: any) => {
+    if (isSubmitEdit !== true) {
+      formProfile.resetFields();
+    }
     setPreviewExpert(null);
     setIsEditProfile(false);
     setActiveTab(0);

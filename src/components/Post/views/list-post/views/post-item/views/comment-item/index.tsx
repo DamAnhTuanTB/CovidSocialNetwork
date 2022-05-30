@@ -1,13 +1,15 @@
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, MoreOutlined } from '@ant-design/icons';
+import { Dropdown, Menu } from 'antd';
 import { cloneDeep } from 'lodash';
 import React, { useState } from 'react';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import { handleLikeCommentAdmin } from '../../../../../../../../api/admin/post';
 import { handleLikeComment } from '../../../../../../../../api/post';
 import handleConvertDateStringToDateTimeComment from '../../../../../../../../helpers/convertDateStringtoDateComment';
 import BaseImagePreview from '../../../../../../../Base/BaseImagePreview';
 import POST_ITEM_CONSTANTS from '../../constants';
 import ModalDeleteComment from '../modal-delete-comment';
+import ModalEditComment from '../modal-edit-comment';
 import { CommentItemStyled } from './styled';
 
 const CommentItem = (props: any) => {
@@ -16,11 +18,30 @@ const CommentItem = (props: any) => {
     listComment = [],
     setListComment = () => { },
     isAdmin = false,
+    idPost,
   } = props;
 
   const [idCommentDelete, setIdCommentDelete] = useState(null);
+  const [commentEditOwner, setCommentEditOwner] = useState(null);
+  const queryClient = useQueryClient();
+  const myProfile: any = queryClient.getQueryData("my-profile");
 
   const mutationLikeComment = useMutation(isAdmin ? handleLikeCommentAdmin : handleLikeComment);
+
+  const onclickMenu = ({ key }: any) => {
+    if (key === "edit-comment") {
+      setCommentEditOwner(detailComment);
+    } else {
+      setIdCommentDelete(detailComment.id);
+    }
+  }
+
+  const menu = (
+    <Menu onClick={onclickMenu}>
+      <Menu.Item key="edit-comment">Chỉnh sửa</Menu.Item>
+      <Menu.Item key="delete-comment">Xóa</Menu.Item>
+    </Menu>
+  );
 
   const handleClickLike = () => {
     if (isAdmin) return;
@@ -63,6 +84,8 @@ const CommentItem = (props: any) => {
 
   return (
     <CommentItemStyled className="comment">
+      <ModalDeleteComment isAdmin={isAdmin} idCommentDelete={idCommentDelete} setIdCommentDelete={setIdCommentDelete} />
+      <ModalEditComment isAdmin={isAdmin} idPost={idPost} commentEditOwner={commentEditOwner} setCommentEditOwner={setCommentEditOwner} />
       <div className="item-comment">
         <div className="avatar">
           <img src={detailComment?.commentator_avatar || "/defaultAvatar.png"} alt="" />
@@ -82,8 +105,16 @@ const CommentItem = (props: any) => {
               <div className="delete-icon" onClick={handleDeleteComment}>
                 <DeleteOutlined />
               </div>
-              <ModalDeleteComment idCommentDelete={idCommentDelete} setIdCommentDelete={setIdCommentDelete}/>
             </>
+          )
+        }
+        {
+          !isAdmin && detailComment?.commentator_id === myProfile?.id && (
+            <Dropdown overlay={menu} placement="bottomLeft">
+              <div className="more-option delete-icon">
+                <MoreOutlined />
+              </div>
+            </Dropdown>
           )
         }
       </div>

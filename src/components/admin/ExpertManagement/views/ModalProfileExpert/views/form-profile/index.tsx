@@ -4,6 +4,7 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { updateExpert } from '../../../../../../../api/admin/expert-management';
+import { updateProfileExpert } from '../../../../../../../api/expert/profile';
 import { getUrlImage } from '../../../../../../../api/uploadimage';
 import toastCustom from '../../../../../../../helpers/toastCustom';
 import BaseImagePreview from '../../../../../../Base/BaseImagePreview';
@@ -27,7 +28,7 @@ const FormProfile = (props: any) => {
   const [avatarPreview, setAvatarPreview] = useState(previewExpert?.avatar || null);
 
   const queryClient = useQueryClient();
-  const mutation = useMutation(updateExpert);
+  const mutation = useMutation(isExpert ? updateProfileExpert : updateExpert);
 
   const handleCancelEdit = () => {
     form.setFieldsValue(initialValues);
@@ -53,20 +54,30 @@ const FormProfile = (props: any) => {
     if (prog) {
       return;
     }
-    const bodyUpdateExpert = { ...values };
+    let bodyUpdateExpert = { ...values };
     bodyUpdateExpert.date_of_birth = bodyUpdateExpert.date_of_birth.format("YYYY-MM-DD");
+    bodyUpdateExpert.idExpert = previewExpert?.id
     if (avatar) {
       bodyUpdateExpert.avatar = avatar;
     }
 
-    mutation.mutate({
-      ...bodyUpdateExpert,
-      idExpert: previewExpert?.id
-    }, {
+    if (isExpert) {
+      bodyUpdateExpert = {
+        avatar: avatar,
+      }
+    }
+
+    mutation.mutate(bodyUpdateExpert, {
       onSuccess: (data) => {
+        console.log(data);
+        
         if (data?.statusCode === 200) {
-          queryClient.invalidateQueries("admin-all-experts");
-          handleCancel();
+          if (isExpert) {
+            queryClient.invalidateQueries("get-profile-expert");
+          } else {
+            queryClient.invalidateQueries("admin-all-experts");
+          }
+          handleCancel(true);
           toastCustom({
             mess: "Thay đổi thông tin thành công",
             type: "success",
@@ -86,6 +97,7 @@ const FormProfile = (props: any) => {
 
     setAvatar(previewExpert?.avatar);
     setAvatarPreview(previewExpert?.avatar);
+    
   }, [previewExpert])
 
   useEffect(() => {
@@ -93,7 +105,7 @@ const FormProfile = (props: any) => {
   }, [initialValues])
 
   return (
-    <FormProfileStyled isEditProfile={isEditProfile}>
+    <FormProfileStyled isHideRequired={isEditProfile || isExpert}>
       <div className='avatar'>
         {
           isEditProfile ? (
@@ -101,7 +113,7 @@ const FormProfile = (props: any) => {
               {/* <BaseImagePreview className="avatar" isLoading cancelPreview src={avatarPreview ? avatarPreview : "defaultAvatar.png"} alt="" /> */}
               <img className="avatar-edit" src={avatarPreview ? avatarPreview : "/defaultAvatar.png"} alt=""></img>
               <span className='button-file'>
-                <input onChange={handleChangeAvatar} title={''} type='file' className="input-file" />
+                <input onChange={handleChangeAvatar} title={''} type='file' accept="image/*" className="input-file" />
                 <CameraOutlined className="camera-icon" />
               </span>
               {
@@ -144,7 +156,7 @@ const FormProfile = (props: any) => {
               }
             ]}
           >
-            <Input disabled={!isEditProfile} placeholder={MODAL_PROFILE_EXPERT_CONSTANTS.modalEditConstant.placeholder.firstName} />
+            <Input disabled={!isEditProfile || isExpert} placeholder={MODAL_PROFILE_EXPERT_CONSTANTS.modalEditConstant.placeholder.firstName} />
           </Form.Item>
           <Form.Item
             name="last_name"
@@ -158,7 +170,7 @@ const FormProfile = (props: any) => {
             ]}
           >
             <Input
-              disabled={!isEditProfile}
+              disabled={!isEditProfile || isExpert}
               placeholder={MODAL_PROFILE_EXPERT_CONSTANTS.modalEditConstant.placeholder.lastName}
             />
           </Form.Item>
@@ -176,7 +188,7 @@ const FormProfile = (props: any) => {
             ]}
           >
             <Input
-              disabled={!isEditProfile}
+              disabled={!isEditProfile || isExpert}
               placeholder={MODAL_PROFILE_EXPERT_CONSTANTS.modalEditConstant.placeholder.nickName}
             />
           </Form.Item>
@@ -190,7 +202,7 @@ const FormProfile = (props: any) => {
               }
             ]}
           >
-            <DatePicker disabled={!isEditProfile} placeholder={MODAL_PROFILE_EXPERT_CONSTANTS.modalEditConstant.placeholder.birthday} format="DD-MM-YYYY" />
+            <DatePicker disabled={!isEditProfile || isExpert} placeholder={MODAL_PROFILE_EXPERT_CONSTANTS.modalEditConstant.placeholder.birthday} format="DD-MM-YYYY" />
           </Form.Item>
 
         </Space>
@@ -209,7 +221,7 @@ const FormProfile = (props: any) => {
             }
           ]}
         >
-          <Input disabled={!isEditProfile} placeholder={MODAL_PROFILE_EXPERT_CONSTANTS.modalEditConstant.placeholder.email} />
+          <Input disabled={!isEditProfile || isExpert} placeholder={MODAL_PROFILE_EXPERT_CONSTANTS.modalEditConstant.placeholder.email} />
         </Form.Item>
         <Form.Item
           name="telephone"
@@ -227,28 +239,24 @@ const FormProfile = (props: any) => {
           ]}
         >
           <Input
-            disabled={!isEditProfile}
+            disabled={!isEditProfile || isExpert}
             placeholder={MODAL_PROFILE_EXPERT_CONSTANTS.modalEditConstant.placeholder.phone}
           />
         </Form.Item>
       </Form>
 
-      {
-        !isExpert && (
-          <div className="list-button-profile">
-            {
-              !isEditProfile ? (
-                <Button type='primary' onClick={() => setIsEditProfile(true)}>{MODAL_PROFILE_EXPERT_CONSTANTS.modalEditConstant.edit}</Button>
-              ) : (
-                <Space>
-                  <Button type='default' onClick={handleCancelEdit}>{MODAL_PROFILE_EXPERT_CONSTANTS.modalEditConstant.cancel}</Button>
-                  <Button type='primary' onClick={form.submit}>{MODAL_PROFILE_EXPERT_CONSTANTS.modalEditConstant.submit}</Button>
-                </Space>
-              )
-            }
-          </div>
-        )
-      }
+      <div className="list-button-profile">
+        {
+          !isEditProfile ? (
+            <Button type='primary' onClick={() => setIsEditProfile(true)}>{MODAL_PROFILE_EXPERT_CONSTANTS.modalEditConstant.edit}</Button>
+          ) : (
+            <Space>
+              <Button type='default' onClick={handleCancelEdit}>{MODAL_PROFILE_EXPERT_CONSTANTS.modalEditConstant.cancel}</Button>
+              <Button type='primary' onClick={form.submit}>{MODAL_PROFILE_EXPERT_CONSTANTS.modalEditConstant.submit}</Button>
+            </Space>
+          )
+        }
+      </div>
 
     </FormProfileStyled>
   );

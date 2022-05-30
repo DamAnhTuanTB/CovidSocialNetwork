@@ -1,17 +1,19 @@
 import { Button, Modal } from 'antd';
 import React, { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
-import { deleteCommentPostAdmin, updateStatusPostAdmin } from '../../../../../../../../api/admin/post';
+import { deleteCommentPostAdmin } from '../../../../../../../../api/admin/post';
+import { deleteComment } from '../../../../../../../../api/post';
 import toastCustom from '../../../../../../../../helpers/toastCustom';
 import MODAL_CHANGE_STATUS_POST_CONSTANTS from './constants';
 
 const ModalDeleteComment = (props: any) => {
   const {
+    isAdmin = false,
     idCommentDelete,
     setIdCommentDelete = () => { },
   } = props;
 
-  const mutation = useMutation(deleteCommentPostAdmin);
+  const mutation = useMutation(isAdmin ? deleteCommentPostAdmin : deleteComment);
 
   const queryClient = useQueryClient();
 
@@ -30,8 +32,13 @@ const ModalDeleteComment = (props: any) => {
               type: "success"
             })
             setIdCommentDelete(null);
-            queryClient.invalidateQueries("admin-detail-post");
-            queryClient.invalidateQueries("admin-comments-post");
+            if (isAdmin) {
+              queryClient.invalidateQueries("admin-detail-post");
+              queryClient.invalidateQueries("admin-comments-post");
+            } else {
+              queryClient.invalidateQueries("detail-post");
+              queryClient.invalidateQueries("comments-post");
+            }
           }
         },
         onError: (err) => {

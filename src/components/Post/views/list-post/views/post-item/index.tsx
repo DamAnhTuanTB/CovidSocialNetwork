@@ -367,6 +367,7 @@ const PostItem = (props: any) => {
                       listComment={listComment}
                       setListComment={setListComment}
                       isAdmin={isAdmin}
+                      idPost={detailPost?.id}
                     />
                   )
                 }) : (

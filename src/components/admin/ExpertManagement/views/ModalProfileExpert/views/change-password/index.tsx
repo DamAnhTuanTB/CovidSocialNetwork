@@ -28,6 +28,8 @@ const ChangePasswordExpert = (props: any) => {
       },
       {
         onSuccess: (data: any) => {
+          console.log(123123, data);
+          
           if (data?.statusCode === 201) {
             toastCustom({
               mess: CHANGE_PASSWORD_CONSTANTS.message.success,

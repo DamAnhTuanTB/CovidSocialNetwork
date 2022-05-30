@@ -1,8 +1,8 @@
 // @ts-nocheck
 
 import { CameraOutlined, CloseOutlined } from '@ant-design/icons';
-import { Progress } from 'antd';
-import React, { useRef, useState } from 'react';
+import { Button, Divider, Progress, Space } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import ReactTextareaAutosize from 'react-textarea-autosize';
 import { createCommentAdmin } from '../../../../../../../../api/admin/post';
@@ -17,11 +17,25 @@ const InputComment = (props: any) => {
     idPost,
     detailPost = {},
     refTextArea,
+    isEdit = false,
+    detailComment = {},
+    handleSubmitEditComment = () => {},
   } = props;
   const [prog, setProg] = useState(0);
   const [commentText, setCommentText] = useState("");
   const [imagePreview, setImagePreview] = useState();
   const [imageUrlComment, setImageUrlComment] = useState();
+  const [isFirstRenderEdit, setIsFirstRenderEdit] = useState(true);
+
+  useEffect(() => {
+    if (isEdit) {
+      setCommentText(detailComment?.content_texts);
+      if (detailComment?.content_images) {
+        setImagePreview(detailComment?.content_images);
+        setImageUrlComment(detailComment?.content_images);
+      }
+    }
+  }, [detailComment])
 
   const refInputFile = useRef(null);
 
@@ -32,6 +46,7 @@ const InputComment = (props: any) => {
 
   const handleChangeImage = (e: any) => {
     setProg(1);
+    setIsFirstRenderEdit(false);
     const fileUrl = URL.createObjectURL(e.target.files[0]);
     setImagePreview(fileUrl);
 
@@ -48,7 +63,7 @@ const InputComment = (props: any) => {
   const checkKeyEnter = (e: any) => {
     if (e.keyCode === 13 && !e.shiftKey) {
       e.preventDefault();
-      if (commentText) {
+      if (commentText && !isEdit) {
         handleSubmitComment();
       }
     }
@@ -84,13 +99,23 @@ const InputComment = (props: any) => {
               queryClient.invalidateQueries("comments-post");
               queryClient.invalidateQueries("detail-post");
             }
-            
+
           }
         }
       }
     )
-    
-    
+
+
+  }
+
+  const onSubmitEdit = () => {
+    const dataComment = {
+      content_texts: commentText,
+    }
+    if (imageUrlComment) {
+      dataComment.content_images = imageUrlComment;
+    }
+    handleSubmitEditComment(dataComment);
   }
 
   return (
@@ -112,7 +137,7 @@ const InputComment = (props: any) => {
           />
           <div className="file-input-container">
             <div className="file-input">
-              <input ref={refInputFile} disabled={!!imagePreview} onChange={handleChangeImage} type="file" />
+              <input ref={refInputFile} disabled={!!imagePreview} onChange={handleChangeImage} type="file" accept="image/*" />
               <CameraOutlined className="camera-icon" />
             </div>
           </div>
@@ -122,7 +147,13 @@ const InputComment = (props: any) => {
         imagePreview && (
           <>
             <div className="preview-image">
-              <img src={imagePreview} alt="" />
+              {
+                (isEdit && isFirstRenderEdit) ? (
+                  <BaseImagePreview className="image" cancelPreview isLoading src={imagePreview} alt="" />
+                ) : (
+                  <img src={imagePreview} alt="" />
+                )
+              }
               {
                 prog === 0 && (
                   <div
@@ -144,6 +175,21 @@ const InputComment = (props: any) => {
                   </div>
                 )
               }
+            </div>
+          </>
+        )
+      }
+      {
+        isEdit && (
+          <>
+            <Divider />
+            <div className="space-button">
+              <Button key="back" onClick={() => setCommentEditOwner(null)}>
+                Hủy
+              </Button>
+              <Button key="submit" type="primary" onClick={onSubmitEdit}>
+                Lưu
+              </Button>
             </div>
           </>
         )

@@ -39,6 +39,7 @@ const CommentItemStyled = styled.div`
             }
             .text {
                 word-break: break-all;
+                white-space: pre-wrap;
             }
         }
         .delete-icon {
@@ -56,6 +57,9 @@ const CommentItemStyled = styled.div`
             :hover {
                 background-color: #e5e5e5;
             }
+        }
+        .more-option {
+            transform: rotate(90deg);
         }
     }
     .image {

@@ -3,13 +3,26 @@ import styled from "styled-components";
 const ListExpertStyled = styled.div`
   padding: 20px 50px;
   .title-container {
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: flex-start;
     .title {
       font-size: 30px;
       font-weight: 500;
+    }
+  }
+
+  .list-button {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  .search {
+    display: flex;
+    margin-top: 20px;
+    input {
+      box-shadow: none;
     }
   }
 
