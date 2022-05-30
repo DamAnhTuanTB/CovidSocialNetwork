@@ -192,10 +192,10 @@ const PostItemStyle = styled.div<Props>`
     .list-comment {
         padding: 15px;
         .input-comment-container {
+            margin-bottom: 20px;
             .input-comment {
                 display: flex;
                 justify-content: space-between;
-                margin-bottom: 20px;
                 .avatar-user {
                     width: 40px;
                     height: 40px;

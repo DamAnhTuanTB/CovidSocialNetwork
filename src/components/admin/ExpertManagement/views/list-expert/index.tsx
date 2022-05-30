@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { DeleteOutlined, EyeOutlined, MessageOutlined } from '@ant-design/icons';
-import { Button, Pagination, Space, Table } from 'antd';
+import { Button, Input, Pagination, Space, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { handleConvertDateStringToDate } from '../../../../../helpers/convertDateStringToDate';
@@ -18,6 +18,7 @@ const ListExpertComponent = (props: any) => {
   const [listExpert, setListExpert] = useState([]);
   const [totalExpert, setTotalExpert] = useState(0);
   const [currentPage, setCurrentPage] = useState("1");
+  const [freeText, setFreeText] = useState("");
   const params = new URL(window.location.href);
   const paramsUrl = params.searchParams;
 
@@ -31,6 +32,7 @@ const ListExpertComponent = (props: any) => {
   const { dataExpert } = useGetListExpert({
     limit: limitPerPage,
     page: currentPage,
+    email: paramsUrl.get("search") || "",
   });
 
   const columns = [
@@ -97,11 +99,16 @@ const ListExpertComponent = (props: any) => {
   ];
 
   const handleChangePage = (page: any) => {
-    history.push(`?page=${page}`);
+    if (freeText) {
+      history.push(`?page=${page}&search=${freeText}`);
+    } else {
+      history.push(`?page=${page}`);
+    }
   }
 
   useEffect(() => {
     setCurrentPage(paramsUrl.get("page") || "1");
+    setFreeText(paramsUrl.get("search") || "");
     if (dataExpert?.statusCode === 200) {
       setListExpert(dataExpert?.data);
       setTotalExpert(dataExpert?.total);
@@ -117,6 +124,22 @@ const ListExpertComponent = (props: any) => {
         </div>
         <div className="list-button">
           <Button type="primary" onClick={() => setIsShowModalCreate(true)}>Tạo chuyên gia</Button>
+          <div className="search">
+            <Input value={freeText} onChange={(e) => setFreeText(e.target.value)} />
+            <Button
+              type="primary"
+              onClick={() => {
+                if (freeText) {
+                  history.push(`/admin/expert-management?search=${freeText}`)
+                } else {
+                  history.push(`/admin/expert-management`)
+                }
+              }
+              }
+            >
+              Tìm kiếm
+            </Button>
+          </div>
         </div>
       </div>
       <Table

@@ -14,8 +14,8 @@ const BaseImagePreviewStyled = styled.div`
         justify-content: center;
         background-color: rgba(0, 0, 0, 0.7);
         .image-temp {
-            max-height: 80%;
-            max-width: 80%;
+            height: 80%;
+            width: 80%;
             object-fit: contain !important;
         }
         .close-button {

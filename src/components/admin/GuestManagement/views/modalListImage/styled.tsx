@@ -12,6 +12,8 @@ const ModalListImageStyled = styled(Modal)`
       height: 150px;
       margin-bottom: 20px;
       margin-right: 15px;
+      border-radius: 10px;
+      border: 0.1px solid #cacaca;
       :nth-child(4n) {
         margin-right: 0;
       }

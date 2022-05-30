@@ -60,3 +60,16 @@ export const getListCommentPost = async (param: any) => {
   const res = await sendGet(`http://localhost:8888/covid-network-social/post/get-all-comment-post`, param);
   return res?.data;
 }
+
+export const deleteComment = async (idComment: any) => {
+  const res = await sendDelete(`http://localhost:8888/covid-network-social/post/delete-comment/${idComment}`);
+  return res?.data;
+}
+
+export const updateComment = async (params: any) => {
+  const idComment = params?.idComment;
+  const newParam = { ...params };
+  delete newParam.idComment
+  const res = await sendPut(`http://localhost:8888/covid-network-social/post/update-comment/${idComment}`, newParam);
+  return res?.data;
+}

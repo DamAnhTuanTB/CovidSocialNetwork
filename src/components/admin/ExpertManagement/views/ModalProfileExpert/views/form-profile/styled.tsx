@@ -2,7 +2,7 @@ import { Modal } from "antd";
 import styled from "styled-components";
 
 interface Props {
-  isEditProfile: boolean
+  isHideRequired: boolean
 }
 
 const FormProfileStyled = styled.div<Props>`
@@ -112,7 +112,7 @@ const FormProfileStyled = styled.div<Props>`
 
   .ant-form-item-required {
     ::before {
-      display: ${props => props.isEditProfile ? "inline-block" : "none"} !important;
+      display: ${props => props.isHideRequired ? "none" : "inline-block"} !important;
     }
   }
 

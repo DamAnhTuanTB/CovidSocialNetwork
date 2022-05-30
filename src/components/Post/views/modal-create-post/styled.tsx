@@ -4,7 +4,7 @@ import { Modal } from 'antd';
 const ModalCreatePostStyled = styled(Modal)`
     font-family: "Alata";
     .body-modal-create {
-        max-height: 45vh;
+        max-height: 50vh;
         overflow: auto;
         ::-webkit-scrollbar {
           width: 6px;
@@ -109,7 +109,7 @@ const ModalCreatePostStyled = styled(Modal)`
     }
     .title-post {
         font-size: 20px;
-        font-weight: 500;
+        font-weight: 700;
         padding: 0;
         width: 100%;
         border: none;

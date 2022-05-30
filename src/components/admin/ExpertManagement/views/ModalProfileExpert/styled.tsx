@@ -16,7 +16,7 @@ const ModalProfileExpertStyled = styled(Modal)<Props>`
     }
     .active {
       /* background-color: red; */
-      border-bottom: 4px solid #1890ff;
+      border-bottom: 4px solid #f1847d;
     }
   }
 `;

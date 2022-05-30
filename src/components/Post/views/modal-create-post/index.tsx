@@ -169,7 +169,7 @@ const ModalCreatePost = (props: any) => {
       title={isEdit ? MODAL_CREATE_POST_CONSTANTS.title.edit : MODAL_CREATE_POST_CONSTANTS.title.create}
       className="modal-create-post"
       visible={isEdit ? !!itemPost?.id : isShowModalCreate}
-      style={{ top: 100 }}
+      style={{ top: 70 }}
       width={800}
       onCancel={handleCancel}
       footer={[
@@ -208,7 +208,7 @@ const ModalCreatePost = (props: any) => {
             </span>
           </div>
           <div className="file-input">
-            <input ref={refInputFile} disabled={listImage.length >= 3 || !!progressUpload} onChange={handleChangeImage} type="file" />
+            <input ref={refInputFile} disabled={listImage.length >= 3 || !!progressUpload} onChange={handleChangeImage} type="file" accept="image/*" />
             <CameraOutlined className="camera-icon" />
           </div>
         </div>
