@@ -2,7 +2,7 @@
 const MODAL_DELETE_EXPERT_CONSTANTS = {
   submit: "Ok",
   cancel: "Hủy",
-  title: "Xóa bệnh nhân",
+  title: "Xóa chuyên gia",
   content: {
     first: "Bạn có muốn xóa chuyên gia ",
     second: " không?"

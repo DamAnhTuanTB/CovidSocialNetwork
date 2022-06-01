@@ -63,7 +63,7 @@ const InputComment = (props: any) => {
   const checkKeyEnter = (e: any) => {
     if (e.keyCode === 13 && !e.shiftKey) {
       e.preventDefault();
-      if (commentText && !isEdit) {
+      if (commentText.replace(/\s/g, "") && !isEdit) {
         handleSubmitComment();
       }
     }
@@ -109,6 +109,9 @@ const InputComment = (props: any) => {
   }
 
   const onSubmitEdit = () => {
+    if (commentText.replace(/\s/g, "").length === 0) {
+      return;
+    }
     const dataComment = {
       content_texts: commentText,
     }
@@ -187,7 +190,7 @@ const InputComment = (props: any) => {
               <Button key="back" onClick={() => setCommentEditOwner(null)}>
                 Hủy
               </Button>
-              <Button key="submit" type="primary" onClick={onSubmitEdit}>
+              <Button key="submit" type="primary" disabled={!commentText.replace(/\s/g, "")} onClick={onSubmitEdit}>
                 Lưu
               </Button>
             </div>

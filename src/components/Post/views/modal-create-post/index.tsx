@@ -176,7 +176,7 @@ const ModalCreatePost = (props: any) => {
         <Button key="back" onClick={handleCancel}>
           {MODAL_CREATE_POST_CONSTANTS.cancel}
         </Button>,
-        <Button loading={loadingSubmit} key="submit" type="primary" disabled={!title || !content || !!progressUpload} onClick={onSubmit}>
+        <Button loading={loadingSubmit} key="submit" type="primary" disabled={!title.replace(/\s/g, "") || !content.replace(/\s/g, "") || !!progressUpload} onClick={onSubmit}>
           {MODAL_CREATE_POST_CONSTANTS.submit}
         </Button>,
       ]}

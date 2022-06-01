@@ -83,7 +83,7 @@ const CommentItem = (props: any) => {
   }
 
   return (
-    <CommentItemStyled className="comment">
+    <CommentItemStyled className="comment" isAdmin={isAdmin}>
       <ModalDeleteComment isAdmin={isAdmin} idCommentDelete={idCommentDelete} setIdCommentDelete={setIdCommentDelete} />
       <ModalEditComment isAdmin={isAdmin} idPost={idPost} commentEditOwner={commentEditOwner} setCommentEditOwner={setCommentEditOwner} />
       <div className="item-comment">
@@ -127,12 +127,16 @@ const CommentItem = (props: any) => {
         )
       }
       <div className="like">
-        <div
-          className={`button-like ${detailComment.isLike && "liked"} ${isAdmin && "admin-disable-like"}`}
-          onClick={handleClickLike}
-        >
-          {POST_ITEM_CONSTANTS.detailAction.like}
-        </div>
+        {
+          !isAdmin && (
+            <div
+              className={`button-like ${detailComment.isLike && "liked"} ${isAdmin && "admin-disable-like"}`}
+              onClick={handleClickLike}
+            >
+              {POST_ITEM_CONSTANTS.detailAction.like}
+            </div>
+          )
+        }
         {
           +detailComment.totalLike > 0 && (
             <div className="total-like">
