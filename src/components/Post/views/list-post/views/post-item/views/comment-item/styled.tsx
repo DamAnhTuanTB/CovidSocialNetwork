@@ -1,6 +1,9 @@
 import styled from "styled-components";
+interface Props {
+    isAdmin: boolean,
+}
 
-const CommentItemStyled = styled.div`
+const CommentItemStyled = styled.div<Props>`
     margin-bottom: 20px;
     &:hover {
         .delete-icon {
@@ -75,11 +78,12 @@ const CommentItemStyled = styled.div`
     .like {
         display: flex;
         align-items: flex-end;
-        margin-left: 55px;
+        margin-left: ${props => props.isAdmin ? "45px" : "55px"};
         margin-top: 3px;
         .button-like {
             font-weight: 600;
             cursor: pointer;
+            margin-right: 10px;
         }
         .liked {
             color: #1877F2;
@@ -90,7 +94,7 @@ const CommentItemStyled = styled.div`
         .total-like {
             display: flex;
             background-color: #F0F2F5;
-            margin-left: 10px;
+            /* margin-left: 10px; */
             align-items: center;
             padding-right: 3px;
             border-radius: 8px;
@@ -99,7 +103,6 @@ const CommentItemStyled = styled.div`
                 height: 16px;
                 margin-right: 4px;
             }
-
         }
     }
 `;

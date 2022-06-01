@@ -6,7 +6,7 @@ const handleConvertDateStringToDateTime = (dateString: any) => {
   }
   const dateObj = new Date(dateString);
   const momentObj = moment(dateObj);
-  return momentObj.format("DD-MM-YYYY - HH:mm");
+  return momentObj.format("DD/MM/YYYY - HH:mm");
 };
 
 export const handleConvertDateStringToDate = (dateString: any) => {
