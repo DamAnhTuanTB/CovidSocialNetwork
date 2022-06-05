@@ -126,11 +126,11 @@ const LoginComponent = (props: any) => {
             {
               !isAdmin && !isExpert && (
                 <>
-                  <Form.Item className="forgot-pass">
+                  {/* <Form.Item className="forgot-pass">
                     <Link className="login-form-forgot" to="">
                       {LOGIN_PATIENT_CONSTANTS.forgotPass}
                     </Link>
-                  </Form.Item>
+                  </Form.Item> */}
 
                   <Divider />
 
