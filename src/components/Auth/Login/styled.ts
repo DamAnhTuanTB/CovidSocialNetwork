@@ -9,10 +9,10 @@ interface Props {
 const LoginStyled = styled.div<Props>`
   background-image: ${(props) =>
     props.isExpert
-      ? "url(https://www.loyensloeff.com/globalassets/01.-corporate-photography/expertise-sectors--markets/health-care/healthcare-13.jpg?width=580&height=387)"
+      ? "url('/login/background_login_expert.png')"
       : props.isAdmin
-      ? "url(https://mcdn.wallpapersafari.com/medium/62/52/H7e46I.jpg)"
-      : "url(https://lh3.googleusercontent.com/xpF04rfmwAa2E8TeksiC4fjei4JHrgcgVAr3iPIgG5CFKEekHC2d5DyNxktnDRY8JYu8S6I1hE0CkzHjJ6v0DGCdQjuS_Yy3iSM-wLnmyTjXPYGLWMcw2YRaFmuW-zN9HlFJ8qN5LGAU1X-U3BR0jVvJB4bMenJ_r_ckiRVltcBWKOQmowPU2FTuKkZixrtecKRrPL3b1CcKnhnjWyazfD4ffs_hOdXp8N8KDtb3Zlm25bbe5bdMwPk44ifSV-5Sa2sUsF_MEaR0Id9GdGwCI331zQvKpl5yQow7QKEIrvR2Nsxj6oja2awvgZ3o2Xtje8VF3JqLXnF66gihinyxY-H1lV9-3BzrdV53jeWM-eL0J08z7EMPhGamGXcd2ViHI-btw-H5PX3MrBznElYZks9KcNX46ij8lSeteNcHJgBTlGDTQ2h5RE6xI6f6-F22IizIYrapQzw0cp6eO_FBF5BBgCMiRhv3ArmHA2n8uUwa3j_7xZXPTs9bV1DtchQtEHyA4poLybRLmw6Sg92QSbT3U82Pt_l5DeWD2IPpFNscityD-2ANBaDQOHRRCrZ6wLzKJ-vkY7G_cqKjMhEWDi62DcG6KmMlAl101DMkAz8TVh4Alz0f8GXaqKShZH_J_q-WH425j729uiQFcFHChm4RvLJ9M5J43SOS7YEgijUx1sH0bvAVePNLmtxEF0zfrvimFacBUThltk7s9lrv27x5Fkuen1ndwxzJHqrUB4tqPPtDzNtDgmacvXMdvWFgU44Y-LbesV8LAqcpSZckVkq9OZPlAav67Qm5hE1nNvNaihTSUGUJvbK7VOLT674rX_12VXhl62ZVu3pv5kRirsI-0YGxhqZKvd0KHhho3A=w1500-h993-no?authuser=3)"};
+      ? "url('/login/background_login_admin.png')"
+      : "url('/login/background_login.png')"};
   /* background-image: url("https://lh3.googleusercontent.com/xpF04rfmwAa2E8TeksiC4fjei4JHrgcgVAr3iPIgG5CFKEekHC2d5DyNxktnDRY8JYu8S6I1hE0CkzHjJ6v0DGCdQjuS_Yy3iSM-wLnmyTjXPYGLWMcw2YRaFmuW-zN9HlFJ8qN5LGAU1X-U3BR0jVvJB4bMenJ_r_ckiRVltcBWKOQmowPU2FTuKkZixrtecKRrPL3b1CcKnhnjWyazfD4ffs_hOdXp8N8KDtb3Zlm25bbe5bdMwPk44ifSV-5Sa2sUsF_MEaR0Id9GdGwCI331zQvKpl5yQow7QKEIrvR2Nsxj6oja2awvgZ3o2Xtje8VF3JqLXnF66gihinyxY-H1lV9-3BzrdV53jeWM-eL0J08z7EMPhGamGXcd2ViHI-btw-H5PX3MrBznElYZks9KcNX46ij8lSeteNcHJgBTlGDTQ2h5RE6xI6f6-F22IizIYrapQzw0cp6eO_FBF5BBgCMiRhv3ArmHA2n8uUwa3j_7xZXPTs9bV1DtchQtEHyA4poLybRLmw6Sg92QSbT3U82Pt_l5DeWD2IPpFNscityD-2ANBaDQOHRRCrZ6wLzKJ-vkY7G_cqKjMhEWDi62DcG6KmMlAl101DMkAz8TVh4Alz0f8GXaqKShZH_J_q-WH425j729uiQFcFHChm4RvLJ9M5J43SOS7YEgijUx1sH0bvAVePNLmtxEF0zfrvimFacBUThltk7s9lrv27x5Fkuen1ndwxzJHqrUB4tqPPtDzNtDgmacvXMdvWFgU44Y-LbesV8LAqcpSZckVkq9OZPlAav67Qm5hE1nNvNaihTSUGUJvbK7VOLT674rX_12VXhl62ZVu3pv5kRirsI-0YGxhqZKvd0KHhho3A=w1500-h993-no?authuser=3"); */
   background-size: cover;
   background-repeat: no-repeat;
