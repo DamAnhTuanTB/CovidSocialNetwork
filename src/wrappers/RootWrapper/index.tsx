@@ -68,6 +68,7 @@ export default function AppWrapper() {
       getUserConfirmation={getConfirmation}
     >
       <div className="root-wrapper">
+      <title>{`aaaaaaaa`}</title>
         <ToastContainer />
         <Switch>
           <Route path="/not-found" exact component={NotFoundPage} />
