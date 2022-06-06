@@ -20,6 +20,10 @@ export default function PageWrapper() {
 
   queryClient.setQueryData("my-profile", profile);
 
+  // console.log(12311123, profile);
+  // console.log(345345345, queryClient.getQueryData("my-profile"));
+  
+
   if (!isAuthenticated) return <Redirect to="/login" />;
   if (!profile) return null;
   if (profile?.role !== "patient") {

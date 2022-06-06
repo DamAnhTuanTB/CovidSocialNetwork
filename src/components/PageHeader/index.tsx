@@ -83,7 +83,7 @@ export default function PageHeader(props: any) {
         socket.off('notify_post', showNotify);
       };
     }
-  }, [])
+  }, [myProfile?.id])
 
   useEffect(() => {
     if (isShowNotification) {
