@@ -91,6 +91,11 @@ const DetailChatComponent = (props: any) => {
 
     const handleBeforeUnload = (event: any) => {
       event.preventDefault();
+      // socket.emit('end_chat_session', {
+      //   chatSessionId: infoChatSession?.id,
+      //   endTime: new Date().toISOString(),
+      //   expertId: infoChatSession?.expert?.id
+      // });
       event.returnValue = "";
     }
     window.addEventListener('beforeunload', handleBeforeUnload)
@@ -111,7 +116,7 @@ const DetailChatComponent = (props: any) => {
         <div className={`chat-box`}>
           <div className="header-chat">
             <div className="user-received-detail">
-              <img className="avatar-image" src="/defaultAvatar.png" alt="" />
+              <img className="avatar-image" src="/defaultAvatarExpert.png" alt="" />
               <div>{CHAT_DETAIL_CONSTANTS.anonymous}</div>
             </div>
             <div className="group-function-header-chat">
@@ -125,7 +130,7 @@ const DetailChatComponent = (props: any) => {
           </div>
           <div className="list-messages">
             <div key={'_0'} className='message message-received'>
-              <img className="avatar-image" src="/defaultAvatar.png" alt="" />
+              <img className="avatar-image" src="/defaultAvatarExpert.png" alt="" />
               <div className='content-message received'>{CHAT_DETAIL_CONSTANTS.welcome}</div>
             </div>
             {
@@ -148,7 +153,7 @@ const DetailChatComponent = (props: any) => {
 
                 return (
                   <div key={itemMessage.id + itemMessage.content_texts} className={`message ${classMessage}`}>
-                    <BaseImagePreview isLoading cancelPreview className={classImage} src={itemMessage?.role === 'patient' ? (infoChatSession?.patient.avatar || "/defaultAvatar.png") : "/defaultAvatar.png"} alt="" />
+                    <BaseImagePreview isLoading cancelPreview className={classImage} src={itemMessage?.role === 'patient' ? (infoChatSession?.patient.avatar || "/defaultAvatar.png") : "/defaultAvatarExpert.png"} alt="" />
                     <Popover content={convertTime(itemMessage.created_at)}>
                       <div className={`content-message ${classContent}`}>{itemMessage?.content_texts}</div>
                     </Popover>
